@@ -1,4 +1,4 @@
-const CACHE = 'morning-circuit-network-first-v4';
+const CACHE = 'movement-network-first-v5';
 const CORE = ['./', './index.html', './styles.css', './manifest.json', './icons/icon.svg',
   './data/equipment.json', './data/exercises.json', './data/routineTemplates.json',
   './js/adaptation.js', './js/app.js', './js/audio.js', './js/config.js', './js/cycles.js',

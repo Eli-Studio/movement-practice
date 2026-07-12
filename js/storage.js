@@ -51,7 +51,7 @@ export function getDefaultState() {
       profiles: {
         eli: {
           displayName:      'User A',
-          icon:             '🔵',
+          icon:             'profile-a',
           primaryGoal:      'general_fitness',
           secondaryGoals:   [],
           experienceLevel:  'some',
@@ -69,7 +69,7 @@ export function getDefaultState() {
         },
         christina: {
           displayName:      'User B',
-          icon:             '🟣',
+          icon:             'profile-b',
           primaryGoal:      'general_fitness',
           secondaryGoals:   [],
           experienceLevel:  'some',
@@ -230,7 +230,7 @@ export function importStateJSON(jsonStr) {
     return { success: false, error: 'Could not parse JSON: ' + err.message };
   }
   if (!isObject(parsed) || typeof parsed.version !== 'string' || !isObject(parsed.settings)) {
-    return { success: false, error: 'This does not look like a Morning Circuit backup.' };
+    return { success: false, error: 'This does not look like a Movement backup.' };
   }
   for (const key of ['sessions', 'missedDays', 'cycleReviews']) {
     if (key in parsed && !Array.isArray(parsed[key])) return { success: false, error: `Backup field "${key}" must be a list.` };

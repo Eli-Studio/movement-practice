@@ -1,5 +1,5 @@
 // ============================================================
-// app.js — Morning Circuit · Main orchestrator  v0.4.1
+// app.js — Movement Practice · Main orchestrator  v0.4.1
 // ============================================================
 
 import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js';
@@ -260,7 +260,8 @@ function navigate(screen) {
           App.ui.selectedChristinaRoutine = {
             id:    App.ui.christinaSuggestion.primary.id,
             templateId: App.ui.christinaSuggestion.primary.templateId,
-            level: App.ui.christinaSuggestion.primary.adaptationLevel
+            level: App.ui.christinaSuggestion.primary.adaptationLevel,
+            label: App.ui.christinaSuggestion.primary.label
           };
           if (App.ui.selectedChristinaRoutine.id !== 'skip_rest') {
             const tmplId = App.ui.selectedChristinaRoutine.templateId ?? App.ui.selectedChristinaRoutine.id;
@@ -475,9 +476,9 @@ function setupListeners(screen) {
       // Apply initial selected state to Both button via inline style
       const _initWhoBtn = document.getElementById('log-who-both');
       if (_initWhoBtn) {
-        _initWhoBtn.style.border = '2px solid var(--eli)';
-        _initWhoBtn.style.background = 'var(--eli-dim)';
-        _initWhoBtn.style.color = 'var(--eli)';
+        _initWhoBtn.style.border = '2px solid var(--action-primary)';
+        _initWhoBtn.style.background = 'color-mix(in srgb, var(--action-primary) 12%, var(--surface))';
+        _initWhoBtn.style.color = 'var(--action-primary)';
         _initWhoBtn.style.fontWeight = '700';
       }
 
@@ -492,9 +493,9 @@ function setupListeners(screen) {
           });
           // Highlight the tapped button
           const t = e.currentTarget;
-          t.style.border = '2px solid var(--eli)';
-          t.style.background = 'var(--eli-dim)';
-          t.style.color = 'var(--eli)';
+          t.style.border = '2px solid var(--action-primary)';
+          t.style.background = 'color-mix(in srgb, var(--action-primary) 12%, var(--surface))';
+          t.style.color = 'var(--action-primary)';
           t.style.fontWeight = '700';
           const who = t.dataset.logWho;
           logUsers = who === 'both' ? ['eli','christina'] : [who];
@@ -637,6 +638,12 @@ function setupListeners(screen) {
       on('btn-eli-recommended', 'click', () => chooseCapacityPlan('eli', false));
       on('btn-christina-original', 'click', () => chooseCapacityPlan('christina', true));
       on('btn-christina-recommended', 'click', () => chooseCapacityPlan('christina', false));
+      const reviewCapacityPlan = userId => {
+        App.ui.capacityChoiceByUser[userId] = null;
+        navigate('routine_suggestion');
+      };
+      on('btn-eli-review-capacity', 'click', () => reviewCapacityPlan('eli'));
+      on('btn-christina-review-capacity', 'click', () => reviewCapacityPlan('christina'));
       document.querySelectorAll('[data-capacity-user]').forEach(btn => btn.addEventListener('click', () => {
         const userId = btn.dataset.capacityUser;
         const dimension = btn.dataset.capacityDimension;
@@ -696,9 +703,11 @@ function setupListeners(screen) {
         btn.addEventListener('click', e => {
           const id   = e.currentTarget.dataset.id;
           const type = e.currentTarget.dataset.type;
-          App.ui.selectedEliRoutine = { id, type, label: e.currentTarget.textContent.trim() };
+          const templateId = e.currentTarget.dataset.templateId || id;
+          const label = e.currentTarget.dataset.label || e.currentTarget.textContent.trim().replace('Current', '').replace('›','').trim();
+          App.ui.selectedEliRoutine = { id, templateId, type, label };
           if (id !== 'skip_rest') {
-            const tmpl = App.data.routineTemplates.find(t => t.id === id);
+            const tmpl = App.data.routineTemplates.find(t => t.id === templateId);
             if (tmpl) {
               let plan = buildExercisePlan(tmpl, App.data.exercises,
                 App.state.sessions.filter(s => s.users.includes('eli')).length, cycleNum,
@@ -722,7 +731,9 @@ function setupListeners(screen) {
           }
           document.querySelectorAll('[data-user="eli"]').forEach(b => b.classList.remove('selected'));
           e.currentTarget.classList.add('selected');
-          showToast(`${App.state.settings.profiles.eli.displayName}: ${e.currentTarget.textContent.trim().replace('›','').trim()}`);
+          refreshConflicts();
+          showToast(`${App.state.settings.profiles.eli.displayName}: ${label}`);
+          navigate('routine_suggestion');
         });
       });
 
@@ -730,14 +741,16 @@ function setupListeners(screen) {
         btn.addEventListener('click', e => {
           const id    = e.currentTarget.dataset.id;
           const level = e.currentTarget.dataset.adaptation;
-          App.ui.selectedChristinaRoutine = { id, level };
+          const templateId = e.currentTarget.dataset.templateId || id;
+          const label = e.currentTarget.dataset.label || e.currentTarget.textContent.trim().replace('Current', '').replace('›','').trim();
+          App.ui.selectedChristinaRoutine = { id, templateId, level, label };
 
           // Rebuild Christina's plan for the chosen routine (mirrors Eli's handler).
           // Previously this was skipped, so the shown exercise list, swap rows, and
           // conflict banner kept operating on the prior routine's plan until the
           // workout actually started — audit B4.
           if (id !== 'skip_rest') {
-            const tmpl = App.data.routineTemplates.find(t => t.id === id);
+            const tmpl = App.data.routineTemplates.find(t => t.id === templateId);
             if (tmpl) {
               let plan = buildExercisePlan(tmpl, App.data.exercises,
                 App.state.sessions.filter(s => s.users.includes('christina')).length, cycleNum,
@@ -767,7 +780,8 @@ function setupListeners(screen) {
 
           document.querySelectorAll('[data-user="christina"]').forEach(b => b.classList.remove('selected','selected--indigo'));
           e.currentTarget.classList.add('selected--indigo');
-          showToast(`${App.state.settings.profiles.christina.displayName}: ${e.currentTarget.textContent.trim().replace('›','').trim()}`);
+          showToast(`${App.state.settings.profiles.christina.displayName}: ${label}`);
+          navigate('routine_suggestion');
         });
       });
 
@@ -991,7 +1005,7 @@ function setupListeners(screen) {
           const arrow = get(`progression-arrow-${exId}`);
           if (arrow) {
             arrow.innerHTML = nowAccepted
-              ? `→ <strong style="color:var(--eli);">${sugg.suggestedKg}kg</strong> across all lifts, reps restart`
+              ? `→ <strong style="color:var(--action-primary);">${sugg.suggestedKg}kg</strong> across all lifts, reps restart`
               : `(holding at ${sugg.currentKg}kg)`;
           }
         });

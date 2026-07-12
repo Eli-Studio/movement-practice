@@ -18,14 +18,14 @@ function downloadFile(filename, content, mime) {
 }
 
 export function exportFullBackupJSON(state) {
-  const filename = `morning-circuit-backup-${today()}.json`;
+  const filename = `movement-backup-${today()}.json`;
   downloadFile(filename, exportStateJSON(state), 'application/json');
   return filename;
 }
 
 export function exportMonthCSV(sessions, missedDays, year, month, profiles = {}) {
   const pad   = n => String(n+1).padStart(2,'0');
-  const fname = `morning-circuit-${year}-${pad(month)}.csv`;
+  const fname = `movement-${year}-${pad(month)}.csv`;
 
   const mSessions = sessions.filter(s => {
     const d = new Date(s.date + 'T12:00:00');
@@ -71,7 +71,7 @@ export function exportMonthCSV(sessions, missedDays, year, month, profiles = {})
 
 export function exportMonthMarkdown(sessions, missedDays, year, month, profiles = {}) {
   const pad     = n => String(n+1).padStart(2,'0');
-  const fname   = `morning-circuit-${year}-${pad(month)}.md`;
+  const fname   = `movement-${year}-${pad(month)}.md`;
   const mName   = new Date(year, month, 1).toLocaleDateString('en-US',{ month:'long', year:'numeric' });
 
   const mSessions = sessions.filter(s => {
@@ -88,7 +88,7 @@ export function exportMonthMarkdown(sessions, missedDays, year, month, profiles 
   const nameA = profiles.eli?.displayName ?? 'User A';
   const nameB = profiles.christina?.displayName ?? 'User B';
 
-  let md = `# Morning Circuit — ${mName}\n\n`;
+  let md = `# Movement Practice — ${mName}\n\n`;
   md    += `*Exported ${formatDate(today())}*\n\n---\n\n`;
   md    += `## Summary\n\n`;
   md    += `- Total sessions: ${mSessions.length}\n`;
@@ -135,7 +135,7 @@ export function exportMonthMarkdown(sessions, missedDays, year, month, profiles 
 }
 
 export function exportCycleMarkdown(cycleState, sessions, profiles = {}) {
-  const fname = `morning-circuit-${cycleState.cycleId}.md`;
+  const fname = `movement-${cycleState.cycleId}.md`;
 
   const cycleSessions = sessions.filter(s =>
     s.date >= cycleState.startDate && s.date <= cycleState.endDate

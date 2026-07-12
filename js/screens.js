@@ -24,16 +24,18 @@ import { ATTRIBUTE_LABELS } from './adaptation.js';
 function symptomConflictBadge(ex) {
   if (!ex?.symptomConflicts?.length) return '';
   const labels = ex.symptomConflicts.map(a => ATTRIBUTE_LABELS[a] ?? a).join(' · ');
-  return `<span class="symptom-flag" title="Conflicts with today's symptoms — your call whether to do or swap it">⚠ ${escapeHtml(labels)}</span>`;
+  return `<span class="symptom-flag" title="Conflicts with today's symptoms — your call whether to do or swap it">${uiGlyph('warning')} ${escapeHtml(labels)}</span>`;
 }
 
-// User display helpers — single source of truth for names/emoji
+function uiGlyph(name, label = '') {
+  return `<span class="ui-glyph ui-glyph--${name}" aria-hidden="true"></span>${label ? `<span class="sr-only">${escapeHtml(label)}</span>` : ''}`;
+}
+
+// User display helpers — names plus theme-native profile seals.
 const userName = (App, id) => App?.state?.settings?.profiles?.[id]?.displayName
   ?? (id === 'eli' ? 'User A' : 'User B');
-const userIcon = (App, id) => App?.state?.settings?.profiles?.[id]?.icon
-  ?? (id === 'eli' ? '🔵' : '🟣');
+const userIcon = (_App, id) => `<span class="profile-seal profile-seal--${id === 'eli' ? 'a' : 'b'}" aria-hidden="true">${id === 'eli' ? 'A' : 'B'}</span>`;
 const userLabel = (App, id) => `${userIcon(App, id)} ${escapeHtml(userName(App, id))}`;
-const PROFILE_ICONS = ['🔵', '🟣', '⭐', '⚡', '🌿', '🏔️', '🧘', '🏋️'];
 const TRAINING_GOALS = [
   ['build_strength', 'Build strength'], ['improve_mobility', 'Improve mobility'],
   ['maintain_consistency', 'Maintain consistency'], ['return_after_break', 'Return after a break'],
@@ -88,9 +90,9 @@ function getProfileOverview(sessions, userId) {
 
 function bottomNav(active) {
   const items = [
-    { key:'hello',    icon:'🏠', label:'Home'    },
-    { key:'reports',  icon:'📊', label:'Tracker' },
-    { key:'settings', icon:'⚙️', label:'Settings'}
+    { key:'hello', label:'Home', icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5v7.2H14v-5h-4v5H4z"/></svg>' },
+    { key:'reports', label:'Tracker', icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="5"/><path d="M12 4v8l5 3"/></svg>' },
+    { key:'settings', label:'Settings', icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1"/></svg>' }
   ];
   return `
     <nav class="bottom-nav">
@@ -102,6 +104,61 @@ function bottomNav(active) {
       `).join('')}
     </nav>
   `;
+}
+
+function movementBrandLockup(compact = false) {
+  return `<div class="movement-brand${compact ? ' movement-brand--compact' : ''}" aria-label="Movement Practice">
+    <span class="movement-mark" aria-hidden="true"><span></span></span>
+    <span class="movement-brand__type"><strong>Movement</strong><small>Practice</small></span>
+  </div>`;
+}
+
+function cycleDayForDisplay(cycleState) {
+  const demo = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('cycle-demo')
+    : null;
+  if (demo === 'week3') return 17;
+  return cycleState?.startDate ? getCycleDayNumber(cycleState) : 1;
+}
+
+// Four persistent rings map the 28-day cycle from the outside inward. Progress
+// is date-based until the data model includes a weekly session plan.
+function fourWeekCycle(dayNumber, cycleNumber, size = 'medium') {
+  const safeDay = Math.min(Math.max(Number(dayNumber) || 1, 1), 28);
+  const currentWeek = Math.min(Math.ceil(safeDay / 7), 4);
+  const weekProgress = ((safeDay - 1) % 7 + 1) / 7;
+  const radii = [70, 56, 42, 28];
+  const weekNames = ['Foundation', 'Build', 'Intensify', 'Consolidate'];
+  const rings = radii.map((radius, index) => {
+    const week = index + 1;
+    const state = week < currentWeek ? 'completed' : week === currentWeek ? 'current' : 'planned';
+    const progress = week < currentWeek ? 100 : week === currentWeek ? Math.round(weekProgress * 100) : 0;
+    return `<circle class="cycle-ring__track" cx="88" cy="88" r="${radius}" pathLength="100"></circle>
+      <circle class="cycle-ring__progress cycle-ring__progress--${state}" cx="88" cy="88" r="${radius}"
+        pathLength="100" stroke-dasharray="${progress} ${100 - progress}" data-week="${week}" data-state="${state}"></circle>`;
+  }).join('');
+  const description = `Cycle ${cycleNumber}, week ${currentWeek} of 4, ${weekNames[currentWeek - 1]}. Day ${safeDay} of 28.`;
+  if (size === 'text') {
+    return `<p class="four-week-cycle-text"><strong>Week ${currentWeek} of 4 · ${weekNames[currentWeek - 1]}</strong><span>Day ${safeDay} of 28 · Cycle ${cycleNumber}</span></p>`;
+  }
+  const legend = size === 'large' ? `<ol class="four-week-cycle__legend">
+    ${weekNames.map((name, index) => {
+      const week = index + 1;
+      const state = week < currentWeek ? 'completed' : week === currentWeek ? 'current' : 'planned';
+      const stateLabel = state === 'completed' ? 'Complete' : state === 'current' ? 'In progress' : 'Upcoming';
+      return `<li data-state="${state}"><span class="cycle-legend-marker" aria-hidden="true"></span><span><strong>${name}</strong><small>Week ${week} · ${stateLabel}</small></span></li>`;
+    }).join('')}
+  </ol>` : '';
+  return `<section class="four-week-cycle four-week-cycle--${size}" aria-label="${description}">
+    <div class="four-week-cycle__graphic" aria-hidden="true">
+      <svg class="cycle-rings" viewBox="0 0 176 176" focusable="false">${rings}</svg>
+      <div class="four-week-cycle__center"><span>Week ${currentWeek}</span><strong>${safeDay}<small>/28</small></strong><span>days</span></div>
+    </div>
+    <div class="four-week-cycle__copy"><span class="section-label">Current intention</span>
+      <strong>${weekNames[currentWeek - 1]}</strong><span>Cycle ${cycleNumber} · Week ${currentWeek}</span></div>
+    ${legend}
+    <p class="sr-only">${description}</p>
+  </section>`;
 }
 
 // ---- 1. First Launch --------------------------------------
@@ -129,8 +186,9 @@ export function renderFirstLaunch(App) {
   return `
     <div class="page page--no-nav fade-in">
       <div style="margin-top:24px;">
+        ${movementBrandLockup()}
         <div class="eyebrow">Welcome</div>
-        <h1 class="page-title" style="margin-top:8px;">Morning Circuit</h1>
+        <h1 class="page-title" style="margin-top:8px;">Movement</h1>
         <p class="page-subtitle" style="margin-top:12px;">
           Set up two flexible profiles. You can change everything later in Settings.
         </p>
@@ -183,13 +241,13 @@ function backupNudgeBanner(settings, sessions, dismissed) {
     : `Last backup ${daysSince} days ago. Tap to save a fresh copy.`;
 
   return `
-    <div style="margin-top:16px;padding:12px 14px;border:1px solid var(--yellow);
+    <div style="margin-top:16px;padding:12px 14px;border:1px solid var(--status-caution);
                 border-radius:12px;background:rgba(234,179,8,0.08);
                 display:flex;flex-direction:column;gap:10px;">
-      <div style="color:var(--yellow);font-size:0.9rem;font-weight:600;">⚠ ${msg}</div>
+      <div style="color:var(--status-caution);font-size:0.9rem;font-weight:600;">${uiGlyph('warning')} ${msg}</div>
       <div style="display:flex;gap:10px;">
         <button id="btn-hello-backup" class="btn btn--sm btn--secondary"
-                style="flex:1;min-height:44px;white-space:nowrap;border-color:var(--yellow);color:var(--yellow);">
+                style="flex:1;min-height:44px;white-space:nowrap;border-color:var(--status-caution);color:var(--status-caution);">
           Back up now</button>
         <button id="btn-hello-backup-later" class="btn btn--sm btn--ghost"
                 style="flex:0 0 auto;width:auto;min-height:44px;padding:0 20px;">Later</button>
@@ -205,12 +263,10 @@ export function renderHello(state, backupNudgeDismissed = false) {
   const spotifyUrl = safeSpotifyUrl(settings?.spotifyUrl);
   const helloSpotifyPill = (musicMode === 'spotify' && spotifyUrl)
     ? `<a href="${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener noreferrer" class="spotify-pill" title="Open in Spotify"
-         style="position:absolute;top:20px;right:0;">♫</a>`
+         style="position:absolute;top:20px;right:0;">${uiGlyph('music')}</a>`
     : '';
 
-  const dayNum = cycleState.startDate ? getCycleDayNumber(cycleState) : 1;
-
-  const cyclePct = Math.round((dayNum / 28) * 100);
+  const dayNum = cycleDayForDisplay(cycleState);
 
   const ELI_LABELS = {
     eli_upper_push:'Upper Push — Chest & Shoulders',
@@ -238,14 +294,13 @@ export function renderHello(state, backupNudgeDismissed = false) {
     <div class="page fade-in" style="display:flex;flex-direction:column;">
       ${backupNudgeBanner(settings, sessions, backupNudgeDismissed)}
       <div style="margin-top:20px;margin-bottom:10px;position:relative;">
+        ${movementBrandLockup()}
         <div class="eyebrow">Cycle ${cycleState.cycleNumber} · Day ${dayNum} of 28</div>
-        <h1 class="page-title" style="margin-top:4px;margin-bottom:0;">Good morning.</h1>
+        <h1 class="page-title" style="margin-top:4px;margin-bottom:0;">Welcome back.</h1>
         ${helloSpotifyPill}
       </div>
 
-      <div class="cycle-bar">
-        <div class="cycle-bar__fill" style="width:${cyclePct}%"></div>
-      </div>
+      ${fourWeekCycle(dayNum, cycleState.cycleNumber)}
 
       <div class="who-grid" style="margin-top:14px;flex:1;min-height:0;">
         <button class="who-card who-card--eli" data-who="eli">
@@ -263,7 +318,7 @@ export function renderHello(state, backupNudgeDismissed = false) {
       <button class="who-card who-card--both" data-who="both"
               style="margin-top:10px;width:100%;flex-direction:row;
                      gap:12px;padding:16px 20px;min-height:60px;">
-        <span style="font-size:1.5rem;">👥</span>
+        ${uiGlyph('paired')}
         <div style="text-align:left;">
           <div class="who-card__name" style="font-size:1rem;">Both Together</div>
           <div class="who-card__next">Paired session</div>
@@ -272,11 +327,11 @@ export function renderHello(state, backupNudgeDismissed = false) {
 
       <div class="hello-stats" style="margin-top:12px;">
         <div class="hello-stat">
-          <div class="hello-stat__value" style="color:var(--eli);">${eliSessions}</div>
+          <div class="hello-stat__value" style="color:var(--profile-a-accent);">${eliSessions}</div>
           <div class="hello-stat__label">${escapeHtml(settings.profiles.eli.displayName)} sessions</div>
         </div>
         <div class="hello-stat">
-          <div class="hello-stat__value" style="color:var(--christina);">${christSessions}</div>
+          <div class="hello-stat__value" style="color:var(--profile-b-accent);">${christSessions}</div>
           <div class="hello-stat__label">${escapeHtml(settings.profiles.christina.displayName)} sessions</div>
         </div>
         <div class="hello-stat">
@@ -346,10 +401,10 @@ export function renderMissedDays(missedDates) {
 export function renderLogToday(App) {
   const todayStr = today();
   const cats = [
-    { id:'skip_rest',   icon:'😴', label:'Skip / Rest'  },
-    { id:'vr_exercise', icon:'🎮', label:'VR Exercise'   },
-    { id:'adventure',   icon:'🌲', label:'Adventure'     },
-    { id:'other',       icon:'📝', label:'Other'         }
+    { id:'skip_rest',   icon:'rest', label:'Skip / Rest'  },
+    { id:'vr_exercise', icon:'motion', label:'VR Exercise' },
+    { id:'adventure',   icon:'path', label:'Adventure'     },
+    { id:'other',       icon:'note', label:'Other'         }
   ];
   return `
     <div class="page page--no-nav fade-in">
@@ -366,8 +421,8 @@ export function renderLogToday(App) {
         <button data-log-who="both" id="log-who-both"
           style="flex:1;padding:14px 8px;border-radius:12px;cursor:pointer;
                  font-size:0.95rem;font-weight:700;line-height:1.3;
-                 border:2px solid var(--eli);background:var(--eli-dim);color:var(--eli);">
-          👥<br>Both
+                 border:2px solid var(--action-primary);background:color-mix(in srgb, var(--action-primary) 12%, var(--surface));color:var(--action-primary);">
+          ${uiGlyph('paired')}<br>Both
         </button>
         <button data-log-who="eli" id="log-who-eli"
           style="flex:1;padding:14px 8px;border-radius:12px;cursor:pointer;
@@ -387,7 +442,7 @@ export function renderLogToday(App) {
       <div class="choice-grid choice-grid--2" style="gap:10px;">
         ${cats.map(c => `
           <button class="choice-btn" data-log="${c.id}" style="min-height:80px;">
-            <span class="choice-btn__icon">${c.icon}</span>
+            <span class="choice-btn__icon">${uiGlyph(c.icon)}</span>
             <span>${c.label}</span>
           </button>
         `).join('')}
@@ -420,9 +475,9 @@ export function renderSymptomCheck(App, userId = 'christina') {
 
       <div class="section-label">Today's pain level</div>
       <div class="pain-picker" id="pain-picker">
-        <button type="button" class="pain-btn selected" data-value="low"><span class="pain-btn__icon">😊</span>Low</button>
-        <button type="button" class="pain-btn" data-value="medium"><span class="pain-btn__icon">😐</span>Medium</button>
-        <button type="button" class="pain-btn" data-value="high"><span class="pain-btn__icon">😔</span>High</button>
+        <button type="button" class="pain-btn selected" data-value="low"><span class="pain-btn__icon">${uiGlyph('low')}</span>Low</button>
+        <button type="button" class="pain-btn" data-value="medium"><span class="pain-btn__icon">${uiGlyph('medium')}</span>Medium</button>
+        <button type="button" class="pain-btn" data-value="high"><span class="pain-btn__icon">${uiGlyph('high')}</span>High</button>
       </div>
 
       <div class="section-label">Muscle soreness</div>
@@ -440,7 +495,7 @@ export function renderSymptomCheck(App, userId = 'christina') {
       <div class="symptom-clusters">
         ${SYMPTOM_CLUSTERS.map(s => `
           <button class="symptom-cluster-btn" data-symptom="${s.id}">
-            <span class="symptom-cluster-btn__icon">${s.icon}</span>${s.label}
+            <span class="symptom-cluster-btn__icon">${uiGlyph(s.icon)}</span>${s.label}
           </button>
         `).join('')}
       </div>
@@ -465,7 +520,7 @@ function buildExerciseListHTML(exercises, user) {
           label ?? null
         ].filter(Boolean).join(' · ');
         const anchorBadge = ex.isAnchor
-          ? `<span class="anchor-badge" title="Track progression on this lift">⚓ Cycle anchor</span>`
+          ? `<span class="anchor-badge" title="Track progression on this lift">${uiGlyph('anchor')} Cycle anchor</span>`
           : '';
         const swappable = (ex.poolIds?.length ?? 0) > 1;
         const swappedBadge = ex.isSwapped
@@ -487,10 +542,18 @@ function buildExerciseListHTML(exercises, user) {
 }
 
 function capacityAdjustmentHTML(adjustment, userId, choices = {}, resolvedChoice = null) {
-  if (!adjustment?.changed || resolvedChoice) return '';
+  if (!adjustment?.changed) return '';
   const explanation = adjustment.reasons?.length
     ? adjustment.reasons.join('; ') : 'today’s capacity suggests a lighter plan';
   const c = adjustment.comparison ?? {};
+  if (resolvedChoice) {
+    const resolvedLabel = resolvedChoice === 'original' ? 'Original plan selected' : 'Recommended plan selected';
+    const count = resolvedChoice === 'original' ? c.originalCount : c.recommendedCount;
+    return `<div class="capacity-resolution" role="status">
+      <div><strong>${resolvedLabel}</strong><span>${count} exercise${count === 1 ? '' : 's'} · Your choice is ready.</span></div>
+      <button class="btn btn--sm btn--ghost" id="btn-${userId}-review-capacity">Review choices</button>
+    </div>`;
+  }
   const rows = [
     ['length', 'Exercises', c.originalCount, c.recommendedCount],
     ['volume', 'Sets / reps', 'Original', c.recommendedReps ? `−${c.setReduction} set · ${c.recommendedReps}` : 'Original'],
@@ -500,13 +563,14 @@ function capacityAdjustmentHTML(adjustment, userId, choices = {}, resolvedChoice
   const choiceButton = (dimension, mode, label) => {
     const selected = (choices[dimension] ?? 'recommended') === mode;
     return `<button class="mode-btn ${selected ? 'active' : ''}" data-capacity-user="${userId}"
-      data-capacity-dimension="${dimension}" data-capacity-mode="${mode}" aria-pressed="${selected}">${escapeHtml(String(label))}</button>`;
+      data-capacity-dimension="${dimension}" data-capacity-mode="${mode}" aria-pressed="${selected}">
+      <span>${mode === 'original' ? 'Original plan' : 'Recommended today'}</span><strong>${escapeHtml(String(label))}</strong></button>`;
   };
   return `<div class="symptom-flag-summary" style="margin-bottom:10px;">
-    <strong>Suggested change:</strong> ${escapeHtml(explanation)}.
-    ${rows.length > 1 ? 'Mix the options below, or choose one complete plan.' : 'Choose the original or suggested plan.'}
+    <strong>Today’s recommendation:</strong> ${escapeHtml(explanation)}.
+    Your original plan remains available. ${rows.length > 1 ? 'Choose by row, or apply one complete plan.' : 'Choose either version below.'}
     <div style="margin-top:10px;border-top:1px solid var(--border);">
-      ${rows.map(([dimension,label,original,recommended]) => `<div class="setting-row" style="padding:9px 0;gap:8px;">
+      ${rows.map(([dimension,label,original,recommended]) => `<div class="setting-row capacity-choice-row" style="padding:9px 0;gap:8px;">
         <div style="min-width:86px;"><div class="setting-row__label">${label}</div></div>
         <div class="mode-toggle" style="margin-left:auto;">${choiceButton(dimension,'original',original)}${choiceButton(dimension,'recommended',recommended)}</div>
       </div>`).join('')}
@@ -515,6 +579,44 @@ function capacityAdjustmentHTML(adjustment, userId, choices = {}, resolvedChoice
       <button class="btn btn--sm btn--secondary" id="btn-${userId}-recommended">Use all recommended</button>
       <button class="btn btn--sm btn--ghost" id="btn-${userId}-original">Use all original</button>
     </div>
+  </div>`;
+}
+
+const STRENGTH_ROUTINE_CHOICES = {
+  eli: [
+    ['eli_upper_push', 'eli_upper_push', 'Upper Push'],
+    ['eli_upper_pull', 'eli_upper_pull', 'Upper Pull'],
+    ['eli_lower_body', 'eli_lower_body', 'Lower Body'],
+    ['eli_full_body', 'eli_full_body', 'Full Body']
+  ],
+  christina: [
+    ['christina_gentle_upper', 'eli_upper_push', 'Upper Push'],
+    ['christina_gentle_pull_posture', 'eli_upper_pull', 'Upper Pull'],
+    ['christina_gentle_lower', 'eli_lower_body', 'Lower Body'],
+    ['christina_gentle_full_body', 'eli_full_body', 'Full Body']
+  ]
+};
+
+function routineDefaultCount(routineTemplates, templateId) {
+  const count = routineTemplates?.find(template => template.id === templateId)?.slots?.length;
+  return Number.isFinite(count) ? count : null;
+}
+
+function routineCountLabel(routineTemplates, templateId) {
+  const count = routineDefaultCount(routineTemplates, templateId);
+  return count == null ? '' : `${count} exercise${count === 1 ? '' : 's'}`;
+}
+
+function strengthRoutineChooser(userId, selectedRoutine, routineTemplates) {
+  const options = STRENGTH_ROUTINE_CHOICES[userId] ?? [];
+  return `<div class="strength-routine-chooser">
+    <div class="strength-routine-chooser__heading"><strong>Strength routine</strong><span>The rotation is recommended; you can choose any area.</span></div>
+    <div class="strength-routine-grid">${options.map(([id, templateId, label]) => `
+      <button class="strength-routine-btn ${selectedRoutine?.id === id ? 'selected' : ''}" data-user="${userId}"
+        data-id="${id}" data-template-id="${templateId}" data-label="${label}" data-type="heavy_weight"${userId === 'christina' ? ' data-adaptation="normal"' : ''}>
+        <span class="strength-routine-btn__label">${label}<small>${routineCountLabel(routineTemplates, templateId)} default</small></span>
+        ${selectedRoutine?.id === id ? '<span class="strength-routine-btn__state">Current</span>' : ''}
+      </button>`).join('')}</div>
   </div>`;
 }
 
@@ -555,14 +657,15 @@ function buildEquipmentSummaryHTML(eliExercisePlan, christinaExercisePlan, allEq
 export function renderRoutineSuggestion(App) {
   const { ui, data } = App;
   const { selectedUsers, eliSuggestion, christinaSuggestion, conflicts,
-          eliExercisePlan, christinaExercisePlan, eliAnchors } = ui;
+          eliExercisePlan, christinaExercisePlan, eliAnchors,
+          selectedEliRoutine, selectedChristinaRoutine } = ui;
 
   const equipmentSummary = buildEquipmentSummaryHTML(eliExercisePlan, christinaExercisePlan, data?.equipment);
 
   const anchorLine = eliAnchors?.length
     ? `<div class="anchor-line">
          <span class="anchor-line__label">This cycle's anchors:</span>
-         ${eliAnchors.map(n => `<span class="anchor-pill">⚓ ${escapeHtml(n)}</span>`).join('')}
+         ${eliAnchors.map(n => `<span class="anchor-pill">${uiGlyph('anchor')} ${escapeHtml(n)}</span>`).join('')}
        </div>`
     : '';
 
@@ -571,23 +674,24 @@ export function renderRoutineSuggestion(App) {
       <div class="section-label" style="margin-bottom:12px;">${userLabel(App, 'eli')}</div>
       <div class="suggestion-card suggestion-card--eli">
         <div class="eyebrow" style="margin-bottom:6px;">
-          ${eliSuggestion.primary.type === 'heavy_weight' ? '🏋️ Heavy' : '⚡ Circuit'}
-          ${eliSuggestion.heavyBlocked ? ' &nbsp;<span style="color:var(--yellow);">Break day required</span>' : ''}
+          ${selectedEliRoutine?.type === 'heavy_weight' ? `${uiGlyph('strength')} Strength` : `${uiGlyph('adapt')} Alternate practice`}
+          ${eliSuggestion.heavyBlocked ? ' &nbsp;<span style="color:var(--status-caution);">Break day required</span>' : ''}
         </div>
-        <div class="suggestion-card__routine">${escapeHtml(eliSuggestion.primary.label)}</div>
-        <div class="suggestion-card__reason">${escapeHtml(eliSuggestion.primary.reason)}</div>
+        <div class="suggestion-card__routine">${escapeHtml(selectedEliRoutine?.label ?? eliSuggestion.primary.label)}</div>
+        <div class="suggestion-card__reason">${escapeHtml(selectedEliRoutine?.id === eliSuggestion.primary.id ? eliSuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
         ${strengthRestHTML(eliSuggestion)}
         ${capacityAdjustmentHTML(ui.eliCapacityAdjustment, 'eli', ui.capacityDimensionChoices?.eli, ui.capacityChoiceByUser?.eli)}
         ${workoutCountHTML(eliExercisePlan)}
         ${anchorLine}
         ${buildExerciseListHTML(eliExercisePlan, 'eli')}
         <p class="text-muted text-sm" style="margin-top:4px;">Tap an exercise to swap it.</p>
+        ${strengthRoutineChooser('eli', selectedEliRoutine, data?.routineTemplates)}
         <button class="alternatives-toggle" id="eli-alt-toggle">Change routine <span>→</span></button>
         <div id="eli-alternatives" class="${eliSuggestion.heavyBlocked ? '' : 'hidden'}">
           <div class="alternatives" style="margin-top:6px;">
             ${eliSuggestion.alternatives.map(alt => `
-              <button class="alt-btn" data-user="eli" data-id="${alt.id}" data-type="${alt.type ?? ''}">
-                ${escapeHtml(alt.label)}<span style="color:var(--text-3);">›</span>
+              <button class="alt-btn" data-user="eli" data-id="${alt.id}" data-label="${escapeHtml(alt.label)}" data-type="${alt.type ?? ''}">
+                <span>${escapeHtml(alt.label)}${routineCountLabel(data?.routineTemplates, alt.id) ? `<small class="routine-default-count">${routineCountLabel(data?.routineTemplates, alt.id)} default</small>` : ''}</span><span style="color:var(--movement-text-on-paper-muted);">›</span>
               </button>
             `).join('')}
           </div>
@@ -601,28 +705,29 @@ export function renderRoutineSuggestion(App) {
       <div class="section-label" style="margin-bottom:12px;">${userLabel(App, 'christina')}</div>
       <div class="suggestion-card suggestion-card--christina">
         <div class="eyebrow eyebrow--christina" style="margin-bottom:6px;">
-          ${christinaSuggestion.primary.adaptationLevel === 'recovery' ? 'Recovery'
-            : christinaSuggestion.primary.adaptationLevel === 'reduced' ? 'Adapted'
-            : 'Gentle Strength'}
+          ${selectedChristinaRoutine?.level === 'recovery' ? 'Recovery'
+            : selectedChristinaRoutine?.level === 'reduced' ? 'Adapted'
+            : selectedChristinaRoutine?.templateId?.startsWith('eli_') ? 'Strength' : 'Gentle practice'}
         </div>
-        <div class="suggestion-card__routine">${escapeHtml(christinaSuggestion.primary.label)}</div>
-        <div class="suggestion-card__reason">${escapeHtml(christinaSuggestion.primary.reason)}</div>
+        <div class="suggestion-card__routine">${escapeHtml(selectedChristinaRoutine?.label ?? christinaSuggestion.primary.label)}</div>
+        <div class="suggestion-card__reason">${escapeHtml(selectedChristinaRoutine?.id === christinaSuggestion.primary.id ? christinaSuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
         ${strengthRestHTML(christinaSuggestion)}
         ${capacityAdjustmentHTML(ui.christinaCapacityAdjustment, 'christina', ui.capacityDimensionChoices?.christina, ui.capacityChoiceByUser?.christina)}
         ${workoutCountHTML(christinaExercisePlan)}
         ${(() => {
           const n = (christinaExercisePlan ?? []).filter(e => e.symptomConflicts?.length).length;
-          return n ? `<div class="symptom-flag-summary">⚠ ${n} exercise${n>1?'s':''} flagged for today's symptoms — review below, do or swap as feels right.</div>` : '';
+          return n ? `<div class="symptom-flag-summary">${uiGlyph('warning')} ${n} exercise${n>1?'s':''} flagged for today's symptoms — review below, do or swap as feels right.</div>` : '';
         })()}
         ${buildExerciseListHTML(christinaExercisePlan, 'christina')}
         <p class="text-muted text-sm" style="margin-top:4px;">Tap an exercise to swap it.</p>
+        ${strengthRoutineChooser('christina', selectedChristinaRoutine, data?.routineTemplates)}
         <button class="alternatives-toggle" id="christina-alt-toggle">Change routine <span>→</span></button>
         <div id="christina-alternatives" class="${christinaSuggestion.heavyBlocked ? '' : 'hidden'}">
           <div class="alternatives" style="margin-top:6px;">
             ${christinaSuggestion.alternatives.map(alt => `
               <button class="alt-btn" data-user="christina" data-id="${alt.id}"
-                      data-adaptation="${alt.adaptationLevel ?? ''}">
-                ${escapeHtml(alt.label)}<span style="color:var(--text-3);">›</span>
+                      data-label="${escapeHtml(alt.label)}" data-adaptation="${alt.adaptationLevel ?? ''}">
+                <span>${escapeHtml(alt.label)}${routineCountLabel(data?.routineTemplates, alt.id) ? `<small class="routine-default-count">${routineCountLabel(data?.routineTemplates, alt.id)} default</small>` : ''}</span><span style="color:var(--movement-text-on-paper-muted);">›</span>
               </button>
             `).join('')}
           </div>
@@ -635,7 +740,7 @@ export function renderRoutineSuggestion(App) {
     <div style="margin-top:16px;">
       ${conflicts.map(c => `
         <div class="conflict-banner">
-          <span class="conflict-banner__icon">⚠️</span>
+          <span class="conflict-banner__icon">${uiGlyph('warning')}</span>
           <div class="conflict-banner__text">
             <strong>Heads up:</strong> ${escapeHtml(c.suggestion)}
           </div>
@@ -673,7 +778,7 @@ export function renderWarmup() {
         Five minutes together — sun salutations or gentle stretching,
         whatever feels right this morning.
       </p>
-      <div class="meditation-orb">🌅</div>
+      <div class="meditation-orb">${uiGlyph('breath')}</div>
       <div id="warmup-start-wrap" style="text-align:center;">
         <button class="btn btn--primary" id="btn-warmup-begin" style="min-width:200px;">Begin Warm-Up</button>
         <div style="margin-top:12px;">
@@ -787,11 +892,11 @@ function renderSingleUserPanel(ws, user) {
     : `Set ${setsDone + 1} of ${totalSets}`;
 
   const adaptNote = ex.adaptationNote
-    ? `<div style="font-size:0.7rem;color:var(--yellow);margin-bottom:6px;">⚡ ${escapeHtml(ex.adaptationNote)}</div>`
+    ? `<div style="font-size:0.7rem;color:var(--movement-accent-adaptation);margin-bottom:6px;">${uiGlyph('adapt')} ${escapeHtml(ex.adaptationNote)}</div>`
     : '';
 
   const anchorBadge = ex.isAnchor
-    ? `<span class="anchor-badge anchor-badge--runner" title="Track progression on this lift">⚓ Cycle anchor</span>`
+    ? `<span class="anchor-badge anchor-badge--runner" title="Track progression on this lift">${uiGlyph('anchor')} Cycle anchor</span>`
     : '';
 
   const completeLabel = us.workoutStructure === 'circuit'
@@ -852,8 +957,10 @@ export function renderWorkoutRunner(App) {
   const musicMode  = App.state?.settings?.musicMode ?? 'spotify';
   const spotifyUrl = safeSpotifyUrl(App.state?.settings?.spotifyUrl);
   const spotifyPill = (musicMode === 'spotify' && spotifyUrl)
-    ? `<a href="${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener noreferrer" class="spotify-pill" title="Open in Spotify">♫</a>`
+    ? `<a href="${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener noreferrer" class="spotify-pill" title="Open in Spotify">${uiGlyph('music')}</a>`
     : '';
+  const cycleDay = cycleDayForDisplay(App.state?.cycleState);
+  const compactCycle = fourWeekCycle(cycleDay, App.state?.cycleState?.cycleNumber ?? 1, 'compact');
 
   // ---- BOTH: side-by-side ----
   if (mode === 'both') {
@@ -865,6 +972,7 @@ export function renderWorkoutRunner(App) {
     return `
       <div class="workout-screen">
         <div class="workout-header">
+          ${compactCycle}
           <span class="workout-header__label">
             ${ws.eli.completed ? '✓' : eliProgress} &nbsp;·&nbsp; ${ws.christina.completed ? '✓' : cProgress}
           </span>
@@ -908,10 +1016,10 @@ export function renderWorkoutRunner(App) {
          </div>
        </div>` : '';
   const adaptNote = ex.adaptationNote
-    ? `<div class="adaptation-note">⚡ ${escapeHtml(ex.adaptationNote)}</div>` : '';
+    ? `<div class="adaptation-note">${uiGlyph('adapt')} ${escapeHtml(ex.adaptationNote)}</div>` : '';
 
   const anchorBadge = ex.isAnchor
-    ? `<span class="anchor-badge anchor-badge--runner">⚓ Cycle anchor</span>`
+    ? `<span class="anchor-badge anchor-badge--runner">${uiGlyph('anchor')} Cycle anchor</span>`
     : '';
 
   const circuitLabel = us.workoutStructure === 'circuit'
@@ -921,6 +1029,7 @@ export function renderWorkoutRunner(App) {
   return `
     <div class="workout-screen">
       <div class="workout-header">
+        ${compactCycle}
         <span class="workout-header__label">
           ${userLabel(App, user)} · Ex ${exNum}/${exTotal}
         </span>
@@ -964,7 +1073,7 @@ function renderBothDone() {
   return `
     <div class="workout-screen">
       <div class="workout-body" style="align-items:center;justify-content:center;text-align:center;padding-top:64px;">
-        <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+        <div class="completion-seal" aria-hidden="true">Complete</div>
         <div class="page-title" style="margin-bottom:8px;">All done!</div>
         <p class="page-subtitle" style="margin-bottom:32px;">Great work today.</p>
         <button class="btn btn--primary" id="btn-finish-workout">Finish &amp; Check In</button>
@@ -1036,7 +1145,7 @@ export function renderEndCheckin(App) {
   ].filter(Boolean).join('');
 
   const summaryCard = summaryLines ? `
-    <div class="card" style="margin-bottom:24px;font-size:0.875rem;line-height:1.7;">
+    <div class="card card--document" style="margin-bottom:24px;font-size:0.875rem;line-height:1.7;">
       ${summaryLines}
     </div>
   ` : '';
@@ -1100,14 +1209,14 @@ export function renderMeditation() {
         <p class="page-subtitle" style="max-width:300px;margin:8px auto 0;">
           Close out with a few quiet minutes, or skip and save.
         </p>
-        <div class="meditation-orb">🧘</div>
+        <div class="meditation-orb">${uiGlyph('breath')}</div>
         <div class="choice-grid choice-grid--3" style="width:100%;">
           <button class="choice-btn" data-med="5">
             <span class="choice-btn__icon">5</span>Minutes
             <span class="choice-btn__hint">Recommended</span>
           </button>
           <button class="choice-btn" data-med="10"><span class="choice-btn__icon">10</span>Minutes</button>
-          <button class="choice-btn" data-med="skip"><span class="choice-btn__icon">⏭</span>Skip and save</button>
+          <button class="choice-btn" data-med="skip"><span class="choice-btn__icon">${uiGlyph('skip')}</span>Skip and save</button>
         </div>
         <div id="med-timer-wrap" style="display:none;text-align:center;margin-top:32px;">
           <div class="meditation-timer" id="med-timer">--:--</div>
@@ -1141,9 +1250,9 @@ export function renderSessionSummary(App) {
     : '';
 
   const summaryCard = (eliLine || cLine || snap.meditation?.completed)
-    ? `<div class="card" style="font-size:0.875rem;line-height:1.8;color:var(--text-2);">
+    ? `<div class="card card--document" style="font-size:0.875rem;line-height:1.8;color:var(--movement-text-on-paper-muted);">
          ${eliLine}${cLine}
-         ${snap.meditation?.completed ? `<div>🧘 Meditation: ${snap.meditation.durationMinutes} min</div>` : ''}
+         ${snap.meditation?.completed ? `<div>${uiGlyph('breath')} Meditation: ${snap.meditation.durationMinutes} min</div>` : ''}
        </div>`
     : '';
 
@@ -1161,7 +1270,7 @@ export function renderSessionSummary(App) {
   return `
     <div class="page fade-in" style="padding-bottom:80px;">
       <div class="summary-hero">
-        <div class="summary-hero__icon">✅</div>
+        <div class="summary-hero__icon">${uiGlyph('complete')}</div>
         <div class="summary-hero__title">Session saved.</div>
         <div class="summary-hero__sub">${snap.date ? formatDate(snap.date) : 'Today'}</div>
       </div>
@@ -1227,8 +1336,14 @@ export function renderReports(App) {
 
   return `
     <div class="page fade-in" style="padding-bottom:80px;">
-      <h1 class="page-title" style="margin-top:8px;">Tracker</h1>
+      ${movementBrandLockup(true)}
+      <h1 class="page-title" style="margin-top:14px;">Tracker</h1>
       <p class="page-subtitle" style="margin-bottom:24px;">Cycle ${cycleState.cycleNumber} · ${sessions.length} sessions total</p>
+
+      ${new URLSearchParams(window.location.search).get('cycle-demo') === 'week3' ? '<div class="demo-preview-note">Week 3 preview · Display-only sample data</div>' : ''}
+      ${fourWeekCycle(cycleDayForDisplay(cycleState), cycleState.cycleNumber, 'large')}
+      ${fourWeekCycle(cycleDayForDisplay(cycleState), cycleState.cycleNumber, 'text')}
+      <div class="divider"></div>
 
       <div class="section-label" style="margin-bottom:12px;">This Month</div>
       ${calHTML}
@@ -1242,10 +1357,10 @@ export function renderReports(App) {
       ${progressionHTML}
       <div class="divider"></div>
       <div class="section-label" style="margin-bottom:12px;">Export</div>
-      <button class="btn btn--secondary" id="btn-export-month-csv">📄 Export Month as CSV</button>
-      <button class="btn btn--secondary" id="btn-export-month-md" style="margin-top:8px;">📝 Export Month as Markdown</button>
-      <button class="btn btn--secondary" id="btn-export-cycle" style="margin-top:8px;">📊 Export Cycle Review</button>
-      <button class="btn btn--secondary" id="btn-export-json" style="margin-top:8px;">💾 Full JSON Backup</button>
+      <button class="btn btn--secondary" id="btn-export-month-csv">${uiGlyph('document')} Export Month as CSV</button>
+      <button class="btn btn--secondary" id="btn-export-month-md" style="margin-top:8px;">${uiGlyph('note')} Export Month as Markdown</button>
+      <button class="btn btn--secondary" id="btn-export-cycle" style="margin-top:8px;">${uiGlyph('cycle')} Export Cycle Review</button>
+      <button class="btn btn--secondary" id="btn-export-json" style="margin-top:8px;">${uiGlyph('archive')} Full JSON Backup</button>
     </div>
     ${bottomNav('reports')}
   `;
@@ -1277,7 +1392,7 @@ export function renderCycleReview(App) {
           <div>
             <div class="setting-row__label">Working weight — all lifts</div>
             <div class="setting-row__desc" id="progression-desc-baseline">
-              ${baselineRow.currentKg}kg <span id="progression-arrow-baseline">→ <strong style="color:var(--eli);">${baselineRow.suggestedKg}kg</strong> across all lifts, reps restart</span>
+              ${baselineRow.currentKg}kg <span id="progression-arrow-baseline">→ <strong style="color:var(--action-primary);">${baselineRow.suggestedKg}kg</strong> across all lifts, reps restart</span>
             </div>
           </div>
           <button class="btn btn--sm btn--eli"
@@ -1325,7 +1440,7 @@ export function renderCycleReview(App) {
 
   return `
     <div class="page page--no-nav fade-in" style="padding-bottom:110px;">
-      <div class="eyebrow">Cycle ${cycleState.cycleNumber} Complete 🎉</div>
+      <div class="eyebrow">Cycle ${cycleState.cycleNumber} Complete</div>
       <h1 class="page-title" style="margin-top:6px;">Nice work this cycle.</h1>
       <p class="page-subtitle" style="margin-bottom:20px;">${formatDate(cycleState.startDate)} – ${formatDate(cycleState.endDate)}</p>
 
@@ -1406,13 +1521,10 @@ function renderProfileCard(App, userId) {
           <input class="input" id="profile-name-${userId}" value="${escapeHtml(p.displayName)}" style="max-width:240px;" aria-label="Profile name">
         </div>
       </div>
-      <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
-        <div class="setting-row__label">Profile icon</div>
-        <div class="mode-toggle" role="group" aria-label="${escapeHtml(p.displayName)} profile icon" style="flex-wrap:wrap;">
-          ${PROFILE_ICONS.map(icon => `<button class="mode-btn ${p.icon === icon ? 'active' : ''}"
-            data-profile-icon="${userId}" data-icon="${icon}" aria-label="Use ${icon}"
-            aria-pressed="${p.icon === icon}">${icon}</button>`).join('')}
-        </div>
+      <div class="setting-row">
+        <div>${userIcon(App, userId)}</div>
+        <div style="flex:1;margin-left:10px;"><div class="setting-row__label">Profile mark</div>
+          <div class="setting-row__desc">A consistent seal keeps profile identity clear without relying on imagery.</div></div>
       </div>
       <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:12px;">
         <div class="setting-row__label">Training goals</div>
@@ -1493,10 +1605,10 @@ export function renderSettings(App) {
       <h1 class="page-title" style="margin-top:8px;">Settings</h1>
       <p class="page-subtitle" style="margin-bottom:24px;">App configuration.</p>
 
-      <div class="card" style="border-color:var(--yellow);">
+      <div class="card" style="border-color:var(--status-caution);">
         <div class="setting-row__label">Health &amp; safety</div>
         <div class="setting-row__desc" style="margin-top:6px;line-height:1.55;">
-          Morning Circuit provides app-defined training suggestions, not medical advice.
+          Movement provides app-defined training suggestions, not medical advice.
           Stop exercising and seek appropriate medical help for chest pain, faintness,
           sharp pain, or severe or new symptoms.
         </div>
@@ -1514,9 +1626,9 @@ export function renderSettings(App) {
           </div>
           <div class="mode-toggle" role="group" aria-label="Appearance theme">
             <button class="mode-btn ${theme==='day'?'active':''}" id="btn-theme-day"
-                    aria-pressed="${theme==='day'}">☀️ Day</button>
+                    aria-pressed="${theme==='day'}">${uiGlyph('light')} Day</button>
             <button class="mode-btn ${theme==='night'?'active':''}" id="btn-theme-night"
-                    aria-pressed="${theme==='night'}">🌙 Night</button>
+                    aria-pressed="${theme==='night'}">${uiGlyph('night')} Night</button>
           </div>
         </div>
       </div>
@@ -1569,16 +1681,16 @@ export function renderSettings(App) {
             <div class="setting-row__label">Music during workout</div>
             <div class="setting-row__desc">
               ${mode === 'spotify'
-                ? 'Spotify mode — ♫ pill opens your playlist. No chimes.'
+                ? 'Spotify mode — the music button opens your playlist. No chimes.'
                 : 'Chime mode — marimba plays at end of every rest and exercise timer.'}
             </div>
           </div>
           <div class="mode-toggle">
             <button class="mode-btn ${mode==='spotify'?'active':''}" id="btn-mode-spotify">
-              🎵 Spotify
+              ${uiGlyph('music')} Spotify
             </button>
             <button class="mode-btn ${mode==='chimes'?'active':''}" id="btn-mode-chimes">
-              🔔 Chimes
+              ${uiGlyph('chime')} Chimes
             </button>
           </div>
           ${mode === 'spotify' ? `

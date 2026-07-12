@@ -1,6 +1,6 @@
-# Morning Circuit
+# Movement Practice
 
-A static, local-first workout tracker for two profiles. It includes routine rotation, timers, symptom check-ins, cycle reports, and JSON/CSV/Markdown exports.
+A static, local-first movement practice tracker for two profiles. It includes routine rotation, timers, capacity check-ins, four-week cycle reports, and JSON/CSV/Markdown exports.
 
 ## Privacy and backups
 

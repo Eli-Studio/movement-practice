@@ -555,8 +555,8 @@ export function renderStrengthProgressChart(containerId, strengthData) {
       fillPct = 0;
     } else if (p > 0) {
       state = 'positive';
-      badge = `<span style="color:var(--pos);font-weight:600;">+${p}%</span>`;
-      barColor = 'var(--eli)';
+      badge = `<span style="color:var(--status-positive);font-weight:600;">+${p}%</span>`;
+      barColor = 'var(--status-positive)';
       fillPct = Math.min(p / PROGRESS_FULL_PCT * 100, 100);
     } else if (p === 0) {
       state = 'neutral';
@@ -565,8 +565,8 @@ export function renderStrengthProgressChart(containerId, strengthData) {
       fillPct = 0;
     } else {
       state = 'caution';
-      badge = `<span style="color:var(--neg);font-weight:600;">${p}%</span>`;
-      barColor = 'var(--neg)';
+      badge = `<span style="color:var(--status-critical);font-weight:600;">${p}%</span>`;
+      barColor = 'var(--status-critical)';
       fillPct = Math.min(Math.abs(p) / PROGRESS_FULL_PCT * 100, 100);
     }
 
@@ -580,7 +580,7 @@ export function renderStrengthProgressChart(containerId, strengthData) {
         ? ex.jointLocations.join(' / ')
         : (JOINT_LABELS[ex.jointSeverity] || 'Joint');
       const sharp = ex.jointSeverity === 'sharp_concerning';
-      const tagColor = sharp ? 'var(--neg)' : 'var(--text-2)';
+      const tagColor = sharp ? 'var(--status-critical)' : 'var(--text-2)';
       const tagBg    = sharp ? 'rgba(248,113,113,0.12)' : 'rgba(255,255,255,0.05)';
       jointTag = `<span title="Joint sensitivity logged this cycle (${JOINT_LABELS[ex.jointSeverity] || ex.jointSeverity})"
         style="font-size:0.6rem;color:${tagColor};background:${tagBg};padding:1px 6px;border-radius:8px;">${esc(locs)}</span>`;
@@ -642,9 +642,9 @@ export function renderMuscleMapChart(containerId, muscleData) {
   function level(sets) { return sets >= 16 ? 'high' : sets >= 10 ? 'strong' : sets >= 4 ? 'moderate' : 'low'; }
   const STYLE = {
     low:      {bg:'rgba(148,163,184,0.08)', txt:'var(--muted-soft)', lbl:'Low'},
-    moderate: {bg:'rgba(59,130,246,0.15)',  txt:'var(--info)', lbl:'Moderate'},
-    strong:   {bg:'rgba(16,185,129,0.2)',   txt:'var(--pos-soft)', lbl:'Strong'},
-    high:     {bg:'rgba(249,115,22,0.2)',   txt:'var(--orange)', lbl:'High'}
+    moderate: {bg:'color-mix(in srgb, var(--status-info) 15%, transparent)', txt:'var(--status-info)', lbl:'Moderate'},
+    strong: {bg:'color-mix(in srgb, var(--status-positive) 20%, transparent)', txt:'var(--status-positive-strong)', lbl:'Strong'},
+    high: {bg:'color-mix(in srgb, var(--status-warm) 20%, transparent)', txt:'var(--status-warm)', lbl:'High'}
   };
 
   const cells = GROUPS.map(g => {
@@ -676,11 +676,11 @@ export function renderReadinessCard(containerId, data, user) {
   }
 
   const STATUS = {
-    green:  {bg:'rgba(74,222,128,0.1)',  border:'rgba(74,222,128,0.3)',  txt:'var(--pos)', lbl:'Fewer Flags', icon:'✓'},
-    yellow: {bg:'rgba(251,191,36,0.1)',  border:'rgba(251,191,36,0.3)',  txt:'var(--warn)', lbl:'Maintain & Monitor', icon:'~'},
-    red:    {bg:'rgba(248,113,113,0.1)', border:'rgba(248,113,113,0.3)', txt:'var(--neg)', lbl:'More Flags', icon:'↓'}
+    green: {bg:'color-mix(in srgb, var(--status-positive) 10%, transparent)', border:'color-mix(in srgb, var(--status-positive) 30%, transparent)', txt:'var(--status-positive)', lbl:'Fewer Flags', icon:'✓'},
+    yellow: {bg:'color-mix(in srgb, var(--status-caution) 10%, transparent)', border:'color-mix(in srgb, var(--status-caution) 30%, transparent)', txt:'var(--status-caution)', lbl:'Maintain & Monitor', icon:'~'},
+    red: {bg:'color-mix(in srgb, var(--status-critical) 10%, transparent)', border:'color-mix(in srgb, var(--status-critical) 30%, transparent)', txt:'var(--status-critical)', lbl:'More Flags', icon:'↓'}
   };
-  const DOT = {green:'var(--pos)', yellow:'var(--warn)', red:'var(--neg)'};
+  const DOT = {green:'var(--status-positive)', yellow:'var(--status-caution)', red:'var(--status-critical)'};
   const s = STATUS[data.overall];
 
   const rows = data.factors.map(f => `
@@ -875,9 +875,9 @@ export function renderChristinaMovementExposureMap(containerId, movementData) {
 
   const STYLE = {
     low:      { bg: 'rgba(148,163,184,0.08)', txt: 'var(--muted-soft)', lbl: 'Low' },
-    moderate: { bg: 'rgba(129,140,248,0.15)', txt: 'var(--christina-light)', lbl: 'Moderate' },
-    strong:   { bg: 'rgba(16,185,129,0.16)',  txt: 'var(--pos-soft)', lbl: 'Strong' },
-    high:     { bg: 'rgba(249,115,22,0.18)',  txt: 'var(--orange)', lbl: 'High' }
+    moderate: { bg: 'color-mix(in srgb, var(--profile-b-accent) 15%, transparent)', txt: 'var(--profile-b-accent-strong)', lbl: 'Moderate' },
+    strong: { bg: 'color-mix(in srgb, var(--status-positive) 16%, transparent)', txt: 'var(--status-positive-strong)', lbl: 'Strong' },
+    high: { bg: 'color-mix(in srgb, var(--status-warm) 18%, transparent)', txt: 'var(--status-warm)', lbl: 'High' }
   };
 
   const cells = CHRISTINA_MOVEMENT_GROUPS.map(g => {
@@ -972,9 +972,9 @@ export function renderChristinaSymptomCalendarHTML(year, month, symptomData) {
 
   const STYLE = {
     none:   { bg: 'rgba(255,255,255,0.03)', border: 'rgba(255,255,255,0.06)', txt: 'var(--text-3)' },
-    low:    { bg: 'rgba(129,140,248,0.12)', border: 'rgba(129,140,248,0.24)', txt: 'var(--christina-light)' },
-    medium: { bg: 'rgba(251,191,36,0.13)',  border: 'rgba(251,191,36,0.28)',  txt: 'var(--warn)' },
-    high:   { bg: 'rgba(248,113,113,0.14)', border: 'rgba(248,113,113,0.3)',  txt: 'var(--neg)' }
+    low: { bg: 'color-mix(in srgb, var(--profile-b-accent) 12%, transparent)', border: 'color-mix(in srgb, var(--profile-b-accent) 24%, transparent)', txt: 'var(--profile-b-accent-strong)' },
+    medium: { bg: 'color-mix(in srgb, var(--status-caution) 13%, transparent)', border: 'color-mix(in srgb, var(--status-caution) 28%, transparent)', txt: 'var(--status-caution)' },
+    high: { bg: 'color-mix(in srgb, var(--status-critical) 14%, transparent)', border: 'color-mix(in srgb, var(--status-critical) 30%, transparent)', txt: 'var(--status-critical)' }
   };
 
   function marker(level) {
