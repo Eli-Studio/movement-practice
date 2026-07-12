@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <title>Morning Circuit</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Morning Circuit">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#090c14">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Apply saved theme before first paint to avoid a flash of the wrong theme.
+       Mirrors settings.theme in localStorage['morningCircuit']. Night is default. -->
+  <script>
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('morningCircuit') || '{}');
+        var t = (s.settings && s.settings.theme) === 'day' ? 'day' : 'night';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'night');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="app" role="main">
+    <div class="loading-screen" id="loading" role="status" aria-live="polite" aria-label="Loading Morning Circuit">
+      <h1>Morning Circuit</h1>
+      <div class="loading-spinner" aria-hidden="true"></div>
+    </div>
+  </div>
+  <!-- Screen-reader announcement region (route changes, timer start/stop, etc.) -->
+  <div id="sr-announce" aria-live="polite" class="sr-only"></div>
+
+  <!-- Chart.js — required by the Reports screen charts (reports.js uses window.Chart) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./service-worker.js');
+    });
+  </script>
+</body>
+</html>

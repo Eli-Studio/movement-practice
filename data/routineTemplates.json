@@ -1,0 +1,801 @@
+[
+  {
+    "id": "eli_upper_push",
+    "name": "Eli Upper Push",
+    "displayName": "Upper Push",
+    "user": "eli",
+    "routineType": "heavy_weight",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": true,
+    "slots": [
+      {
+        "slotId": "primary_chest",
+        "slotName": "Primary Chest Press",
+        "slotType": "anchor",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_incline_dumbbell_bench_press",
+          "eli_flat_dumbbell_bench_press",
+          "eli_floor_press"
+        ]
+      },
+      {
+        "slotId": "shoulder_press",
+        "slotName": "Shoulder Press",
+        "slotType": "anchor",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_seated_dumbbell_shoulder_press",
+          "eli_standing_dumbbell_shoulder_press",
+          "eli_standing_arnold_press"
+        ]
+      },
+      {
+        "slotId": "secondary_press",
+        "slotName": "Secondary Press",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_incline_pushup",
+          "eli_tempo_incline_pushup",
+          "eli_close_grip_incline_pushup"
+        ]
+      },
+      {
+        "slotId": "triceps",
+        "slotName": "Triceps",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_overhead_tricep_extension",
+          "eli_single_dumbbell_tricep_extension",
+          "eli_bench_tricep_extension"
+        ]
+      },
+      {
+        "slotId": "delt_accessory",
+        "slotName": "Delt Accessory",
+        "slotType": "optional",
+        "required": false,
+        "conflictNote": "Uses the shared 3kg set — reorder stages this around Christina's dumbbell work",
+        "allowedExerciseIds": [
+          "eli_lateral_raise_3kg",
+          "eli_front_raise_3kg",
+          "eli_rear_delt_raise_3kg"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eli_lower_body",
+    "name": "Eli Lower Body",
+    "displayName": "Lower Body",
+    "user": "eli",
+    "routineType": "heavy_weight",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": true,
+    "slots": [
+      {
+        "slotId": "squat",
+        "slotName": "Squat Pattern",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_goblet_squat",
+          "eli_bodyweight_tempo_squat"
+        ]
+      },
+      {
+        "slotId": "hinge",
+        "slotName": "Hinge Pattern",
+        "slotType": "anchor",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_dumbbell_rdl",
+          "eli_kettlebell_style_deadlift",
+          "eli_single_dumbbell_rdl"
+        ]
+      },
+      {
+        "slotId": "single_leg",
+        "slotName": "Single-Leg Pattern",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_split_squat",
+          "eli_reverse_lunge",
+          "eli_step_up"
+        ]
+      },
+      {
+        "slotId": "glute",
+        "slotName": "Glute Pattern",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_bench_glute_bridge",
+          "eli_floor_glute_bridge",
+          "eli_weighted_glute_bridge"
+        ]
+      },
+      {
+        "slotId": "finisher",
+        "slotName": "Calves / Carry / Finisher",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "eli_calf_raises",
+          "eli_weighted_calf_raises",
+          "eli_wall_sit",
+          "eli_farmer_carry",
+          "eli_side_plank"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eli_upper_pull",
+    "name": "Eli Upper Pull",
+    "displayName": "Upper Pull",
+    "user": "eli",
+    "routineType": "heavy_weight",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": true,
+    "slots": [
+      {
+        "slotId": "primary_row",
+        "slotName": "Primary Row",
+        "slotType": "anchor",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_one_arm_dumbbell_row",
+          "eli_two_dumbbell_bent_row"
+        ]
+      },
+      {
+        "slotId": "secondary_row",
+        "slotName": "Secondary Row",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_bench_supported_dumbbell_row",
+          "eli_single_dumbbell_row"
+        ]
+      },
+      {
+        "slotId": "rear_delt",
+        "slotName": "Rear Delt / Posture",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_reverse_fly",
+          "eli_rear_delt_raise_3kg",
+          "eli_prone_y_raise"
+        ]
+      },
+      {
+        "slotId": "biceps",
+        "slotName": "Biceps",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_hammer_curl",
+          "eli_standard_dumbbell_curl",
+          "eli_slow_eccentric_curl"
+        ]
+      },
+      {
+        "slotId": "core_finisher",
+        "slotName": "Core Finisher",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "eli_renegade_row",
+          "eli_side_plank",
+          "eli_plank",
+          "eli_incline_situp",
+          "eli_bench_reverse_crunch"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eli_full_body",
+    "name": "Eli Full Body",
+    "displayName": "Full Body",
+    "user": "eli",
+    "routineType": "heavy_weight",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": true,
+    "slots": [
+      {
+        "slotId": "lower",
+        "slotName": "Lower Body",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_goblet_squat",
+          "eli_reverse_lunge",
+          "eli_split_squat",
+          "eli_bodyweight_tempo_squat"
+        ]
+      },
+      {
+        "slotId": "hinge_glute",
+        "slotName": "Hinge / Glute",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_dumbbell_rdl",
+          "eli_kettlebell_style_deadlift",
+          "eli_weighted_glute_bridge",
+          "eli_floor_glute_bridge"
+        ]
+      },
+      {
+        "slotId": "push",
+        "slotName": "Push (Shoulder / Upper Chest)",
+        "slotType": "anchor",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_standing_dumbbell_shoulder_press",
+          "eli_standing_arnold_press",
+          "eli_incline_dumbbell_bench_press"
+        ]
+      },
+      {
+        "slotId": "pull",
+        "slotName": "Pull",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_one_arm_dumbbell_row",
+          "eli_two_dumbbell_bent_row",
+          "eli_hammer_curl"
+        ]
+      },
+      {
+        "slotId": "carry_core",
+        "slotName": "Carry / Core",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "eli_farmer_carry",
+          "eli_side_plank",
+          "eli_plank",
+          "eli_incline_situp"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eli_light_circuit",
+    "name": "Eli Light Circuit",
+    "displayName": "Light Circuit",
+    "user": "eli",
+    "routineType": "circuit",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "cardio",
+        "slotName": "Cardio",
+        "slotType": "anchor",
+        "required": true,
+        "allowedExerciseIds": [
+          "step_jacks",
+          "eli_speed_rope_intervals"
+        ]
+      },
+      {
+        "slotId": "lower",
+        "slotName": "Lower Body",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bodyweight_squat",
+          "eli_reverse_lunge",
+          "eli_bodyweight_tempo_squat"
+        ]
+      },
+      {
+        "slotId": "upper",
+        "slotName": "Upper Body / Carry",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_incline_pushup",
+          "eli_close_grip_incline_pushup",
+          "eli_farmer_carry"
+        ]
+      },
+      {
+        "slotId": "core",
+        "slotName": "Core / Mobility",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bird_dog",
+          "dead_bug",
+          "eli_side_plank",
+          "eli_plank"
+        ]
+      },
+      {
+        "slotId": "shoulder_finish",
+        "slotName": "Shoulder Accessory",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "eli_lateral_raise_3kg",
+          "eli_front_raise_3kg"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eli_cardio_circuit",
+    "name": "Eli Cardio Circuit",
+    "displayName": "Cardio Circuit",
+    "user": "eli",
+    "routineType": "cardio_circuit",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "rope",
+        "slotName": "Speed Rope / Cardio",
+        "slotType": "anchor",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_speed_rope_intervals",
+          "step_jacks"
+        ]
+      },
+      {
+        "slotId": "lower_cardio",
+        "slotName": "Lower Body",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bodyweight_squat",
+          "eli_bodyweight_tempo_squat",
+          "eli_wall_sit"
+        ]
+      },
+      {
+        "slotId": "upper_push",
+        "slotName": "Upper Body Push",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_incline_pushup",
+          "eli_tempo_incline_pushup",
+          "eli_close_grip_incline_pushup"
+        ]
+      },
+      {
+        "slotId": "core",
+        "slotName": "Core",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bird_dog",
+          "dead_bug",
+          "eli_side_plank",
+          "eli_plank"
+        ]
+      },
+      {
+        "slotId": "shoulder_finish",
+        "slotName": "Shoulder Accessory",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "eli_lateral_raise_3kg",
+          "eli_front_raise_3kg"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eli_mobility_recovery",
+    "name": "Eli Mobility Recovery",
+    "displayName": "Mobility / Recovery",
+    "user": "eli",
+    "routineType": "mobility_recovery",
+    "workoutStructure": "straight_sets",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "yoga",
+        "slotName": "Yoga / Flow",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "gentle_yoga_flow",
+          "mobility_flow"
+        ]
+      },
+      {
+        "slotId": "core_mobility",
+        "slotName": "Core Mobility",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bird_dog",
+          "dead_bug",
+          "eli_side_plank",
+          "eli_prone_y_raise"
+        ]
+      },
+      {
+        "slotId": "posture",
+        "slotName": "Posture / Prehab",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "eli_rear_delt_raise_3kg",
+          "eli_reverse_fly"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eli_combo_weight_circuit",
+    "name": "Eli Combo",
+    "displayName": "Combo: Weight + Circuit",
+    "user": "eli",
+    "routineType": "combo_weight_circuit",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "heavy_1",
+        "slotName": "Heavy Exercise 1",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_incline_dumbbell_bench_press",
+          "eli_goblet_squat",
+          "eli_one_arm_dumbbell_row",
+          "eli_dumbbell_rdl"
+        ]
+      },
+      {
+        "slotId": "heavy_2",
+        "slotName": "Heavy Exercise 2",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "eli_standing_dumbbell_shoulder_press",
+          "eli_hammer_curl",
+          "eli_split_squat",
+          "eli_farmer_carry"
+        ]
+      },
+      {
+        "slotId": "circuit_1",
+        "slotName": "Circuit Movement",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "step_jacks",
+          "bodyweight_squat",
+          "eli_reverse_lunge"
+        ]
+      },
+      {
+        "slotId": "core_finish",
+        "slotName": "Core Finish",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bird_dog",
+          "dead_bug",
+          "eli_side_plank",
+          "eli_plank"
+        ]
+      },
+      {
+        "slotId": "shoulder_finish",
+        "slotName": "Shoulder Accessory",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "eli_lateral_raise_3kg",
+          "eli_front_raise_3kg"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "christina_gentle_upper",
+    "name": "Christina Gentle Upper",
+    "displayName": "Gentle Upper Body",
+    "user": "christina",
+    "routineType": "gentle_strength",
+    "workoutStructure": "straight_sets",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "push",
+        "slotName": "Gentle Push",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_wall_pushup",
+          "christina_incline_pushup",
+          "christina_seated_dumbbell_shoulder_press"
+        ]
+      },
+      {
+        "slotId": "pull",
+        "slotName": "Gentle Pull / Posture",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_light_dumbbell_row",
+          "christina_seated_row_motion_no_weight",
+          "christina_bench_single_arm_row_3kg"
+        ]
+      },
+      {
+        "slotId": "mobility",
+        "slotName": "Mobility / Posture",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_seated_mobility",
+          "mobility_flow",
+          "christina_floor_mobility"
+        ]
+      },
+      {
+        "slotId": "optional_core",
+        "slotName": "Optional Core / Accessory",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "christina_seated_core_brace",
+          "bird_dog",
+          "dead_bug",
+          "christina_seated_shoulder_blade_squeeze"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "christina_gentle_lower",
+    "name": "Christina Gentle Lower",
+    "displayName": "Gentle Lower Body",
+    "user": "christina",
+    "routineType": "gentle_strength",
+    "workoutStructure": "straight_sets",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "squat",
+        "slotName": "Squat / Sit-to-Stand",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_sit_to_stand",
+          "christina_light_goblet_squat",
+          "christina_supported_squat",
+          "bodyweight_squat"
+        ]
+      },
+      {
+        "slotId": "glute",
+        "slotName": "Glute",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_glute_bridge",
+          "christina_floor_glute_squeeze",
+          "christina_standing_glute_squeeze",
+          "christina_standing_hip_abduction",
+          "christina_side_lying_leg_lift",
+          "christina_quadruped_hip_extension",
+          "christina_bench_hip_thrust"
+        ]
+      },
+      {
+        "slotId": "hinge",
+        "slotName": "Hinge / Support",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_supported_hinge",
+          "christina_light_rdl_3kg",
+          "christina_standing_hip_hinge",
+          "christina_wall_supported_hip_hinge",
+          "christina_seated_forward_hinge",
+          "christina_bench_light_rdl_3kg"
+        ]
+      },
+      {
+        "slotId": "optional_mobility",
+        "slotName": "Optional Mobility / Accessory",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "christina_floor_mobility",
+          "christina_seated_mobility",
+          "christina_calf_raise_supported",
+          "dead_bug"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "christina_gentle_pull_posture",
+    "name": "Christina Gentle Pull & Posture",
+    "displayName": "Gentle Pull & Posture",
+    "user": "christina",
+    "routineType": "gentle_strength",
+    "workoutStructure": "straight_sets",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "row",
+        "slotName": "Row",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_light_dumbbell_row",
+          "christina_seated_row_motion_no_weight",
+          "christina_bench_single_arm_row_3kg"
+        ]
+      },
+      {
+        "slotId": "rear_shoulder",
+        "slotName": "Rear Shoulder / Posture",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_seated_shoulder_blade_squeeze",
+          "christina_seated_core_brace",
+          "christina_standing_scapular_wall_slide"
+        ]
+      },
+      {
+        "slotId": "core_mobility",
+        "slotName": "Core / Mobility",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bird_dog",
+          "dead_bug",
+          "christina_floor_mobility"
+        ]
+      },
+      {
+        "slotId": "optional_mobility",
+        "slotName": "Optional Mobility",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "christina_seated_mobility",
+          "gentle_yoga_flow"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "christina_gentle_full_body",
+    "name": "Christina Gentle Full Body",
+    "displayName": "Gentle Full Body",
+    "user": "christina",
+    "routineType": "gentle_strength",
+    "workoutStructure": "straight_sets",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "lower",
+        "slotName": "Lower Body",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_sit_to_stand",
+          "christina_glute_bridge",
+          "christina_supported_squat",
+          "bodyweight_squat"
+        ]
+      },
+      {
+        "slotId": "upper",
+        "slotName": "Upper Body",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_wall_pushup",
+          "christina_light_dumbbell_row",
+          "christina_seated_dumbbell_shoulder_press"
+        ]
+      },
+      {
+        "slotId": "posture_core",
+        "slotName": "Posture / Core",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "bird_dog",
+          "dead_bug",
+          "christina_seated_core_brace"
+        ]
+      },
+      {
+        "slotId": "optional_mobility",
+        "slotName": "Optional Mobility / Accessory",
+        "slotType": "optional",
+        "required": false,
+        "allowedExerciseIds": [
+          "christina_floor_mobility",
+          "christina_seated_mobility",
+          "gentle_yoga_flow",
+          "christina_calf_raise_supported"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "christina_light_movement",
+    "name": "Christina Light Movement",
+    "displayName": "Light Movement",
+    "user": "christina",
+    "routineType": "light_movement",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "gentle_cardio",
+        "slotName": "Gentle Cardio / Movement",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_marching_in_place",
+          "christina_low_impact_side_steps",
+          "step_jacks"
+        ]
+      },
+      {
+        "slotId": "flow",
+        "slotName": "Yoga / Mobility Flow",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "gentle_yoga_flow",
+          "mobility_flow",
+          "christina_floor_mobility",
+          "christina_seated_mobility"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "christina_recovery_minimum",
+    "name": "Christina Recovery / Minimum",
+    "displayName": "Recovery / Minimum",
+    "user": "christina",
+    "routineType": "recovery_minimum",
+    "workoutStructure": "circuit",
+    "countsAsHeavy": false,
+    "slots": [
+      {
+        "slotId": "gentle",
+        "slotName": "Gentle Movement",
+        "slotType": "accessory",
+        "required": true,
+        "allowedExerciseIds": [
+          "christina_seated_mobility",
+          "christina_floor_mobility",
+          "gentle_yoga_flow",
+          "bird_dog",
+          "dead_bug"
+        ]
+      }
+    ]
+  }
+]

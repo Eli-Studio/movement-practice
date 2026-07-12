@@ -1,0 +1,92 @@
+[
+  {
+    "id": "modular_adjustable_weights",
+    "name": "Modular Adjustable Weight System",
+    "category": "weights",
+    "quantity": 1,
+    "unit": "system",
+    "conflictLevel": "hard",
+    "canUseSimultaneously": false,
+    "primaryUsers": [
+      "eli"
+    ],
+    "secondaryUsers": [],
+    "launchBaseline": "5kg_per_hand",
+    "notes": "Eli's main progressive strength equipment. Two standard dumbbells, kettlebell handle, or one large connected weight."
+  },
+  {
+    "id": "fixed_dumbbells_3kg",
+    "name": "Fixed Dumbbells 3kg",
+    "category": "weights",
+    "quantity": 1,
+    "unit": "set",
+    "conflictLevel": "hard",
+    "canUseSimultaneously": false,
+    "primaryUsers": [
+      "christina"
+    ],
+    "secondaryUsers": [
+      "eli"
+    ],
+    "notes": "Christina's primary dumbbells. Eli uses for lateral raises and reverse flys only."
+  },
+  {
+    "id": "adjustable_bench",
+    "name": "Adjustable Bench",
+    "category": "bench",
+    "quantity": 1,
+    "unit": "unit",
+    "conflictLevel": "hard",
+    "canUseSimultaneously": false,
+    "primaryUsers": [
+      "eli",
+      "christina"
+    ],
+    "secondaryUsers": [],
+    "notes": "Cannot be used by both simultaneously. Coordinate bench exercises."
+  },
+  {
+    "id": "speed_rope",
+    "name": "Speed Rope",
+    "category": "cardio",
+    "quantity": 1,
+    "unit": "unit",
+    "conflictLevel": "hard",
+    "canUseSimultaneously": false,
+    "primaryUsers": [
+      "eli"
+    ],
+    "secondaryUsers": [],
+    "notes": "Eli primary. Do not suggest for Christina when dizzy, lightheaded, migraine, high pain, or high fatigue."
+  },
+  {
+    "id": "yoga_mats",
+    "name": "Yoga Mats",
+    "category": "mat",
+    "quantity": 2,
+    "unit": "mats",
+    "conflictLevel": "none",
+    "canUseSimultaneously": true,
+    "primaryUsers": [
+      "eli",
+      "christina"
+    ],
+    "secondaryUsers": [],
+    "notes": "Two mats available. No conflict — both users can use simultaneously."
+  },
+  {
+    "id": "open_space",
+    "name": "Open Workout Space",
+    "category": "space",
+    "quantity": 1,
+    "unit": "space",
+    "conflictLevel": "none",
+    "canUseSimultaneously": true,
+    "primaryUsers": [
+      "eli",
+      "christina"
+    ],
+    "secondaryUsers": [],
+    "notes": "Shared open space. No conflict. Farmer carries do not create a conflict."
+  }
+]

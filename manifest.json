@@ -1,0 +1,15 @@
+{
+  "name": "Morning Circuit",
+  "short_name": "Morning Circuit",
+  "description": "A private-by-default, device-local workout tracker for two people.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090c14",
+  "theme_color": "#090c14",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

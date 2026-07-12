@@ -1,0 +1,2603 @@
+[
+  {
+    "id": "eli_incline_dumbbell_bench_press",
+    "name": "Incline Dumbbell Bench Press",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "horizontal_press",
+    "equipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Elbows slightly tucked, not flared",
+      "Lower slowly with control",
+      "Press through the chest",
+      "Keep wrists stacked over elbows"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_flat_dumbbell_bench_press"
+    ]
+  },
+  {
+    "id": "eli_flat_dumbbell_bench_press",
+    "name": "Flat Dumbbell Bench Press",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "horizontal_press",
+    "equipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Shoulder blades pinched",
+      "Feet flat on floor",
+      "Controlled descent"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_incline_dumbbell_bench_press"
+    ]
+  },
+  {
+    "id": "eli_incline_pushup",
+    "name": "Incline Pushup",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "bodyweight_press",
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Straight line from head to heels",
+      "Elbows at 45 degrees",
+      "Full range of motion"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_seated_dumbbell_shoulder_press",
+    "name": "Seated Dumbbell Shoulder Press",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "vertical_press",
+    "equipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Core braced",
+      "Press straight up, don't flare elbows out wide",
+      "Don't shrug shoulders"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_standing_dumbbell_shoulder_press"
+    ]
+  },
+  {
+    "id": "eli_standing_dumbbell_shoulder_press",
+    "name": "Standing Dumbbell Shoulder Press",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "vertical_press",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Feet shoulder-width apart",
+      "Core tight",
+      "Don't lean back to assist the press"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_seated_dumbbell_shoulder_press"
+    ]
+  },
+  {
+    "id": "eli_overhead_tricep_extension",
+    "name": "Overhead Tricep Extension",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "triceps",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg (one configured weight)",
+    "intensity": "medium_heavy",
+    "formCues": [
+      "Elbows close to head",
+      "Only forearms move",
+      "Full extension at top"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_lateral_raise_3kg",
+    "name": "Lateral Raise",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "shoulder_accessory",
+    "equipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Slight bend in elbows",
+      "Lead with elbows, not wrists",
+      "Stop at shoulder height",
+      "Controlled descent"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_one_arm_dumbbell_row",
+    "name": "One-Arm Dumbbell Row",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "horizontal_pull",
+    "equipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg",
+    "intensity": "heavy",
+    "formCues": [
+      "Support on bench",
+      "Drive elbow up and back",
+      "Shoulder blade retracts",
+      "Don't rotate torso"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_bench_supported_dumbbell_row"
+    ]
+  },
+  {
+    "id": "eli_bench_supported_dumbbell_row",
+    "name": "Bench-Supported Dumbbell Row",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "horizontal_pull",
+    "equipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Chest on bench for support",
+      "Row both dumbbells simultaneously",
+      "Squeeze at top"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_one_arm_dumbbell_row"
+    ]
+  },
+  {
+    "id": "eli_reverse_fly",
+    "name": "Reverse Fly",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "rear_delts",
+    "equipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Hinge forward at hips",
+      "Slight bend in elbows",
+      "Lead with elbows out to sides",
+      "Squeeze shoulder blades together at top"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_hammer_curl",
+    "name": "Hammer Curl",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "biceps",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "medium_heavy",
+    "formCues": [
+      "Neutral grip (thumbs up)",
+      "Elbows stay at sides",
+      "Full range of motion",
+      "Control the descent"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_renegade_row",
+    "name": "Renegade Row",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "row_core",
+    "equipment": [
+      "modular_adjustable_weights",
+      "yoga_mats"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "High plank position",
+      "Row one arm at a time",
+      "Keep hips level",
+      "Brace core hard"
+    ],
+    "cautions": [
+      "wrist discomfort",
+      "shoulder discomfort"
+    ],
+    "substitutions": [
+      "eli_bench_supported_dumbbell_row"
+    ]
+  },
+  {
+    "id": "eli_goblet_squat",
+    "name": "Goblet Squat",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "squat",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "one configured modular weight",
+    "intensity": "heavy",
+    "formCues": [
+      "Hold weight at chest",
+      "Knees track over toes",
+      "Chest up",
+      "Sit deep, drive through heels"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "bodyweight_squat"
+    ]
+  },
+  {
+    "id": "eli_dumbbell_rdl",
+    "name": "Dumbbell Romanian Deadlift",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Soft bend in knees",
+      "Push hips back, not down",
+      "Keep weights close to legs",
+      "Neutral spine throughout"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_split_squat",
+    "name": "Split Squat",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "single_leg",
+    "equipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": false,
+    "defaultWeight": "bodyweight or 5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Front foot flat",
+      "Rear foot elevated optional",
+      "Knee tracks over toe",
+      "Torso upright"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "bodyweight_squat"
+    ]
+  },
+  {
+    "id": "eli_bench_glute_bridge",
+    "name": "Bench Glute Bridge",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium_heavy",
+    "formCues": [
+      "Upper back on bench",
+      "Drive through heels",
+      "Full hip extension at top",
+      "Squeeze glutes"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_glute_bridge"
+    ]
+  },
+  {
+    "id": "eli_calf_raises",
+    "name": "Calf Raises",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "calves",
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 3,
+    "defaultReps": "15-20",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Full range of motion",
+      "Pause at top",
+      "Slow descent"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_farmer_carry",
+    "name": "Farmer Carry",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "full_body",
+    "movementPattern": "carry",
+    "equipment": [
+      "modular_adjustable_weights",
+      "open_space"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": null,
+    "defaultDurationSeconds": 35,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "medium_heavy",
+    "formCues": [
+      "Tall posture",
+      "Shoulders down and back",
+      "Core braced",
+      "Controlled stride"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_incline_situp",
+    "name": "Incline Sit-Up",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "core",
+    "movementPattern": "core_flexion",
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Hands behind head lightly",
+      "Exhale on the way up",
+      "Lower with control"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_bench_reverse_crunch",
+      "dead_bug"
+    ]
+  },
+  {
+    "id": "eli_bench_reverse_crunch",
+    "name": "Bench Reverse Crunch",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "core",
+    "movementPattern": "core",
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Hold bench behind head",
+      "Draw knees toward chest",
+      "Lower slowly"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "dead_bug"
+    ]
+  },
+  {
+    "id": "eli_side_plank",
+    "name": "Side Plank",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "core",
+    "movementPattern": "anti_lateral_flexion",
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": null,
+    "defaultDurationSeconds": 30,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Body in straight line",
+      "Hips don't sag",
+      "Top shoulder stacked over bottom"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "dead_bug"
+    ]
+  },
+  {
+    "id": "eli_speed_rope_intervals",
+    "name": "Speed Rope Intervals",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "cardio",
+    "movementPattern": "cardio",
+    "equipment": [
+      "speed_rope",
+      "open_space"
+    ],
+    "conflictEquipment": [
+      "speed_rope"
+    ],
+    "defaultSets": 6,
+    "defaultReps": null,
+    "defaultDurationSeconds": 45,
+    "defaultRestSeconds": 45,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium_high",
+    "formCues": [
+      "Wrists do the work, not arms",
+      "Light on the balls of feet",
+      "Small controlled jumps"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "step_jacks"
+    ]
+  },
+  {
+    "id": "step_jacks",
+    "name": "Step Jacks",
+    "eligibleUsers": [
+      "eli",
+      "christina"
+    ],
+    "category": "cardio",
+    "movementPattern": "cardio",
+    "attributes": [
+      "standing",
+      "elevated_hr"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 3,
+    "defaultReps": null,
+    "defaultDurationSeconds": 45,
+    "defaultRestSeconds": 45,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low_medium",
+    "formCues": [
+      "Step out wide to each side",
+      "Arms swing naturally",
+      "Keep it controlled"
+    ],
+    "cautions": [
+      "dizziness"
+    ],
+    "substitutions": [
+      "christina_marching_in_place"
+    ]
+  },
+  {
+    "id": "bodyweight_squat",
+    "name": "Bodyweight Squat",
+    "eligibleUsers": [
+      "eli",
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "squat",
+    "attributes": [
+      "standing"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 3,
+    "defaultReps": "12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low_medium",
+    "formCues": [
+      "Feet shoulder-width apart",
+      "Chest up",
+      "Knees track over toes"
+    ],
+    "cautions": [
+      "dizziness"
+    ],
+    "substitutions": [
+      "christina_sit_to_stand"
+    ]
+  },
+  {
+    "id": "bird_dog",
+    "name": "Bird Dog",
+    "eligibleUsers": [
+      "eli",
+      "christina"
+    ],
+    "category": "core",
+    "movementPattern": "core_mobility",
+    "attributes": [
+      "floor_transition",
+      "balance_single_leg"
+    ],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Tabletop position",
+      "Extend opposite arm and leg",
+      "Keep hips level",
+      "Hold 2 counts at top"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "dead_bug",
+    "name": "Dead Bug",
+    "eligibleUsers": [
+      "eli",
+      "christina"
+    ],
+    "category": "core",
+    "movementPattern": "core_mobility",
+    "attributes": [
+      "floor_transition"
+    ],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Lower back pressed flat",
+      "Opposite arm and leg extend slowly",
+      "Exhale on extension"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "gentle_yoga_flow",
+    "name": "Gentle Yoga Flow",
+    "eligibleUsers": [
+      "eli",
+      "christina"
+    ],
+    "category": "mobility",
+    "movementPattern": "mobility",
+    "attributes": [
+      "floor_transition",
+      "overhead_arm",
+      "twisting"
+    ],
+    "equipment": [
+      "yoga_mats",
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 1,
+    "defaultReps": null,
+    "defaultDurationSeconds": 480,
+    "defaultRestSeconds": 0,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Move with breath",
+      "Don't force range of motion",
+      "Rest when needed"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "mobility_flow"
+    ]
+  },
+  {
+    "id": "mobility_flow",
+    "name": "Gentle Mobility Flow",
+    "eligibleUsers": [
+      "eli",
+      "christina"
+    ],
+    "category": "mobility",
+    "movementPattern": "mobility",
+    "attributes": [
+      "standing",
+      "twisting"
+    ],
+    "equipment": [
+      "open_space",
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 1,
+    "defaultReps": null,
+    "defaultDurationSeconds": 480,
+    "defaultRestSeconds": 0,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Slow hip circles — 5 each direction",
+      "Shoulder rolls — 8 forward, 8 back",
+      "Gentle standing or seated spinal twists — 5 each side",
+      "Move slowly through each movement, no forcing"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_seated_dumbbell_shoulder_press",
+    "name": "Seated Shoulder Press",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "push",
+    "movementPattern": "vertical_press",
+    "attributes": [
+      "overhead_arm",
+      "grip_dependent"
+    ],
+    "equipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "gentle",
+    "formCues": [
+      "Seated for stability",
+      "Press without locking elbows",
+      "Core braced"
+    ],
+    "cautions": [
+      "dizziness",
+      "fatigue",
+      "grip weakness"
+    ],
+    "substitutions": [
+      "christina_wall_pushup"
+    ]
+  },
+  {
+    "id": "christina_light_dumbbell_row",
+    "name": "Light Dumbbell Row",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "pull",
+    "movementPattern": "horizontal_pull",
+    "attributes": [
+      "spinal_hinge",
+      "grip_dependent"
+    ],
+    "equipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "gentle",
+    "formCues": [
+      "Hinge slightly",
+      "Elbow drives back",
+      "Squeeze at top",
+      "Lower with control"
+    ],
+    "cautions": [
+      "grip weakness",
+      "fatigue"
+    ],
+    "substitutions": []
+  },
+  {
+    "id": "christina_sit_to_stand",
+    "name": "Sit-to-Stand",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "squat",
+    "attributes": [
+      "standing"
+    ],
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Hands optional on thighs for support",
+      "Drive through heels to stand",
+      "Controlled descent"
+    ],
+    "cautions": [
+      "dizziness"
+    ],
+    "substitutions": [
+      "bodyweight_squat"
+    ]
+  },
+  {
+    "id": "christina_glute_bridge",
+    "name": "Glute Bridge",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "attributes": [
+      "floor_transition"
+    ],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Feet flat on floor",
+      "Drive hips up",
+      "Squeeze glutes at top",
+      "Gentle descent"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_supported_hinge",
+    "name": "Supported Hinge",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "attributes": [
+      "standing",
+      "spinal_hinge"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Hands on thighs for support if needed",
+      "Push hips back",
+      "Soft bend in knees",
+      "Neutral spine"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_light_goblet_squat",
+    "name": "Light Goblet Squat",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "squat",
+    "attributes": [
+      "standing",
+      "grip_dependent"
+    ],
+    "equipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "3kg",
+    "intensity": "gentle",
+    "formCues": [
+      "Hold dumbbell at chest",
+      "Chest up",
+      "Sit into the squat gently"
+    ],
+    "cautions": [
+      "dizziness",
+      "fatigue"
+    ],
+    "substitutions": [
+      "christina_sit_to_stand",
+      "bodyweight_squat"
+    ]
+  },
+  {
+    "id": "christina_wall_pushup",
+    "name": "Wall Pushup",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "push",
+    "movementPattern": "bodyweight_press",
+    "attributes": [
+      "standing"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Hands at shoulder height on wall",
+      "Body in straight line",
+      "Controlled push"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_incline_pushup",
+    "name": "Incline Pushup",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "push",
+    "movementPattern": "bodyweight_press",
+    "attributes": [
+      "sustained_pressure"
+    ],
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "6-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle_medium",
+    "formCues": [
+      "Hands on bench",
+      "Straight line from head to heels",
+      "Lower with control"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_wall_pushup"
+    ]
+  },
+  {
+    "id": "christina_marching_in_place",
+    "name": "Marching in Place",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "cardio",
+    "movementPattern": "cardio",
+    "attributes": [
+      "standing",
+      "elevated_hr",
+      "balance_single_leg"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 1,
+    "defaultReps": null,
+    "defaultDurationSeconds": 60,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Lift knees gently",
+      "Arm swing optional",
+      "Move at your own pace"
+    ],
+    "cautions": [
+      "dizziness"
+    ],
+    "substitutions": []
+  },
+  {
+    "id": "christina_low_impact_side_steps",
+    "name": "Low-Impact Side Steps",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "cardio",
+    "movementPattern": "cardio",
+    "attributes": [
+      "standing",
+      "elevated_hr",
+      "balance_single_leg"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 1,
+    "defaultReps": null,
+    "defaultDurationSeconds": 60,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Step side to side",
+      "Keep it gentle",
+      "Arms optional"
+    ],
+    "cautions": [
+      "dizziness"
+    ],
+    "substitutions": [
+      "christina_marching_in_place"
+    ]
+  },
+  {
+    "id": "christina_seated_mobility",
+    "name": "Seated Mobility",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "mobility",
+    "movementPattern": "mobility",
+    "attributes": [
+      "twisting"
+    ],
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 1,
+    "defaultReps": null,
+    "defaultDurationSeconds": 300,
+    "defaultRestSeconds": 0,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Neck rolls, shoulder circles",
+      "Seated twists",
+      "Move only what feels comfortable"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_floor_mobility"
+    ]
+  },
+  {
+    "id": "christina_floor_mobility",
+    "name": "Floor Mobility",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "mobility",
+    "movementPattern": "mobility",
+    "attributes": [
+      "floor_transition"
+    ],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 1,
+    "defaultReps": null,
+    "defaultDurationSeconds": 300,
+    "defaultRestSeconds": 0,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Cat-cow",
+      "Supine twists",
+      "Knees-to-chest",
+      "Rest between movements"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_seated_mobility"
+    ]
+  },
+  {
+    "id": "eli_floor_press",
+    "name": "Floor Press",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "horizontal_press",
+    "equipment": [
+      "modular_adjustable_weights",
+      "yoga_mats"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Upper arms rest lightly on floor each rep",
+      "Press through the chest",
+      "No bench needed"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_incline_dumbbell_bench_press"
+    ]
+  },
+  {
+    "id": "eli_tempo_incline_pushup",
+    "name": "Tempo Incline Pushup",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "bodyweight_press",
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "3-second lower",
+      "Pause at bottom",
+      "Drive up under control"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_incline_pushup"
+    ]
+  },
+  {
+    "id": "eli_close_grip_incline_pushup",
+    "name": "Close-Grip Incline Pushup",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "bodyweight_press",
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Hands inside shoulder width",
+      "Elbows track close to ribs",
+      "Triceps emphasis"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_incline_pushup"
+    ]
+  },
+  {
+    "id": "eli_standing_arnold_press",
+    "name": "Standing Arnold Press",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "vertical_press",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Start palms facing you",
+      "Rotate as you press overhead",
+      "Control the return"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_standing_dumbbell_shoulder_press"
+    ]
+  },
+  {
+    "id": "eli_single_dumbbell_tricep_extension",
+    "name": "Single-Dumbbell Overhead Triceps Extension",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "triceps",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg",
+    "intensity": "medium",
+    "formCues": [
+      "Both hands on one weight",
+      "Elbows point forward",
+      "Full stretch overhead"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_overhead_tricep_extension"
+    ]
+  },
+  {
+    "id": "eli_bench_tricep_extension",
+    "name": "Bench Triceps Extension",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "triceps",
+    "equipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights",
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Lying on bench",
+      "Lower to forehead level",
+      "Elbows stay tucked"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_overhead_tricep_extension"
+    ]
+  },
+  {
+    "id": "eli_front_raise_3kg",
+    "name": "Front Raise",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "push",
+    "movementPattern": "delt_isolation",
+    "equipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Raise to shoulder height",
+      "No swinging",
+      "Front-delt emphasis"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_lateral_raise_3kg"
+    ]
+  },
+  {
+    "id": "eli_rear_delt_raise_3kg",
+    "name": "Rear Delt Raise",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "delt_isolation",
+    "equipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Hinge forward slightly",
+      "Raise out to sides",
+      "Squeeze rear delts"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_reverse_fly"
+    ]
+  },
+  {
+    "id": "eli_kettlebell_style_deadlift",
+    "name": "Kettlebell-Style Deadlift",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg",
+    "intensity": "heavy",
+    "formCues": [
+      "Connected weight between feet",
+      "Hinge at hips",
+      "Flat back, drive through heels"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_dumbbell_rdl"
+    ]
+  },
+  {
+    "id": "eli_single_dumbbell_rdl",
+    "name": "Single-Dumbbell RDL",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg",
+    "intensity": "heavy",
+    "formCues": [
+      "Weight held at center",
+      "Push hips back",
+      "Feel hamstring stretch"
+    ],
+    "cautions": [
+      "lower back"
+    ],
+    "substitutions": [
+      "eli_dumbbell_rdl"
+    ]
+  },
+  {
+    "id": "eli_reverse_lunge",
+    "name": "Reverse Lunge",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "single_leg",
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 3,
+    "defaultReps": "8-10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": false,
+    "defaultWeight": "bodyweight or 5kg per hand",
+    "intensity": "medium_heavy",
+    "formCues": [
+      "Step back, drop rear knee",
+      "Torso upright",
+      "Drive through front heel"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_split_squat"
+    ]
+  },
+  {
+    "id": "eli_step_up",
+    "name": "Step-Up",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "single_leg",
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": false,
+    "defaultWeight": "bodyweight or 5kg per hand",
+    "intensity": "medium_heavy",
+    "formCues": [
+      "Full foot on bench",
+      "Drive through top leg",
+      "Control the descent"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_split_squat"
+    ]
+  },
+  {
+    "id": "eli_floor_glute_bridge",
+    "name": "Floor Glute Bridge",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 3,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Feet flat, drive hips up",
+      "Squeeze glutes at top",
+      "No bench needed"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_bench_glute_bridge"
+    ]
+  },
+  {
+    "id": "eli_weighted_glute_bridge",
+    "name": "Weighted Glute Bridge",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "equipment": [
+      "modular_adjustable_weights",
+      "yoga_mats"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg",
+    "intensity": "medium_heavy",
+    "formCues": [
+      "Weight across hips",
+      "Drive hips up",
+      "Pause and squeeze at top"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_floor_glute_bridge"
+    ]
+  },
+  {
+    "id": "eli_bodyweight_tempo_squat",
+    "name": "Bodyweight Tempo Squat",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "squat",
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "3-second descent",
+      "Pause at bottom",
+      "Chest up throughout"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_goblet_squat"
+    ]
+  },
+  {
+    "id": "eli_wall_sit",
+    "name": "Wall Sit",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "isometric",
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": null,
+    "defaultDurationSeconds": 40,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "medium",
+    "formCues": [
+      "Back flat against wall",
+      "Thighs parallel to floor",
+      "Hold and breathe"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_weighted_calf_raises",
+    "name": "Weighted Calf Raises",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "lower",
+    "movementPattern": "calves",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "15-20",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Full stretch at bottom",
+      "Rise onto toes",
+      "Pause at top"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_calf_raises"
+    ]
+  },
+  {
+    "id": "eli_two_dumbbell_bent_row",
+    "name": "Two-Dumbbell Bent Row",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "horizontal_pull",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "heavy",
+    "formCues": [
+      "Hinge to ~45 degrees",
+      "Row to ribs",
+      "Squeeze shoulder blades"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_one_arm_dumbbell_row"
+    ]
+  },
+  {
+    "id": "eli_single_dumbbell_row",
+    "name": "Single-Dumbbell Row",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "horizontal_pull",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 120,
+    "weighted": true,
+    "defaultWeight": "5kg",
+    "intensity": "heavy",
+    "formCues": [
+      "Support free hand on thigh",
+      "Drive elbow back",
+      "Control the lower"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_one_arm_dumbbell_row"
+    ]
+  },
+  {
+    "id": "eli_standard_dumbbell_curl",
+    "name": "Standard Dumbbell Curl",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "biceps",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Elbows pinned to sides",
+      "No swinging",
+      "Full squeeze at top"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_hammer_curl"
+    ]
+  },
+  {
+    "id": "eli_slow_eccentric_curl",
+    "name": "Slow-Eccentric Curl",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "biceps",
+    "equipment": [
+      "modular_adjustable_weights"
+    ],
+    "conflictEquipment": [
+      "modular_adjustable_weights"
+    ],
+    "defaultSets": 3,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "5kg per hand",
+    "intensity": "medium",
+    "formCues": [
+      "Curl up normally",
+      "4-second lower",
+      "Resist the descent"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "eli_hammer_curl"
+    ]
+  },
+  {
+    "id": "eli_prone_y_raise",
+    "name": "Prone Y-Raise",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "pull",
+    "movementPattern": "posture",
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Face down on mat",
+      "Arms form a Y overhead",
+      "Lift and squeeze upper back"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "eli_plank",
+    "name": "Plank",
+    "eligibleUsers": [
+      "eli"
+    ],
+    "category": "core",
+    "movementPattern": "core_brace",
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": null,
+    "defaultDurationSeconds": 40,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "low",
+    "formCues": [
+      "Forearms down",
+      "Straight line head to heels",
+      "Brace and breathe"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_seated_row_motion_no_weight",
+    "name": "Seated Row Motion (No Weight)",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "pull",
+    "movementPattern": "horizontal_pull",
+    "attributes": [],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Sit tall",
+      "Pull elbows back",
+      "Squeeze shoulder blades, no weight needed"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_supported_squat",
+    "name": "Supported Squat",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "squat",
+    "attributes": [
+      "standing"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Hold a sturdy surface for support",
+      "Sit back gently",
+      "Rise with control"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_sit_to_stand"
+    ]
+  },
+  {
+    "id": "christina_floor_glute_squeeze",
+    "name": "Floor Glute Squeeze",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "attributes": [
+      "floor_transition"
+    ],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Lie on back, knees bent",
+      "Squeeze glutes without lifting high",
+      "Gentle and controlled"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_glute_bridge"
+    ]
+  },
+  {
+    "id": "christina_seated_shoulder_blade_squeeze",
+    "name": "Seated Shoulder Blade Squeeze",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "pull",
+    "movementPattern": "posture",
+    "attributes": [],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Sit tall",
+      "Draw shoulder blades together",
+      "Hold 2 counts, release slowly"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_seated_core_brace",
+    "name": "Seated Core Brace",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "core",
+    "movementPattern": "core_brace",
+    "attributes": [],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": null,
+    "defaultDurationSeconds": 20,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Sit or lie tall",
+      "Gently brace the core",
+      "Breathe steadily through the hold"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_calf_raise_supported",
+    "name": "Supported Calf Raise",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "calves",
+    "attributes": [
+      "standing"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "12-15",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Hold support for balance",
+      "Rise onto toes",
+      "Lower slowly"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_light_rdl_3kg",
+    "name": "Light RDL",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "attributes": [
+      "standing",
+      "spinal_hinge",
+      "grip_dependent"
+    ],
+    "equipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "gentle",
+    "formCues": [
+      "Soft knees",
+      "Hinge at hips, short range",
+      "Stop if any back discomfort"
+    ],
+    "cautions": [
+      "lower back"
+    ],
+    "substitutions": [
+      "christina_supported_hinge"
+    ]
+  },
+  {
+    "id": "christina_standing_scapular_wall_slide",
+    "name": "Standing Scapular Wall Slide",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "pull",
+    "movementPattern": "posture",
+    "attributes": [
+      "standing",
+      "overhead_arm"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Back against wall, arms in W position",
+      "Slide arms up into Y, keep contact with wall",
+      "Lower slowly with control"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_bench_single_arm_row_3kg",
+    "name": "Bench-Supported Single-Arm Row",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "pull",
+    "movementPattern": "horizontal_pull",
+    "attributes": [
+      "spinal_hinge",
+      "grip_dependent"
+    ],
+    "equipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "8-10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "3kg",
+    "intensity": "gentle",
+    "formCues": [
+      "Support on bench with free hand",
+      "Drive elbow up and back",
+      "Control the lower, no torso rotation"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_light_dumbbell_row"
+    ]
+  },
+  {
+    "id": "christina_standing_glute_squeeze",
+    "name": "Standing Glute Squeeze",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "attributes": [
+      "standing"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": null,
+    "defaultDurationSeconds": 20,
+    "defaultRestSeconds": 60,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Stand tall, hold support if needed",
+      "Squeeze glutes and hold",
+      "Release slowly"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_floor_glute_squeeze"
+    ]
+  },
+  {
+    "id": "christina_standing_hip_abduction",
+    "name": "Standing Hip Abduction (Wall-Supported)",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "attributes": [
+      "standing",
+      "balance_single_leg"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Hold wall or sturdy surface for balance",
+      "Lift leg out to the side with control",
+      "Lower slowly, keep hips level"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_side_lying_leg_lift",
+    "name": "Side-Lying Leg Lift",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "attributes": [
+      "floor_transition",
+      "sustained_pressure"
+    ],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "10 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Lie on side, legs stacked",
+      "Lift top leg with control, no swinging",
+      "Lower slowly"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_quadruped_hip_extension",
+    "name": "Quadruped Hip Extension",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "attributes": [
+      "floor_transition",
+      "sustained_pressure",
+      "twisting",
+      "balance_single_leg"
+    ],
+    "equipment": [
+      "yoga_mats"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8 each side",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "On hands and knees",
+      "Extend one leg back and up, knee bent",
+      "Lower with control, keep hips square"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_floor_glute_squeeze"
+    ]
+  },
+  {
+    "id": "christina_bench_hip_thrust",
+    "name": "Bench-Supported Hip Thrust",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "glute",
+    "attributes": [
+      "sustained_pressure"
+    ],
+    "equipment": [
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "adjustable_bench"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "10-12",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Upper back on bench, feet flat on floor",
+      "Drive hips up, squeeze glutes at top",
+      "Lower with control"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_glute_bridge"
+    ]
+  },
+  {
+    "id": "christina_standing_hip_hinge",
+    "name": "Standing Hip Hinge (Bodyweight)",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "attributes": [
+      "standing",
+      "spinal_hinge"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Soft knees, hinge at the hips",
+      "Keep back flat, short range of motion",
+      "Stand back up with control"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_supported_hinge"
+    ]
+  },
+  {
+    "id": "christina_wall_supported_hip_hinge",
+    "name": "Wall-Supported Hip Hinge",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "attributes": [
+      "standing",
+      "spinal_hinge"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 75,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Hold wall or sturdy surface for balance",
+      "Hinge at hips, short controlled range",
+      "Stop if any back discomfort"
+    ],
+    "cautions": [],
+    "substitutions": [
+      "christina_supported_hinge"
+    ]
+  },
+  {
+    "id": "christina_seated_forward_hinge",
+    "name": "Seated Forward Hinge (Gentle Stretch)",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "attributes": [
+      "spinal_hinge"
+    ],
+    "equipment": [
+      "open_space"
+    ],
+    "conflictEquipment": [],
+    "defaultSets": 2,
+    "defaultReps": null,
+    "defaultDurationSeconds": 30,
+    "defaultRestSeconds": 45,
+    "weighted": false,
+    "defaultWeight": null,
+    "intensity": "gentle",
+    "formCues": [
+      "Sit tall, hinge gently forward from the hips",
+      "Don't force the range of motion",
+      "Breathe and hold"
+    ],
+    "cautions": [],
+    "substitutions": []
+  },
+  {
+    "id": "christina_bench_light_rdl_3kg",
+    "name": "Bench-Supported Light RDL",
+    "eligibleUsers": [
+      "christina"
+    ],
+    "category": "lower",
+    "movementPattern": "hinge",
+    "attributes": [
+      "standing",
+      "spinal_hinge",
+      "grip_dependent",
+      "balance_single_leg"
+    ],
+    "equipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "conflictEquipment": [
+      "fixed_dumbbells_3kg",
+      "adjustable_bench"
+    ],
+    "defaultSets": 2,
+    "defaultReps": "8-10",
+    "defaultDurationSeconds": null,
+    "defaultRestSeconds": 90,
+    "weighted": true,
+    "defaultWeight": "3kg per hand",
+    "intensity": "gentle",
+    "formCues": [
+      "Free hand resting on bench for balance",
+      "Soft knees, hinge at hips, short range",
+      "Stop if any back discomfort"
+    ],
+    "cautions": [
+      "lower back"
+    ],
+    "substitutions": [
+      "christina_light_rdl_3kg"
+    ]
+  }
+]
