@@ -70,7 +70,10 @@ export function getEliSuggestion(cycleState, sessions, missedDays) {
         type:   'circuit',
         reason: 'Break day needed after your last heavy session.'
       },
-      alternatives: ELI_ALTERNATIVES.filter(a => a.id !== 'eli_light_circuit'),
+      alternatives: [
+        ...ELI_ALTERNATIVES.filter(a => a.id !== 'eli_light_circuit'),
+        { id: 'christina_light_movement', label: 'Gentle Movement', type: 'circuit' }
+      ],
       heavyBlocked: true,
       heavyBlockedReason: 'Complete a break day before your next heavy session.'
     };

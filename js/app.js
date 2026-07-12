@@ -195,7 +195,9 @@ function navigate(screen) {
               primary: { ...adaptive.primary, id: trackingId,
                 templateId: adaptive.primary.templateId ?? adaptive.primary.id,
                 type: 'heavy_weight' },
-              alternatives: []
+              alternatives: adaptive.alternatives,
+              heavyBlocked: adaptive.heavyBlocked,
+              heavyBlockedReason: adaptive.heavyBlockedReason
             };
           }
           App.ui.selectedEliRoutine = {
@@ -246,7 +248,9 @@ function navigate(screen) {
             App.ui.christinaSuggestion = {
               primary: { ...strength.primary, id: trackingId, templateId: strength.primary.id,
                 adaptationLevel: 'normal' },
-              alternatives: []
+              alternatives: strength.alternatives.map(alt => ({ ...alt, adaptationLevel: 'normal' })),
+              heavyBlocked: strength.heavyBlocked,
+              heavyBlockedReason: strength.heavyBlockedReason
             };
           }
           App.ui.selectedChristinaRoutine = {
@@ -569,7 +573,6 @@ function setupListeners(screen) {
           painDay: useDefaults ? 'low' : currentPainDay,
           energy: useDefaults ? 'medium' : currentEnergy,
           soreness: useDefaults ? 'low' : currentSoreness,
-          availableTime: get('available-time')?.value ?? App.state.settings.profiles[userId].typicalDuration,
           symptoms: useDefaults ? {} : symptoms
         };
         if (userId === 'christina') App.ui.christinaSymptoms = App.ui.symptomsByUser[userId];
@@ -712,6 +715,17 @@ function setupListeners(screen) {
         const eliR  = App.ui.selectedEliRoutine;
         const cR    = App.ui.selectedChristinaRoutine;
         const users = [...App.ui.selectedUsers];
+
+        const missingPlan = users.find(userId => {
+          const routine = userId === 'eli' ? eliR : cR;
+          const plan = userId === 'eli' ? App.ui.eliExercisePlan : App.ui.christinaExercisePlan;
+          return routine?.id !== 'skip_rest' && !plan?.length;
+        });
+        if (missingPlan) {
+          const name = App.state.settings.profiles[missingPlan].displayName;
+          showToast(`No compatible exercises for ${name}. Enable more equipment or exercises in Settings.`, 'error', 6000);
+          return;
+        }
 
         const skipping = users.filter(u =>
           (u === 'eli'       && eliR?.id === 'skip_rest') ||
@@ -1045,9 +1059,6 @@ function setupListeners(screen) {
         document.querySelectorAll(`[data-experience="${uid}"]`).forEach(btn => btn.addEventListener('click', () => {
           prof().experienceLevel = btn.dataset.value; saveState(App.state); navigate('settings');
         }));
-        document.querySelectorAll(`[data-duration="${uid}"]`).forEach(btn => btn.addEventListener('click', () => {
-          prof().typicalDuration = btn.dataset.value; saveState(App.state); navigate('settings');
-        }));
         document.querySelectorAll(`[data-adaptation="${uid}"]`).forEach(btn => btn.addEventListener('click', () => {
           prof().adaptationPreference = btn.dataset.value;
           prof().progressionMode = btn.dataset.value === 'daily_capacity' ? 'fixed' : 'cycle_review';
@@ -1076,6 +1087,15 @@ function setupListeners(screen) {
         App.state.settings.unavailableEquipmentIds = [...unavailable];
         saveState(App.state);
       }));
+      get('btn-equipment-bodyweight')?.addEventListener('click', () => {
+        const keep = new Set(['open_space', 'yoga_mats', 'adjustable_bench']);
+        App.state.settings.unavailableEquipmentIds = App.data.equipment.map(item => item.id).filter(id => !keep.has(id));
+        saveState(App.state); navigate('settings');
+      });
+      get('btn-equipment-all')?.addEventListener('click', () => {
+        App.state.settings.unavailableEquipmentIds = [];
+        saveState(App.state); navigate('settings');
+      });
 
       // Music mode toggle
       get('btn-theme-day')?.addEventListener('click', () => {

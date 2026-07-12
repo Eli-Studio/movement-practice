@@ -57,11 +57,12 @@
         "slotName": "Delt Accessory",
         "slotType": "optional",
         "required": false,
-        "conflictNote": "Uses the shared 3kg set — reorder stages this around Christina's dumbbell work",
+        "conflictNote": "May use shared light weights; paired workouts can reorder equipment use.",
         "allowedExerciseIds": [
           "eli_lateral_raise_3kg",
           "eli_front_raise_3kg",
-          "eli_rear_delt_raise_3kg"
+          "eli_rear_delt_raise_3kg",
+          "band_shoulder_external_rotation"
         ]
       }
     ]
@@ -115,7 +116,8 @@
         "allowedExerciseIds": [
           "eli_bench_glute_bridge",
           "eli_floor_glute_bridge",
-          "eli_weighted_glute_bridge"
+          "eli_weighted_glute_bridge",
+          "band_clamshell"
         ]
       },
       {
@@ -170,7 +172,8 @@
         "allowedExerciseIds": [
           "eli_reverse_fly",
           "eli_rear_delt_raise_3kg",
-          "eli_prone_y_raise"
+          "eli_prone_y_raise",
+          "band_pull_apart"
         ]
       },
       {
@@ -548,7 +551,8 @@
         "allowedExerciseIds": [
           "christina_seated_mobility",
           "mobility_flow",
-          "christina_floor_mobility"
+          "christina_floor_mobility",
+          "band_shoulder_external_rotation"
         ]
       },
       {
@@ -598,7 +602,8 @@
           "christina_standing_hip_abduction",
           "christina_side_lying_leg_lift",
           "christina_quadruped_hip_extension",
-          "christina_bench_hip_thrust"
+          "christina_bench_hip_thrust",
+          "band_clamshell"
         ]
       },
       {
@@ -657,7 +662,8 @@
         "allowedExerciseIds": [
           "christina_seated_shoulder_blade_squeeze",
           "christina_seated_core_brace",
-          "christina_standing_scapular_wall_slide"
+          "christina_standing_scapular_wall_slide",
+          "band_pull_apart"
         ]
       },
       {

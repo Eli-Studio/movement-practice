@@ -1,7 +1,7 @@
 [
   {
     "id": "modular_adjustable_weights",
-    "name": "Modular Adjustable Weight System",
+    "name": "Adjustable Dumbbells / Weights",
     "category": "weights",
     "quantity": 1,
     "unit": "system",
@@ -12,11 +12,11 @@
     ],
     "secondaryUsers": [],
     "launchBaseline": "5kg_per_hand",
-    "notes": "Eli's main progressive strength equipment. Two standard dumbbells, kettlebell handle, or one large connected weight."
+    "notes": "Adjustable resistance equipment for progressive strength exercises."
   },
   {
     "id": "fixed_dumbbells_3kg",
-    "name": "Fixed Dumbbells 3kg",
+    "name": "Fixed Dumbbell Set",
     "category": "weights",
     "quantity": 1,
     "unit": "set",
@@ -28,7 +28,19 @@
     "secondaryUsers": [
       "eli"
     ],
-    "notes": "Christina's primary dumbbells. Eli uses for lateral raises and reverse flys only."
+    "notes": "A fixed light dumbbell set for lighter weighted movements."
+  },
+  {
+    "id": "resistance_bands",
+    "name": "Resistance Bands",
+    "category": "resistance",
+    "quantity": 1,
+    "unit": "set",
+    "conflictLevel": "none",
+    "canUseSimultaneously": true,
+    "primaryUsers": ["eli", "christina"],
+    "secondaryUsers": [],
+    "notes": "A loop or long resistance-band set for accessible strength variations."
   },
   {
     "id": "adjustable_bench",
@@ -57,7 +69,7 @@
       "eli"
     ],
     "secondaryUsers": [],
-    "notes": "Eli primary. Do not suggest for Christina when dizzy, lightheaded, migraine, high pain, or high fatigue."
+    "notes": "Cardio equipment that may be unsuitable when balance, pain, or energy is limited."
   },
   {
     "id": "yoga_mats",

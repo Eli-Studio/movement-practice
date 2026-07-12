@@ -42,9 +42,6 @@ const TRAINING_GOALS = [
 const EXPERIENCE_LEVELS = [
   ['new', 'New to exercise'], ['some', 'Some experience'], ['experienced', 'Experienced']
 ];
-const DURATION_OPTIONS = [
-  ['10_15', '10–15 min'], ['20_30', '20–30 min'], ['30_45', '30–45 min'], ['45_plus', '45+ min']
-];
 const ADAPTATION_OPTIONS = [
   ['progress_when_ready', 'Progress weights when appropriate'],
   ['daily_capacity', 'Adapt based on daily capacity'],
@@ -368,12 +365,6 @@ export function renderSymptomCheck(App, userId = 'christina') {
         <button class="pain-btn" data-soreness="high">High</button>
       </div>
 
-      <div class="input-group">
-        <label class="input-label" for="available-time">Available time today</label>
-        <select class="input" id="available-time">
-          ${DURATION_OPTIONS.map(([value,label]) => `<option value="${value}" ${App.state.settings.profiles[userId].typicalDuration===value?'selected':''}>${label}</option>`).join('')}
-        </select>
-      </div>
 
       <div class="section-label" style="margin-top:4px;">
         Active symptoms
@@ -442,6 +433,19 @@ function capacityAdjustmentHTML(adjustment, userId) {
   </div>`;
 }
 
+function workoutCountHTML(plan) {
+  const count = plan?.length ?? 0;
+  return `<div class="setting-row__desc" style="margin:8px 0 10px;">Today’s workout: <strong>${count} exercise${count === 1 ? '' : 's'}</strong></div>`;
+}
+
+function strengthRestHTML(suggestion) {
+  if (!suggestion?.heavyBlocked) return '';
+  return `<div class="symptom-flag-summary" style="margin-bottom:12px;">
+    <strong>Strength rest day recommended.</strong> Recovery supports progress; missing perfection is not the goal.
+    Choose a circuit, cardio, mobility, gentle movement, or rest below—and come back for strength afterward.
+  </div>`;
+}
+
 function buildEquipmentSummaryHTML(eliExercisePlan, christinaExercisePlan, allEquipment) {
   const ids = new Set();
   [...(eliExercisePlan ?? []), ...(christinaExercisePlan ?? [])].forEach(ex => {
@@ -487,12 +491,14 @@ export function renderRoutineSuggestion(App) {
         </div>
         <div class="suggestion-card__routine">${escapeHtml(eliSuggestion.primary.label)}</div>
         <div class="suggestion-card__reason">${escapeHtml(eliSuggestion.primary.reason)}</div>
+        ${strengthRestHTML(eliSuggestion)}
         ${capacityAdjustmentHTML(ui.eliCapacityAdjustment, 'eli')}
+        ${workoutCountHTML(eliExercisePlan)}
         ${anchorLine}
         ${buildExerciseListHTML(eliExercisePlan, 'eli')}
         <p class="text-muted text-sm" style="margin-top:4px;">Tap an exercise to swap it.</p>
         <button class="alternatives-toggle" id="eli-alt-toggle">Change routine <span>→</span></button>
-        <div id="eli-alternatives" class="hidden">
+        <div id="eli-alternatives" class="${eliSuggestion.heavyBlocked ? '' : 'hidden'}">
           <div class="alternatives" style="margin-top:6px;">
             ${eliSuggestion.alternatives.map(alt => `
               <button class="alt-btn" data-user="eli" data-id="${alt.id}" data-type="${alt.type ?? ''}">
@@ -516,7 +522,9 @@ export function renderRoutineSuggestion(App) {
         </div>
         <div class="suggestion-card__routine">${escapeHtml(christinaSuggestion.primary.label)}</div>
         <div class="suggestion-card__reason">${escapeHtml(christinaSuggestion.primary.reason)}</div>
+        ${strengthRestHTML(christinaSuggestion)}
         ${capacityAdjustmentHTML(ui.christinaCapacityAdjustment, 'christina')}
+        ${workoutCountHTML(christinaExercisePlan)}
         ${(() => {
           const n = (christinaExercisePlan ?? []).filter(e => e.symptomConflicts?.length).length;
           return n ? `<div class="symptom-flag-summary">⚠ ${n} exercise${n>1?'s':''} flagged for today's symptoms — review below, do or swap as feels right.</div>` : '';
@@ -524,7 +532,7 @@ export function renderRoutineSuggestion(App) {
         ${buildExerciseListHTML(christinaExercisePlan, 'christina')}
         <p class="text-muted text-sm" style="margin-top:4px;">Tap an exercise to swap it.</p>
         <button class="alternatives-toggle" id="christina-alt-toggle">Change routine <span>→</span></button>
-        <div id="christina-alternatives" class="hidden">
+        <div id="christina-alternatives" class="${christinaSuggestion.heavyBlocked ? '' : 'hidden'}">
           <div class="alternatives" style="margin-top:6px;">
             ${christinaSuggestion.alternatives.map(alt => `
               <button class="alt-btn" data-user="christina" data-id="${alt.id}"
@@ -1318,7 +1326,8 @@ function profileExerciseList(App, userId) {
   const seen = new Set();
   const out = [];
   for (const t of (App.data.routineTemplates ?? [])) {
-    if (t.user !== userId) continue;
+    // Unified profiles can use either legacy template family, so both profile
+    // checklists intentionally expose the same complete exercise pool.
     for (const slot of (t.slots ?? [])) {
       for (const id of (slot.allowedExerciseIds ?? [])) {
         if (seen.has(id)) continue;
@@ -1340,7 +1349,6 @@ function renderProfileCard(App, userId) {
   const primaryGoal = p.primaryGoal ?? 'general_fitness';
   const secondaryGoals = new Set(p.secondaryGoals ?? []);
   const experience = p.experienceLevel ?? 'some';
-  const typicalDuration = p.typicalDuration ?? '20_30';
   const adaptationPreference = p.adaptationPreference ?? 'both';
 
   const rows = list.map(x => `
@@ -1379,11 +1387,6 @@ function renderProfileCard(App, userId) {
         <div class="setting-row__label">Training experience</div>
         <div class="mode-toggle" style="flex-wrap:wrap;">${EXPERIENCE_LEVELS.map(([value,label]) => `
           <button class="mode-btn ${experience===value?'active':''}" data-experience="${userId}" data-value="${value}">${label}</button>`).join('')}</div>
-      </div>
-      <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
-        <div class="setting-row__label">Typical workout duration</div>
-        <div class="mode-toggle" style="flex-wrap:wrap;">${DURATION_OPTIONS.map(([value,label]) => `
-          <button class="mode-btn ${typicalDuration===value?'active':''}" data-duration="${userId}" data-value="${value}">${label}</button>`).join('')}</div>
       </div>
       <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
         <div><div class="setting-row__label">Adaptation preferences</div>
@@ -1427,7 +1430,18 @@ export function renderSettings(App) {
   const mode = settings.musicMode ?? 'spotify';
   const theme = settings.theme ?? 'night';
   const unavailableEquipment = new Set(settings.unavailableEquipmentIds ?? []);
-  const equipmentRows = (App.data.equipment ?? []).map(item => `
+  const dumbbellIds = new Set(['modular_adjustable_weights', 'fixed_dumbbells_3kg']);
+  const hasAnyDumbbells = [...dumbbellIds].some(id => !unavailableEquipment.has(id));
+  const equipment = App.data.equipment ?? [];
+  const availableExerciseCount = (App.data.exercises ?? []).filter(ex =>
+    (ex.equipment ?? []).every(id => dumbbellIds.has(id) ? hasAnyDumbbells : !unavailableEquipment.has(id))
+  ).length;
+  const strengthGoalSelected = Object.values(settings.profiles ?? {}).some(profile =>
+    profile.primaryGoal === 'build_strength' || (profile.secondaryGoals ?? []).includes('build_strength')
+  );
+  const weightsUnavailable = unavailableEquipment.has('modular_adjustable_weights')
+    && unavailableEquipment.has('fixed_dumbbells_3kg');
+  const equipmentRows = equipment.map(item => `
     <label class="ex-toggle">
       <input type="checkbox" data-equipment-toggle value="${item.id}" ${unavailableEquipment.has(item.id) ? '' : 'checked'}>
       <span>${escapeHtml(item.name)}</span>
@@ -1474,6 +1488,16 @@ export function renderSettings(App) {
       <div class="card">
         <div class="setting-row__desc" style="margin-bottom:12px;line-height:1.5;">
           Turn off anything this household does not have. Exercises requiring unavailable equipment will be removed from routine choices.
+        </div>
+        <div class="setting-row__desc" style="margin-bottom:12px;">
+          ${availableExerciseCount} of ${App.data.exercises.length} exercises currently available.
+        </div>
+        ${strengthGoalSelected && weightsUnavailable ? `<div class="symptom-flag-summary" style="margin-bottom:12px;">
+          Strength is selected as a goal, but no weights are available. The app will use bodyweight strength variations where possible.
+        </div>` : ''}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+          <button class="btn btn--sm btn--secondary" id="btn-equipment-bodyweight">Bodyweight-focused</button>
+          <button class="btn btn--sm btn--ghost" id="btn-equipment-all">Enable all</button>
         </div>
         <div class="ex-toggle-grid">${equipmentRows}</div>
       </div>

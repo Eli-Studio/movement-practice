@@ -95,14 +95,19 @@ export function adaptWorkoutToCapacity(exercises, capacity = {}, profile = {}) {
   const energy = capacity.energy ?? 'medium';
   const pain = capacity.painDay ?? 'low';
   const soreness = capacity.soreness ?? 'low';
-  const time = capacity.availableTime ?? profile.typicalDuration ?? '20_30';
   let score = 0;
   if (energy === 'low') score += 2; else if (energy === 'high') score -= 1;
   if (pain === 'medium') score += 1; else if (pain === 'high') score += 3;
   if (soreness === 'medium') score += 1; else if (soreness === 'high') score += 2;
 
-  const timeCaps = { '10_15': 2, '20_30': 3, '30_45': 4, '45_plus': 5 };
-  let maxExercises = timeCaps[time] ?? 3;
+  const goalCaps = {
+    build_strength: 5,
+    improve_mobility: 4,
+    maintain_consistency: 4,
+    return_after_break: 3,
+    general_fitness: 4
+  };
+  let maxExercises = goalCaps[profile.primaryGoal] ?? 4;
   let setReduction = 0, reps = null, restBonus = 0, loadFactor = 1;
   const reasons = [];
   if (score >= 5) {
@@ -114,8 +119,9 @@ export function adaptWorkoutToCapacity(exercises, capacity = {}, profile = {}) {
   } else if (energy === 'high' && pain === 'low' && soreness === 'low') {
     reasons.push('capacity supports the original plan');
   }
-  if (profile.experienceLevel === 'new') maxExercises = Math.min(maxExercises, 4);
-  if (maxExercises < exercises.length) reasons.push(`available time limits the plan to ${maxExercises} exercises`);
+  if (profile.experienceLevel === 'new') maxExercises = Math.min(maxExercises, 3);
+  if (maxExercises < exercises.length && score < 2) reasons.push(`your current goal sets a ${maxExercises}-exercise plan`);
+  else if (maxExercises < exercises.length) reasons.push(`today's capacity reduces the plan to ${maxExercises} exercises`);
 
   const plan = exercises.slice(0, maxExercises).map(ex => ({
     ...ex,
