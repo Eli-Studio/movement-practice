@@ -11,7 +11,7 @@ import { getCycleDayNumber } from './cycles.js';
 import { formatDate, formatDateShort, escapeHtml, getTomorrowDate, formatTime, today, safeSpotifyUrl } from './utils.js';
 import { buildMonthCalendar, renderCalendarHTML, getEliStats, getChristinaStats,
          getEliStrengthData, getEliMuscleStimulus, getEliReadiness, getChristinaReadiness,
-         getProfileProgressionSignals, getProfileOverview,
+         getProfileProgressionSignals,
          getChristinaMovementExposure, getChristinaSymptomCalendarData,
          renderStrengthProgressChart, renderMuscleMapChart, renderReadinessCard,
          renderChristinaMovementExposureMap, renderChristinaSymptomCalendarHTML,
@@ -47,6 +47,42 @@ const ADAPTATION_OPTIONS = [
   ['daily_capacity', 'Adapt based on daily capacity'],
   ['both', 'Use both']
 ];
+
+// Kept beside the Tracker renderer so a partial offline-cache refresh cannot
+// leave screens.js depending on a brand-new named export from reports.js.
+function getProfileOverview(sessions, userId) {
+  const completed = sessions.filter(s => s.status === 'completed' && s.users?.includes(userId));
+  const checkinFor = session => session.profileCheckins?.[userId]
+    ?? (userId === 'eli' ? session.eliEndCheckin : session.christinaCheckin) ?? {};
+  const capacityFor = session => checkinFor(session).capacity ?? checkinFor(session);
+  const effortValues = completed.map(s => checkinFor(s).effort ?? checkinFor(s).formFatigue)
+    .filter(value => Number.isFinite(Number(value)) && Number(value) > 0).map(Number);
+  const adapted = completed.filter(session => {
+    const checkin = checkinFor(session);
+    if (checkin.adjustmentUsed != null) return checkin.adjustmentUsed;
+    if (checkin.adjustmentChanged != null) return checkin.adjustmentChanged;
+    return userId === 'christina' && ['reduced', 'recovery'].includes(session.christinaAdaptationLevel);
+  }).length;
+  const weighted = completed.filter(session => (session.exerciseLogs?.[userId] ?? []).some(log =>
+    (log.setLogs ?? []).some(set => typeof set.weightUsed === 'string' && /kg/i.test(set.weightUsed))
+  )).length;
+  const discomfort = completed.filter(session => {
+    const value = checkinFor(session).jointPain;
+    return value && value !== 'no';
+  }).length;
+  const capacity = { low: 0, medium: 0, high: 0 };
+  completed.forEach(session => {
+    const pain = capacityFor(session).painDay;
+    if (pain in capacity) capacity[pain]++;
+  });
+  return {
+    total: completed.length, adapted, weighted, discomfort,
+    avgEffort: effortValues.length
+      ? (effortValues.reduce((sum, value) => sum + value, 0) / effortValues.length).toFixed(1)
+      : null,
+    capacity
+  };
+}
 
 // ---- Shared Nav -------------------------------------------
 
