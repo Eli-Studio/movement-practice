@@ -1,4 +1,4 @@
-const CACHE = 'morning-circuit-network-first-v1';
+const CACHE = 'morning-circuit-network-first-v2';
 const CORE = ['./', './index.html', './styles.css', './manifest.json', './icons/icon.svg',
   './data/equipment.json', './data/exercises.json', './data/routineTemplates.json',
   './js/adaptation.js', './js/app.js', './js/audio.js', './js/config.js', './js/cycles.js',
@@ -17,13 +17,15 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (url.origin === self.location.origin) {
     event.respondWith(fetch(event.request).then(response => {
-      if (response.ok) caches.open(CACHE).then(cache => cache.put(event.request, response.clone()));
+      const cachedCopy = response.ok ? response.clone() : null;
+      if (cachedCopy) caches.open(CACHE).then(cache => cache.put(event.request, cachedCopy));
       return response;
     }).catch(() => caches.match(event.request)));
     return;
   }
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-    if (response.ok || response.type === 'opaque') caches.open(CACHE).then(cache => cache.put(event.request, response.clone()));
+    const cachedCopy = (response.ok || response.type === 'opaque') ? response.clone() : null;
+    if (cachedCopy) caches.open(CACHE).then(cache => cache.put(event.request, cachedCopy));
     return response;
   })));
 });
