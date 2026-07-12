@@ -450,16 +450,34 @@ function buildExerciseListHTML(exercises, user) {
   `;
 }
 
-function capacityAdjustmentHTML(adjustment, userId) {
+function capacityAdjustmentHTML(adjustment, userId, choices = {}) {
   if (!adjustment?.changed) return '';
   const explanation = adjustment.reasons?.length
     ? adjustment.reasons.join('; ') : 'today’s capacity suggests a lighter plan';
+  const c = adjustment.comparison ?? {};
+  const rows = [
+    ['length', 'Exercises', c.originalCount, c.recommendedCount],
+    ['volume', 'Sets / reps', 'Original', c.recommendedReps ? `−${c.setReduction} set · ${c.recommendedReps}` : 'Original'],
+    ['load', 'Working load', '100%', `${Math.round((c.loadFactor ?? 1) * 100)}%`],
+    ['rest', 'Rest', 'Original', c.restBonus ? `+${c.restBonus}s` : 'Original']
+  ];
+  const choiceButton = (dimension, mode, label) => {
+    const selected = (choices[dimension] ?? 'recommended') === mode;
+    return `<button class="mode-btn ${selected ? 'active' : ''}" data-capacity-user="${userId}"
+      data-capacity-dimension="${dimension}" data-capacity-mode="${mode}" aria-pressed="${selected}">${escapeHtml(String(label))}</button>`;
+  };
   return `<div class="symptom-flag-summary" style="margin-bottom:10px;">
     <strong>Recommended adjustment:</strong> ${escapeHtml(explanation)}.
-    You can swap individual exercises below or use the original plan unchanged.
+    Choose original or recommended values independently. You can also swap exercises below.
+    <div style="margin-top:10px;border-top:1px solid var(--border);">
+      ${rows.map(([dimension,label,original,recommended]) => `<div class="setting-row" style="padding:9px 0;gap:8px;">
+        <div style="min-width:86px;"><div class="setting-row__label">${label}</div></div>
+        <div class="mode-toggle" style="margin-left:auto;">${choiceButton(dimension,'original',original)}${choiceButton(dimension,'recommended',recommended)}</div>
+      </div>`).join('')}
+    </div>
     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-      <button class="btn btn--sm btn--secondary" id="btn-${userId}-recommended">Use recommendation</button>
-      <button class="btn btn--sm btn--ghost" id="btn-${userId}-original">Use original plan</button>
+      <button class="btn btn--sm btn--secondary" id="btn-${userId}-recommended">Use all recommended</button>
+      <button class="btn btn--sm btn--ghost" id="btn-${userId}-original">Use all original</button>
     </div>
   </div>`;
 }
@@ -523,7 +541,7 @@ export function renderRoutineSuggestion(App) {
         <div class="suggestion-card__routine">${escapeHtml(eliSuggestion.primary.label)}</div>
         <div class="suggestion-card__reason">${escapeHtml(eliSuggestion.primary.reason)}</div>
         ${strengthRestHTML(eliSuggestion)}
-        ${capacityAdjustmentHTML(ui.eliCapacityAdjustment, 'eli')}
+        ${capacityAdjustmentHTML(ui.eliCapacityAdjustment, 'eli', ui.capacityDimensionChoices?.eli)}
         ${workoutCountHTML(eliExercisePlan)}
         ${anchorLine}
         ${buildExerciseListHTML(eliExercisePlan, 'eli')}
@@ -554,7 +572,7 @@ export function renderRoutineSuggestion(App) {
         <div class="suggestion-card__routine">${escapeHtml(christinaSuggestion.primary.label)}</div>
         <div class="suggestion-card__reason">${escapeHtml(christinaSuggestion.primary.reason)}</div>
         ${strengthRestHTML(christinaSuggestion)}
-        ${capacityAdjustmentHTML(ui.christinaCapacityAdjustment, 'christina')}
+        ${capacityAdjustmentHTML(ui.christinaCapacityAdjustment, 'christina', ui.capacityDimensionChoices?.christina)}
         ${workoutCountHTML(christinaExercisePlan)}
         ${(() => {
           const n = (christinaExercisePlan ?? []).filter(e => e.symptomConflicts?.length).length;

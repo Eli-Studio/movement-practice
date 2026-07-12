@@ -134,7 +134,32 @@ export function adaptWorkoutToCapacity(exercises, capacity = {}, profile = {}) {
     adapted: score >= 2,
     adaptationNote: score >= 2 ? `${Math.round(loadFactor * 100)}% load · ${restBonus ? `+${restBonus}s rest` : 'usual rest'}` : null
   }));
-  return { plan, changed: score >= 2 || maxExercises < exercises.length, score, reasons };
+  return {
+    plan, changed: score >= 2 || maxExercises < exercises.length, score, reasons,
+    comparison: {
+      originalCount: exercises.length, recommendedCount: plan.length,
+      setReduction, recommendedReps: reps, restBonus, loadFactor
+    }
+  };
+}
+
+export function composeCapacityPlan(original, recommended, choices = {}) {
+  const use = dimension => (choices[dimension] ?? 'recommended') === 'recommended';
+  const count = use('length') ? recommended.length : original.length;
+  const recommendedById = new Map(recommended.map(ex => [ex.id, ex]));
+  return original.slice(0, count).map(ex => {
+    const rec = recommendedById.get(ex.id) ?? ex;
+    return {
+      ...ex,
+      sets: use('volume') ? rec.sets : ex.sets,
+      reps: use('volume') ? rec.reps : ex.reps,
+      currentReps: use('volume') ? rec.currentReps : ex.currentReps,
+      currentWeightKg: use('load') ? rec.currentWeightKg : ex.currentWeightKg,
+      restSeconds: use('rest') ? rec.restSeconds : ex.restSeconds,
+      adapted: ['length','volume','load','rest'].some(key => use(key)) && rec.adapted,
+      adaptationNote: ['volume','load','rest'].some(key => use(key)) ? rec.adaptationNote : null
+    };
+  });
 }
 
 /**

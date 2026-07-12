@@ -8,7 +8,7 @@ import { unlockAudio, playSessionComplete, playMeditation, stopMeditation, playT
 import { initCycleFromLaunchDate, startNewCycle, isCycleExpired, updateCycleAfterSession, getCycleProgressionSuggestions } from './cycles.js';
 import { getEliReadiness } from './reports.js';
 import { getEliSuggestion, getChristinaSuggestion, getMissedDays } from './rotation.js';
-import { adaptChristinaExercises, adaptWorkoutToCapacity, annotateSymptomConflicts } from './adaptation.js';
+import { adaptChristinaExercises, adaptWorkoutToCapacity, composeCapacityPlan, annotateSymptomConflicts } from './adaptation.js';
 import { analyzePairedConflicts, getConflictingItems } from './equipment.js';
 import { buildExercisePlan, createSession, logSet, skipExercise,
          completeSession, abandonSession, getTemplateAnchors,
@@ -39,6 +39,7 @@ window.App = {
     pendingSymptomUsers:    [],
     activeSymptomUser:      null,
     capacityChoiceByUser:   {},
+    capacityDimensionChoices: {},
     eliSuggestion:          null,
     christinaSuggestion:    null,
     selectedEliRoutine:     null,
@@ -223,6 +224,7 @@ function navigate(screen) {
               App.ui.eliOriginalPlan = eliPlan;
               App.ui.eliCapacityAdjustment = adjustment;
               App.ui.eliRecommendedPlan = adjustment.plan;
+              App.ui.capacityDimensionChoices.eli ??= {};
               eliPlan = adjustment.plan;
               App.ui.eliAnchors = App.ui.eliSuggestion.primary.type === 'heavy_weight'
                 ? getTemplateAnchors(tmpl, App.data.exercises, cycleNum) : [];
@@ -271,6 +273,7 @@ function navigate(screen) {
               App.ui.christinaOriginalPlan = plan;
               App.ui.christinaCapacityAdjustment = adjustment;
               App.ui.christinaRecommendedPlan = adjustment.plan;
+              App.ui.capacityDimensionChoices.christina ??= {};
               plan = adjustment.plan;
               // Advisory: flag exercises that conflict with today's active symptoms (no removal).
               plan = annotateSymptomConflicts(plan, App.ui.symptomsByUser.christina);
@@ -616,10 +619,13 @@ function setupListeners(screen) {
       };
       const chooseCapacityPlan = (userId, useOriginal) => {
         const key = userId === 'eli' ? 'eliExercisePlan' : 'christinaExercisePlan';
-        const source = useOriginal
-          ? App.ui[`${userId}OriginalPlan`]
-          : App.ui[`${userId}RecommendedPlan`];
-        if (source) App.ui[key] = source.map(ex => ({ ...ex }));
+        const mode = useOriginal ? 'original' : 'recommended';
+        App.ui.capacityDimensionChoices[userId] = {
+          length: mode, volume: mode, load: mode, rest: mode
+        };
+        const original = App.ui[`${userId}OriginalPlan`];
+        const recommended = App.ui[`${userId}RecommendedPlan`];
+        if (original && recommended) App.ui[key] = composeCapacityPlan(original, recommended, App.ui.capacityDimensionChoices[userId]);
         App.ui.capacityChoiceByUser[userId] = useOriginal ? 'original' : 'recommended';
         refreshConflicts();
         navigate('routine_suggestion');
@@ -628,6 +634,18 @@ function setupListeners(screen) {
       on('btn-eli-recommended', 'click', () => chooseCapacityPlan('eli', false));
       on('btn-christina-original', 'click', () => chooseCapacityPlan('christina', true));
       on('btn-christina-recommended', 'click', () => chooseCapacityPlan('christina', false));
+      document.querySelectorAll('[data-capacity-user]').forEach(btn => btn.addEventListener('click', () => {
+        const userId = btn.dataset.capacityUser;
+        const dimension = btn.dataset.capacityDimension;
+        App.ui.capacityDimensionChoices[userId] ??= {};
+        App.ui.capacityDimensionChoices[userId][dimension] = btn.dataset.capacityMode;
+        const original = App.ui[`${userId}OriginalPlan`];
+        const recommended = App.ui[`${userId}RecommendedPlan`];
+        const key = userId === 'eli' ? 'eliExercisePlan' : 'christinaExercisePlan';
+        if (original && recommended) App.ui[key] = composeCapacityPlan(original, recommended, App.ui.capacityDimensionChoices[userId]);
+        refreshConflicts();
+        navigate('routine_suggestion');
+      }));
 
       on('eli-alt-toggle', 'click', () => {
         get('eli-alternatives')?.classList.toggle('hidden');
@@ -1289,6 +1307,7 @@ function afterMissedDays() {
   const adaptiveUsers = [...App.ui.selectedUsers];
   App.ui.symptomsByUser = {};
   App.ui.capacityChoiceByUser = {};
+  App.ui.capacityDimensionChoices = {};
   App.ui.activeSymptomUser = adaptiveUsers.shift() ?? null;
   App.ui.pendingSymptomUsers = adaptiveUsers;
   if (App.ui.activeSymptomUser) {
@@ -1317,9 +1336,8 @@ function buildWorkoutState() {
     const tmpl = App.data.routineTemplates.find(t => t.id === (eliR.templateId ?? eliR.id));
     if (tmpl) {
       eliExercises = buildExercisePlan(tmpl, App.data.exercises, eliSessionCount, cycleNum, App.state.cycleState?.eliExerciseWeights ?? {}, App.state.cycleState?.eliExerciseRepsTarget ?? {}, App.state.settings.profiles.eli, App.state.settings.unavailableEquipmentIds);
-      if (App.ui.capacityChoiceByUser.eli !== 'original') {
-        eliExercises = adaptWorkoutToCapacity(eliExercises, App.ui.symptomsByUser.eli, App.state.settings.profiles.eli).plan;
-      }
+      const adjusted = adaptWorkoutToCapacity(eliExercises, App.ui.symptomsByUser.eli, App.state.settings.profiles.eli);
+      eliExercises = composeCapacityPlan(eliExercises, adjusted.plan, App.ui.capacityDimensionChoices.eli);
       eliExercises = annotateSymptomConflicts(eliExercises, App.ui.symptomsByUser.eli);
     }
   }
@@ -1328,9 +1346,8 @@ function buildWorkoutState() {
     const tmpl = App.data.routineTemplates.find(t => t.id === (christR.templateId ?? christR.id));
     if (tmpl) {
       let plan = buildExercisePlan(tmpl, App.data.exercises, cSessionCount, cycleNum, {}, {}, App.state.settings.profiles.christina, App.state.settings.unavailableEquipmentIds);
-      if (App.ui.capacityChoiceByUser.christina !== 'original') {
-        plan = adaptWorkoutToCapacity(plan, App.ui.symptomsByUser.christina, App.state.settings.profiles.christina).plan;
-      }
+      const adjusted = adaptWorkoutToCapacity(plan, App.ui.symptomsByUser.christina, App.state.settings.profiles.christina);
+      plan = composeCapacityPlan(plan, adjusted.plan, App.ui.capacityDimensionChoices.christina);
       christinaExercises = annotateSymptomConflicts(plan, App.ui.symptomsByUser.christina);
     }
   }
