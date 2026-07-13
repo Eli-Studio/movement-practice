@@ -1580,7 +1580,6 @@ function renderProfileCard(App, userId) {
 
 export function renderSettings(App) {
   const { settings } = App.state;
-  const mode = settings.musicMode ?? 'spotify';
   const theme = settings.theme ?? 'night';
   const unavailableEquipment = new Set(settings.unavailableEquipmentIds ?? []);
   const dumbbellIds = new Set(['modular_adjustable_weights', 'fixed_dumbbells_3kg']);
@@ -1675,38 +1674,20 @@ export function renderSettings(App) {
           </div>
         </div>
 
-        <!-- Music Mode toggle -->
+        <!-- Public builds are silent; Spotify remains an optional external link. -->
         <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:12px;">
           <div>
             <div class="setting-row__label">Music during workout</div>
             <div class="setting-row__desc">
-              ${mode === 'spotify'
-                ? 'Spotify mode — the music button opens your playlist. No chimes.'
-                : 'Chime mode — marimba plays at end of every rest and exercise timer.'}
+              Add a Spotify playlist to show a music shortcut during workouts. This public build runs silently; chimes and guided-audio tracks are not included.
             </div>
           </div>
-          <div class="mode-toggle">
-            <button class="mode-btn ${mode==='spotify'?'active':''}" id="btn-mode-spotify">
-              ${uiGlyph('music')} Spotify
-            </button>
-            <button class="mode-btn ${mode==='chimes'?'active':''}" id="btn-mode-chimes">
-              ${uiGlyph('chime')} Chimes
-            </button>
-          </div>
-          ${mode === 'spotify' ? `
           <div style="width:100%;">
             <div class="input-label" style="margin-bottom:4px;">Spotify Playlist URL</div>
             <input type="url" class="input" id="spotify-url"
                    placeholder="https://open.spotify.com/playlist/..."
                    value="${escapeHtml(settings.spotifyUrl ?? '')}">
-          </div>` : `
-          <div style="display:flex;align-items:center;gap:12px;">
-            <label class="toggle">
-              <input type="checkbox" id="audio-toggle" ${settings.audioEnabled?'checked':''}>
-              <span class="toggle-slider"></span>
-            </label>
-            <span style="font-size:0.85rem;color:var(--text-2);">Enable chime sounds</span>
-          </div>`}
+          </div>
         </div>
       </div>
 

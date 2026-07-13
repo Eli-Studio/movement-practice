@@ -3,7 +3,7 @@
 // ============================================================
 
 import { today, formatDate } from './utils.js';
-import { exportStateJSON } from './storage.js';
+import { exportStateJSON } from './storage.js?v=2';
 
 function downloadFile(filename, content, mime) {
   const blob = new Blob([content], { type: mime });

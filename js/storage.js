@@ -2,7 +2,7 @@
 // storage.js — localStorage persistence
 // ============================================================
 
-import { STORAGE_KEY } from './config.js';
+import { AUDIO_AVAILABLE, STORAGE_KEY } from './config.js?v=2';
 import { safeSpotifyUrl } from './utils.js';
 
 export const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
@@ -38,7 +38,7 @@ export function getDefaultState() {
     settings: {
       launchDate:         null,
       currentCycleStart:  null,
-      audioEnabled:       true,
+      audioEnabled:       AUDIO_AVAILABLE,
       defaultRestSeconds: 120,
       spotifyUrl:         '',
       musicMode:          'spotify',  // 'spotify' | 'chimes'
@@ -204,7 +204,7 @@ function migrateLegacyIds(value) {
 function mergeAgainstDefaults(rawParsed) {
   const parsed = migrateLegacyIds(rawParsed);
   const d = getDefaultState();
-  return {
+  const merged = {
     ...d,
     ...parsed,
     version:      parsed.version ?? d.version,
@@ -218,6 +218,14 @@ function mergeAgainstDefaults(rawParsed) {
     missedDays:   Array.isArray(parsed.missedDays)   ? parsed.missedDays   : d.missedDays,
     cycleReviews: Array.isArray(parsed.cycleReviews) ? parsed.cycleReviews : d.cycleReviews
   };
+  // Audio files are not part of the public build. Normalize old backups that
+  // selected chimes so the UI and workout controls consistently use Spotify's
+  // external-link mode and never imply unavailable sound effects will play.
+  if (!AUDIO_AVAILABLE) {
+    merged.settings.audioEnabled = false;
+    merged.settings.musicMode = 'spotify';
+  }
+  return merged;
 }
 
 export function loadState() {

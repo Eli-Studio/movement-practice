@@ -2,9 +2,9 @@
 // app.js — Movement Practice · Main orchestrator  v0.4.1
 // ============================================================
 
-import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js';
+import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js?v=2';
 import { loadAllData } from './data.js';
-import { unlockAudio, playSessionComplete, playMeditation, stopMeditation, playTimerComplete, playButtonClick } from './audio.js';
+import { unlockAudio, playSessionComplete, playMeditation, stopMeditation, playTimerComplete, playButtonClick } from './audio.js?v=2';
 import { initCycleFromLaunchDate, startNewCycle, isCycleExpired, updateCycleAfterSession, getCycleProgressionSuggestions } from './cycles.js';
 import { getEliReadiness } from './reports.js';
 import { getEliSuggestion, getChristinaSuggestion, getMissedDays } from './rotation.js';
@@ -23,7 +23,7 @@ import {
   renderRoutineSuggestion, renderWarmup, renderWorkoutRunner, renderRestOverlay, updateRestOverlayDOM,
   renderEndCheckin, renderMeditation, renderSessionSummary, renderReports,
   initReportCharts, renderSettings, renderCycleReview, initCycleReviewCards
-} from './screens.js';
+} from './screens.js?v=2';
 
 // ============================================================
 // Global App object
@@ -1172,7 +1172,7 @@ function setupListeners(screen) {
         saveState(App.state); navigate('settings');
       });
 
-      // Music mode toggle
+      // Appearance and optional Spotify shortcut
       get('btn-theme-day')?.addEventListener('click', () => {
         App.state.settings.theme = 'day';
         applyTheme('day');
@@ -1186,23 +1186,6 @@ function setupListeners(screen) {
         saveState(App.state);
         navigate('settings');
         showToast('Night theme on');
-      });
-
-      get('btn-mode-spotify')?.addEventListener('click', () => {
-        App.state.settings.musicMode = 'spotify';
-        saveState(App.state);
-        navigate('settings');
-      });
-      get('btn-mode-chimes')?.addEventListener('click', () => {
-        App.state.settings.musicMode = 'chimes';
-        saveState(App.state);
-        navigate('settings');
-      });
-
-      get('audio-toggle')?.addEventListener('change', e => {
-        App.state.settings.audioEnabled = e.target.checked;
-        saveState(App.state);
-        showToast(e.target.checked ? 'Chimes on' : 'Chimes off');
       });
 
       get('spotify-url')?.addEventListener('blur', e => {

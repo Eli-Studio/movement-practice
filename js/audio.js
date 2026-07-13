@@ -12,17 +12,19 @@
 // programmatically for the rest of the session.
 // ============================================================
 
-import { AUDIO_FILES, MEDITATION_TRACKS } from './config.js';
+import { AUDIO_AVAILABLE, AUDIO_FILES, MEDITATION_TRACKS } from './config.js?v=2';
 
 // ---- Pre-create elements at module load --------------------
 // Do NOT create new Audio() objects later — reuse these.
 
-const _chime       = new Audio(AUDIO_FILES.timerComplete);
-const _session     = new Audio(AUDIO_FILES.sessionComplete);
-const _buttonClick = new Audio(AUDIO_FILES.buttonClick);
-const _med         = MEDITATION_TRACKS.map(src => new Audio(src));
+const makeAudio = src => AUDIO_AVAILABLE && typeof Audio !== 'undefined' ? new Audio(src) : null;
+const _chime       = makeAudio(AUDIO_FILES.timerComplete);
+const _session     = makeAudio(AUDIO_FILES.sessionComplete);
+const _buttonClick = makeAudio(AUDIO_FILES.buttonClick);
+const _med         = AUDIO_AVAILABLE ? MEDITATION_TRACKS.map(makeAudio).filter(Boolean) : [];
+const _allAudio    = [_chime, _session, _buttonClick, ..._med].filter(Boolean);
 
-[_chime, _session, _buttonClick, ..._med].forEach(a => { a.preload = 'auto'; });
+_allAudio.forEach(a => { a.preload = 'auto'; });
 
 let _unlocked         = false;
 let _meditationActive = false;
@@ -32,12 +34,12 @@ let _lastButtonClickAt = 0;
 // ---- Unlock (call on every early user tap) -----------------
 
 export function unlockAudio() {
-  if (_unlocked) return;
+  if (!AUDIO_AVAILABLE || _unlocked) return;
   _unlocked = true;
 
   // Touch every audio element inside this gesture handler so
   // iOS grants permission for future programmatic .play() calls.
-  [_chime, _session, _buttonClick, ..._med].forEach(audio => {
+  _allAudio.forEach(audio => {
     const p = audio.play();
     if (p && typeof p.then === 'function') {
       p.then(() => { audio.pause(); audio.currentTime = 0; }).catch(() => {});
@@ -50,13 +52,13 @@ export function unlockAudio() {
 // ---- Chime sounds ------------------------------------------
 
 export function playTimerComplete(audioEnabled) {
-  if (!audioEnabled) return;
+  if (!AUDIO_AVAILABLE || !audioEnabled || !_chime) return;
   _chime.currentTime = 0;
   _chime.play().catch(() => {});
 }
 
 export function playSessionComplete(audioEnabled) {
-  if (!audioEnabled) return;
+  if (!AUDIO_AVAILABLE || !audioEnabled || !_session) return;
   _session.currentTime = 0;
   _session.play().catch(() => {});
 }
@@ -68,7 +70,7 @@ export function playSessionComplete(audioEnabled) {
 // the first tap. Small cooldown prevents rapid-tap sound spam.
 
 export function playButtonClick(audioEnabled) {
-  if (!audioEnabled) return;
+  if (!AUDIO_AVAILABLE || !audioEnabled || !_buttonClick) return;
   const now = Date.now();
   if (now - _lastButtonClickAt < 80) return;
   _lastButtonClickAt = now;
@@ -87,7 +89,7 @@ export function playButtonClick(audioEnabled) {
 // in app.js), so iOS permits it.
 
 export function playMeditation(minutes, audioEnabled) {
-  if (!audioEnabled) return;
+  if (!AUDIO_AVAILABLE || !audioEnabled || !_med.length) return;
   stopMeditation();
   _meditationActive = true;
   _medIdx = 0;

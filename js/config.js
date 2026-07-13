@@ -102,6 +102,11 @@ export const ACTIVITY_COLORS = {
 
 export const DEFAULT_REST_SECONDS = 120;
 
+// This public distribution intentionally ships without audio assets. Keeping
+// the capability explicit lets audio.js avoid constructing HTMLAudioElements,
+// which would otherwise trigger a burst of guaranteed 404 requests at startup.
+export const AUDIO_AVAILABLE = false;
+
 // Exercise audio: marimba chime — fires only at warmup end and meditation natural end.
 // Removed from rest timers and exercise duration timers to avoid interfering with music.
 export const AUDIO_FILES = {

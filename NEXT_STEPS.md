@@ -13,12 +13,13 @@ items are intentionally deferred for the next development session.
 - Add a browser test that reloads halfway through a workout and verifies that no
   progress is lost.
 
-## Priority 2 — Align the public audio experience
+## Completed — Align the public audio experience
 
-- Stop eagerly requesting audio files that are not included in the public build.
-- Either hide/disable chime and meditation-audio controls for the silent build, or
-  add properly licensed audio assets and include them in the service-worker cache.
-- Verify that a normal page load produces no missing-asset requests.
+- Audio capability is explicitly disabled for this public build, so it creates no
+  media elements and makes no missing-asset requests.
+- Chime controls are hidden and Settings accurately describes silent operation.
+- Warm-up and meditation timers remain available without bundled audio, while an
+  optional Spotify URL still provides an external music shortcut.
 
 ## Priority 3 — Add release checks
 
@@ -51,4 +52,3 @@ items are intentionally deferred for the next development session.
 - Onboarding, capacity check-in, routine suggestion, workout startup, Settings,
   and offline reload work in browser testing.
 - No committed secrets or unexpected third-party runtime requests were found.
-
