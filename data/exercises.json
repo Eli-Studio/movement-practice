@@ -3,7 +3,7 @@
     "id": "eli_incline_dumbbell_bench_press",
     "name": "Incline Dumbbell Bench Press",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "horizontal_press",
@@ -37,7 +37,7 @@
     "id": "eli_flat_dumbbell_bench_press",
     "name": "Flat Dumbbell Bench Press",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "horizontal_press",
@@ -70,7 +70,7 @@
     "id": "eli_incline_pushup",
     "name": "Incline Pushup",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "bodyweight_press",
@@ -99,7 +99,7 @@
     "id": "eli_seated_dumbbell_shoulder_press",
     "name": "Seated Dumbbell Shoulder Press",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "vertical_press",
@@ -132,7 +132,7 @@
     "id": "eli_standing_dumbbell_shoulder_press",
     "name": "Standing Dumbbell Shoulder Press",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "vertical_press",
@@ -163,7 +163,7 @@
     "id": "eli_overhead_tricep_extension",
     "name": "Overhead Tricep Extension",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "triceps",
@@ -192,7 +192,7 @@
     "id": "eli_lateral_raise_3kg",
     "name": "Lateral Raise",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "shoulder_accessory",
@@ -222,7 +222,7 @@
     "id": "eli_one_arm_dumbbell_row",
     "name": "One-Arm Dumbbell Row",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "horizontal_pull",
@@ -256,7 +256,7 @@
     "id": "eli_bench_supported_dumbbell_row",
     "name": "Bench-Supported Dumbbell Row",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "horizontal_pull",
@@ -289,7 +289,7 @@
     "id": "eli_reverse_fly",
     "name": "Reverse Fly",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "rear_delts",
@@ -319,7 +319,7 @@
     "id": "eli_hammer_curl",
     "name": "Hammer Curl",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "biceps",
@@ -349,7 +349,7 @@
     "id": "eli_renegade_row",
     "name": "Renegade Row",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "row_core",
@@ -385,7 +385,7 @@
     "id": "eli_goblet_squat",
     "name": "Goblet Squat",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "squat",
@@ -417,7 +417,7 @@
     "id": "eli_dumbbell_rdl",
     "name": "Dumbbell Romanian Deadlift",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -447,7 +447,7 @@
     "id": "eli_split_squat",
     "name": "Split Squat",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "single_leg",
@@ -481,7 +481,7 @@
     "id": "eli_bench_glute_bridge",
     "name": "Bench Glute Bridge",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -513,7 +513,7 @@
     "id": "eli_calf_raises",
     "name": "Calf Raises",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "calves",
@@ -540,7 +540,7 @@
     "id": "eli_farmer_carry",
     "name": "Farmer Carry",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "full_body",
     "movementPattern": "carry",
@@ -571,7 +571,7 @@
     "id": "eli_incline_situp",
     "name": "Incline Sit-Up",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "core",
     "movementPattern": "core_flexion",
@@ -603,7 +603,7 @@
     "id": "eli_bench_reverse_crunch",
     "name": "Bench Reverse Crunch",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "core",
     "movementPattern": "core",
@@ -634,7 +634,7 @@
     "id": "eli_side_plank",
     "name": "Side Plank",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "core",
     "movementPattern": "anti_lateral_flexion",
@@ -663,7 +663,7 @@
     "id": "eli_speed_rope_intervals",
     "name": "Speed Rope Intervals",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "cardio",
     "movementPattern": "cardio",
@@ -695,8 +695,8 @@
     "id": "step_jacks",
     "name": "Step Jacks",
     "eligibleUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "category": "cardio",
     "movementPattern": "cardio",
@@ -731,8 +731,8 @@
     "id": "bodyweight_squat",
     "name": "Bodyweight Squat",
     "eligibleUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "squat",
@@ -766,8 +766,8 @@
     "id": "bird_dog",
     "name": "Bird Dog",
     "eligibleUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "category": "core",
     "movementPattern": "core_mobility",
@@ -799,8 +799,8 @@
     "id": "dead_bug",
     "name": "Dead Bug",
     "eligibleUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "category": "core",
     "movementPattern": "core_mobility",
@@ -830,8 +830,8 @@
     "id": "gentle_yoga_flow",
     "name": "Gentle Yoga Flow",
     "eligibleUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "category": "mobility",
     "movementPattern": "mobility",
@@ -866,8 +866,8 @@
     "id": "mobility_flow",
     "name": "Gentle Mobility Flow",
     "eligibleUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "category": "mobility",
     "movementPattern": "mobility",
@@ -900,7 +900,7 @@
     "id": "christina_seated_dumbbell_shoulder_press",
     "name": "Seated Shoulder Press",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "push",
     "movementPattern": "vertical_press",
@@ -941,7 +941,7 @@
     "id": "christina_light_dumbbell_row",
     "name": "Light Dumbbell Row",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "pull",
     "movementPattern": "horizontal_pull",
@@ -980,7 +980,7 @@
     "id": "christina_sit_to_stand",
     "name": "Sit-to-Stand",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "squat",
@@ -1016,7 +1016,7 @@
     "id": "christina_glute_bridge",
     "name": "Glute Bridge",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -1047,7 +1047,7 @@
     "id": "christina_supported_hinge",
     "name": "Supported Hinge",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -1079,7 +1079,7 @@
     "id": "christina_light_goblet_squat",
     "name": "Light Goblet Squat",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "squat",
@@ -1118,7 +1118,7 @@
     "id": "christina_wall_pushup",
     "name": "Wall Pushup",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "push",
     "movementPattern": "bodyweight_press",
@@ -1148,7 +1148,7 @@
     "id": "christina_incline_pushup",
     "name": "Incline Pushup",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "push",
     "movementPattern": "bodyweight_press",
@@ -1182,7 +1182,7 @@
     "id": "christina_marching_in_place",
     "name": "Marching in Place",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "cardio",
     "movementPattern": "cardio",
@@ -1216,7 +1216,7 @@
     "id": "christina_low_impact_side_steps",
     "name": "Low-Impact Side Steps",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "cardio",
     "movementPattern": "cardio",
@@ -1252,7 +1252,7 @@
     "id": "christina_seated_mobility",
     "name": "Seated Mobility",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "mobility",
     "movementPattern": "mobility",
@@ -1286,7 +1286,7 @@
     "id": "christina_floor_mobility",
     "name": "Floor Mobility",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "mobility",
     "movementPattern": "mobility",
@@ -1319,7 +1319,7 @@
     "id": "eli_floor_press",
     "name": "Floor Press",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "horizontal_press",
@@ -1351,7 +1351,7 @@
     "id": "eli_tempo_incline_pushup",
     "name": "Tempo Incline Pushup",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "bodyweight_press",
@@ -1382,7 +1382,7 @@
     "id": "eli_close_grip_incline_pushup",
     "name": "Close-Grip Incline Pushup",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "bodyweight_press",
@@ -1413,7 +1413,7 @@
     "id": "eli_standing_arnold_press",
     "name": "Standing Arnold Press",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "vertical_press",
@@ -1444,7 +1444,7 @@
     "id": "eli_single_dumbbell_tricep_extension",
     "name": "Single-Dumbbell Overhead Triceps Extension",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "triceps",
@@ -1475,7 +1475,7 @@
     "id": "eli_bench_tricep_extension",
     "name": "Bench Triceps Extension",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "triceps",
@@ -1508,7 +1508,7 @@
     "id": "eli_front_raise_3kg",
     "name": "Front Raise",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "push",
     "movementPattern": "delt_isolation",
@@ -1539,7 +1539,7 @@
     "id": "eli_rear_delt_raise_3kg",
     "name": "Rear Delt Raise",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "delt_isolation",
@@ -1570,7 +1570,7 @@
     "id": "eli_kettlebell_style_deadlift",
     "name": "Kettlebell-Style Deadlift",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -1601,7 +1601,7 @@
     "id": "eli_single_dumbbell_rdl",
     "name": "Single-Dumbbell RDL",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -1634,7 +1634,7 @@
     "id": "eli_reverse_lunge",
     "name": "Reverse Lunge",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "single_leg",
@@ -1663,7 +1663,7 @@
     "id": "eli_step_up",
     "name": "Step-Up",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "single_leg",
@@ -1694,7 +1694,7 @@
     "id": "eli_floor_glute_bridge",
     "name": "Floor Glute Bridge",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -1723,7 +1723,7 @@
     "id": "eli_weighted_glute_bridge",
     "name": "Weighted Glute Bridge",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -1755,7 +1755,7 @@
     "id": "eli_bodyweight_tempo_squat",
     "name": "Bodyweight Tempo Squat",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "squat",
@@ -1784,7 +1784,7 @@
     "id": "eli_wall_sit",
     "name": "Wall Sit",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "isometric",
@@ -1811,7 +1811,7 @@
     "id": "eli_weighted_calf_raises",
     "name": "Weighted Calf Raises",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "lower",
     "movementPattern": "calves",
@@ -1842,7 +1842,7 @@
     "id": "eli_two_dumbbell_bent_row",
     "name": "Two-Dumbbell Bent Row",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "horizontal_pull",
@@ -1873,7 +1873,7 @@
     "id": "eli_single_dumbbell_row",
     "name": "Single-Dumbbell Row",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "horizontal_pull",
@@ -1904,7 +1904,7 @@
     "id": "eli_standard_dumbbell_curl",
     "name": "Standard Dumbbell Curl",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "biceps",
@@ -1935,7 +1935,7 @@
     "id": "eli_slow_eccentric_curl",
     "name": "Slow-Eccentric Curl",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "biceps",
@@ -1966,7 +1966,7 @@
     "id": "eli_prone_y_raise",
     "name": "Prone Y-Raise",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "pull",
     "movementPattern": "posture",
@@ -1993,7 +1993,7 @@
     "id": "eli_plank",
     "name": "Plank",
     "eligibleUsers": [
-      "eli"
+      "userA"
     ],
     "category": "core",
     "movementPattern": "core_brace",
@@ -2020,7 +2020,7 @@
     "id": "christina_seated_row_motion_no_weight",
     "name": "Seated Row Motion (No Weight)",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "pull",
     "movementPattern": "horizontal_pull",
@@ -2048,7 +2048,7 @@
     "id": "christina_supported_squat",
     "name": "Supported Squat",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "squat",
@@ -2080,7 +2080,7 @@
     "id": "christina_floor_glute_squeeze",
     "name": "Floor Glute Squeeze",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -2112,7 +2112,7 @@
     "id": "christina_seated_shoulder_blade_squeeze",
     "name": "Seated Shoulder Blade Squeeze",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "pull",
     "movementPattern": "posture",
@@ -2140,7 +2140,7 @@
     "id": "christina_seated_core_brace",
     "name": "Seated Core Brace",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "core",
     "movementPattern": "core_brace",
@@ -2168,7 +2168,7 @@
     "id": "christina_calf_raise_supported",
     "name": "Supported Calf Raise",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "calves",
@@ -2198,7 +2198,7 @@
     "id": "christina_light_rdl_3kg",
     "name": "Light RDL",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -2236,7 +2236,7 @@
     "id": "christina_standing_scapular_wall_slide",
     "name": "Standing Scapular Wall Slide",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "pull",
     "movementPattern": "posture",
@@ -2267,7 +2267,7 @@
     "id": "christina_bench_single_arm_row_3kg",
     "name": "Bench-Supported Single-Arm Row",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "pull",
     "movementPattern": "horizontal_pull",
@@ -2304,7 +2304,7 @@
     "id": "christina_standing_glute_squeeze",
     "name": "Standing Glute Squeeze",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -2336,7 +2336,7 @@
     "id": "christina_standing_hip_abduction",
     "name": "Standing Hip Abduction (Wall-Supported)",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -2367,7 +2367,7 @@
     "id": "christina_side_lying_leg_lift",
     "name": "Side-Lying Leg Lift",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -2398,7 +2398,7 @@
     "id": "christina_quadruped_hip_extension",
     "name": "Quadruped Hip Extension",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -2433,7 +2433,7 @@
     "id": "christina_bench_hip_thrust",
     "name": "Bench-Supported Hip Thrust",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "glute",
@@ -2467,7 +2467,7 @@
     "id": "christina_standing_hip_hinge",
     "name": "Standing Hip Hinge (Bodyweight)",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -2500,7 +2500,7 @@
     "id": "christina_wall_supported_hip_hinge",
     "name": "Wall-Supported Hip Hinge",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -2533,7 +2533,7 @@
     "id": "christina_seated_forward_hinge",
     "name": "Seated Forward Hinge (Gentle Stretch)",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -2563,7 +2563,7 @@
     "id": "christina_bench_light_rdl_3kg",
     "name": "Bench-Supported Light RDL",
     "eligibleUsers": [
-      "christina"
+      "userB"
     ],
     "category": "lower",
     "movementPattern": "hinge",
@@ -2603,7 +2603,7 @@
   {
     "id": "band_pull_apart",
     "name": "Resistance Band Pull-Apart",
-    "eligibleUsers": ["eli", "christina"],
+    "eligibleUsers": ["userA", "userB"],
     "category": "pull",
     "movementPattern": "horizontal_pull",
     "attributes": ["standing", "grip_dependent"],
@@ -2623,7 +2623,7 @@
   {
     "id": "band_shoulder_external_rotation",
     "name": "Band Shoulder External Rotation",
-    "eligibleUsers": ["eli", "christina"],
+    "eligibleUsers": ["userA", "userB"],
     "category": "push",
     "movementPattern": "shoulder_rotation",
     "attributes": ["grip_dependent"],
@@ -2643,7 +2643,7 @@
   {
     "id": "band_clamshell",
     "name": "Resistance Band Clamshell",
-    "eligibleUsers": ["eli", "christina"],
+    "eligibleUsers": ["userA", "userB"],
     "category": "lower",
     "movementPattern": "hip_abduction",
     "attributes": ["floor_transition"],

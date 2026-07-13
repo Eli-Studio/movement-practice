@@ -2,7 +2,7 @@
 // cycles.js — 28-day training cycle management
 // ============================================================
 
-import { CYCLE_LENGTH_DAYS, ELI_HEAVY_SEQUENCE, CHRISTINA_SEQUENCE, CYCLE_PROGRESSION_STEP_KG } from './config.js';
+import { CYCLE_LENGTH_DAYS, USERA_HEAVY_SEQUENCE, USERB_SEQUENCE, CYCLE_PROGRESSION_STEP_KG } from './config.js';
 import { addDays, today, daysBetween } from './utils.js';
 
 // Parse the first number from a weight string like "5.5kg per hand" → 5.5
@@ -31,20 +31,20 @@ export function initCycleFromLaunchDate(launchDate) {
     cycleNumber:              1,
     startDate:                launchDate,
     endDate:                  addDays(launchDate, CYCLE_LENGTH_DAYS - 1),
-    eliSequencePointer:       0,
-    eliLastHeavyDate:         null,
-    eliLastHeavyRoutineId:    null,
-    eliLastActivityDate:      null,
-    eliHeavyCounts:           { eli_upper_push: 0, eli_lower_body: 0, eli_upper_pull: 0, eli_full_body: 0 },
-    eliCircuitCount:          0,
-    eliCardioCount:           0,
-    eliMobilityCount:         0,
-    eliComboCount:            0,
-    eliExerciseWeights:       {},
-    eliExerciseRepsTarget:    {},
-    christinaSequencePointer: 0,
-    christinaLastActivityDate:null,
-    christinaRoutineCounts: {
+    userASequencePointer:       0,
+    userALastHeavyDate:         null,
+    userALastHeavyRoutineId:    null,
+    userALastActivityDate:      null,
+    userAHeavyCounts:           { eli_upper_push: 0, eli_lower_body: 0, eli_upper_pull: 0, eli_full_body: 0 },
+    userACircuitCount:          0,
+    userACardioCount:           0,
+    userAMobilityCount:         0,
+    userAComboCount:            0,
+    userAExerciseWeights:       {},
+    userAExerciseRepsTarget:    {},
+    userBSequencePointer: 0,
+    userBLastActivityDate:null,
+    userBRoutineCounts: {
       christina_gentle_upper:       0,
       christina_gentle_lower:       0,
       christina_gentle_pull_posture:0,
@@ -63,23 +63,23 @@ export function startNewCycle(current) {
     cycleNumber:              n,
     startDate:                nextStart,
     endDate:                  addDays(nextStart, CYCLE_LENGTH_DAYS - 1),
-    eliSequencePointer:       current.eliSequencePointer,
-    eliLastHeavyDate:         current.eliLastHeavyDate,
-    eliLastHeavyRoutineId:    current.eliLastHeavyRoutineId,
-    eliLastActivityDate:      current.eliLastActivityDate,
-    eliHeavyCounts:           { eli_upper_push: 0, eli_lower_body: 0, eli_upper_pull: 0, eli_full_body: 0 },
-    eliCircuitCount:          0,
-    eliCardioCount:           0,
-    eliMobilityCount:         0,
-    eliComboCount:            0,
+    userASequencePointer:       current.userASequencePointer,
+    userALastHeavyDate:         current.userALastHeavyDate,
+    userALastHeavyRoutineId:    current.userALastHeavyRoutineId,
+    userALastActivityDate:      current.userALastActivityDate,
+    userAHeavyCounts:           { eli_upper_push: 0, eli_lower_body: 0, eli_upper_pull: 0, eli_full_body: 0 },
+    userACircuitCount:          0,
+    userACardioCount:           0,
+    userAMobilityCount:         0,
+    userAComboCount:            0,
     // Weight now derives from the profile baseline each cycle, so per-lift logged
     // weights don't carry across the boundary (they'd otherwise shadow the baseline).
     // Rep targets DO carry — the climb continues unless a baseline bump reset them.
-    eliExerciseWeights:       {},
-    eliExerciseRepsTarget:    { ...(current.eliExerciseRepsTarget ?? {}) },
-    christinaSequencePointer: current.christinaSequencePointer,
-    christinaLastActivityDate:current.christinaLastActivityDate,
-    christinaRoutineCounts: {
+    userAExerciseWeights:       {},
+    userAExerciseRepsTarget:    { ...(current.userAExerciseRepsTarget ?? {}) },
+    userBSequencePointer: current.userBSequencePointer,
+    userBLastActivityDate:current.userBLastActivityDate,
+    userBRoutineCounts: {
       christina_gentle_upper:       0,
       christina_gentle_lower:       0,
       christina_gentle_pull_posture:0,
@@ -102,37 +102,37 @@ export function getCycleDayNumber(cycleState) {
 export function updateCycleAfterSession(cycleState, session, allExercises = []) {
   const c = {
     ...cycleState,
-    eliExerciseWeights:    { ...(cycleState.eliExerciseWeights ?? {}) },
-    eliExerciseRepsTarget: { ...(cycleState.eliExerciseRepsTarget ?? {}) }
+    userAExerciseWeights:    { ...(cycleState.userAExerciseWeights ?? {}) },
+    userAExerciseRepsTarget: { ...(cycleState.userAExerciseRepsTarget ?? {}) }
   };
   const date = session.date;
 
-  if (session.users.includes('eli') && session.eliRoutineId) {
-    c.eliLastActivityDate = date;
-    const rid   = session.eliRoutineId;
-    const rtype = session.eliRoutineType;
+  if (session.users.includes('userA') && session.userARoutineId) {
+    c.userALastActivityDate = date;
+    const rid   = session.userARoutineId;
+    const rtype = session.userARoutineType;
 
     if (rtype === 'heavy_weight') {
-      c.eliLastHeavyDate      = date;
-      c.eliLastHeavyRoutineId = rid;
-      const idx = ELI_HEAVY_SEQUENCE.indexOf(rid);
+      c.userALastHeavyDate      = date;
+      c.userALastHeavyRoutineId = rid;
+      const idx = USERA_HEAVY_SEQUENCE.indexOf(rid);
       if (idx >= 0) {
-        c.eliSequencePointer = (idx + 1) % ELI_HEAVY_SEQUENCE.length;
-        if (c.eliHeavyCounts[rid] !== undefined) c.eliHeavyCounts[rid]++;
+        c.userASequencePointer = (idx + 1) % USERA_HEAVY_SEQUENCE.length;
+        if (c.userAHeavyCounts[rid] !== undefined) c.userAHeavyCounts[rid]++;
       }
-    } else if (rtype === 'circuit')              { c.eliCircuitCount++;  }
-      else if (rtype === 'cardio_circuit')       { c.eliCardioCount++;   }
-      else if (rtype === 'mobility_recovery')    { c.eliMobilityCount++; }
-      else if (rtype === 'combo_weight_circuit') { c.eliComboCount++;    }
+    } else if (rtype === 'circuit')              { c.userACircuitCount++;  }
+      else if (rtype === 'cardio_circuit')       { c.userACardioCount++;   }
+      else if (rtype === 'mobility_recovery')    { c.userAMobilityCount++; }
+      else if (rtype === 'combo_weight_circuit') { c.userAComboCount++;    }
 
-    for (const log of (session.exerciseLogs?.eli ?? [])) {
+    for (const log of (session.exerciseLogs?.userA ?? [])) {
       if (log.skipped) continue;
 
       for (const setLog of (log.setLogs ?? [])) {
         const kg = parseKg(setLog.weightUsed);
         if (kg !== null && kg > 0) {
-          const prev = c.eliExerciseWeights[log.exerciseId] ?? 0;
-          if (kg > prev) c.eliExerciseWeights[log.exerciseId] = kg;
+          const prev = c.userAExerciseWeights[log.exerciseId] ?? 0;
+          if (kg > prev) c.userAExerciseWeights[log.exerciseId] = kg;
         }
       }
 
@@ -144,32 +144,32 @@ export function updateCycleAfterSession(cycleState, session, allExercises = []) 
         if (repsLogged.length) {
           const toppedCount = repsLogged.filter(r => r >= range.max).length;
           const majorityTopped = toppedCount > repsLogged.length / 2;
-          const currentTarget = c.eliExerciseRepsTarget[log.exerciseId] ?? range.min;
+          const currentTarget = c.userAExerciseRepsTarget[log.exerciseId] ?? range.min;
           if (majorityTopped) {
-            c.eliExerciseRepsTarget[log.exerciseId] = Math.min(currentTarget + 1, range.max);
-          } else if (c.eliExerciseRepsTarget[log.exerciseId] == null) {
-            c.eliExerciseRepsTarget[log.exerciseId] = currentTarget;
+            c.userAExerciseRepsTarget[log.exerciseId] = Math.min(currentTarget + 1, range.max);
+          } else if (c.userAExerciseRepsTarget[log.exerciseId] == null) {
+            c.userAExerciseRepsTarget[log.exerciseId] = currentTarget;
           }
         }
       }
     }
   }
 
-  if (session.users.includes('christina') && session.christinaRoutineId) {
-    c.christinaLastActivityDate = date;
-    const cid    = session.christinaRoutineId;
-    const cLevel = session.christinaAdaptationLevel;
+  if (session.users.includes('userB') && session.userBRoutineId) {
+    c.userBLastActivityDate = date;
+    const cid    = session.userBRoutineId;
+    const cLevel = session.userBAdaptationLevel;
 
     const isRealWorkout = cLevel === 'normal' || cLevel === 'reduced';
     if (isRealWorkout) {
-      const cIdx = CHRISTINA_SEQUENCE.indexOf(cid);
+      const cIdx = USERB_SEQUENCE.indexOf(cid);
       if (cIdx >= 0) {
-        c.christinaSequencePointer = (cIdx + 1) % CHRISTINA_SEQUENCE.length;
+        c.userBSequencePointer = (cIdx + 1) % USERB_SEQUENCE.length;
       }
     }
 
-    if (c.christinaRoutineCounts[cid] !== undefined) {
-      c.christinaRoutineCounts[cid]++;
+    if (c.userBRoutineCounts[cid] !== undefined) {
+      c.userBRoutineCounts[cid]++;
     }
   }
 
@@ -189,7 +189,7 @@ export function getCycleProgressionSuggestions(cycleState, allExercises, heavyTe
   const baselineKg = profile?.baselineWeightKg ?? null;
 
   for (const tmpl of heavyTemplates ?? []) {
-    if (!cycleState.eliHeavyCounts?.[tmpl.id]) continue;
+    if (!cycleState.userAHeavyCounts?.[tmpl.id]) continue;
 
     for (const slot of tmpl.slots ?? []) {
       if (slot.slotType !== 'anchor' || !slot.allowedExerciseIds?.length) continue;
@@ -204,7 +204,7 @@ export function getCycleProgressionSuggestions(cycleState, allExercises, heavyTe
       const range = parseRepsRange(def.defaultReps);
       if (!range) continue;
 
-      const currentTarget = cycleState.eliExerciseRepsTarget?.[exId] ?? range.min;
+      const currentTarget = cycleState.userAExerciseRepsTarget?.[exId] ?? range.min;
       anchorsWithData++;
 
       if (currentTarget >= range.max) {

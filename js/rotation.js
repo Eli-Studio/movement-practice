@@ -2,7 +2,7 @@
 // rotation.js — Routine selection and break-day logic
 // ============================================================
 
-import { ELI_HEAVY_SEQUENCE, CHRISTINA_SEQUENCE } from './config.js';
+import { USERA_HEAVY_SEQUENCE, USERB_SEQUENCE } from './config.js';
 import { today, daysBetween, toLocalDateString } from './utils.js';
 import { describePainRule } from './adaptation.js';
 
@@ -13,20 +13,20 @@ import { describePainRule } from './adaptation.js';
  * Break = any non-heavy session logged, any missed-day entry,
  * OR simply 1+ calendar day elapsed since last heavy.
  */
-export function eliHasBreakDay(cycleState, sessions, missedDays) {
-  const lastHeavy = cycleState.eliLastHeavyDate;
+export function userAHasBreakDay(cycleState, sessions, missedDays) {
+  const lastHeavy = cycleState.userALastHeavyDate;
   if (!lastHeavy) return true;           // No heavy session yet
   if (lastHeavy === today()) return false; // Heavy was today — no break yet
 
   const nonHeavyAfter = sessions.some(s =>
     s.date > lastHeavy &&
-    s.users.includes('eli') &&
-    s.eliRoutineType !== 'heavy_weight' &&
+    s.users.includes('userA') &&
+    s.userARoutineType !== 'heavy_weight' &&
     s.status !== 'abandoned'
   );
 
   const missedAfter = missedDays.some(m =>
-    m.date > lastHeavy && m.users.includes('eli')
+    m.date > lastHeavy && m.users.includes('userA')
   );
 
   const daysSince = daysBetween(lastHeavy, today());
@@ -38,12 +38,12 @@ export function eliHasBreakDay(cycleState, sessions, missedDays) {
  * Full Body only unlocks after Upper Push + Lower Body + Upper Pull
  * are each completed at least once in the current cycle.
  */
-export function eliEligibleForFullBody(cycleState) {
-  const c = cycleState.eliHeavyCounts;
+export function userAEligibleForFullBody(cycleState) {
+  const c = cycleState.userAHeavyCounts;
   return c.eli_upper_push > 0 && c.eli_lower_body > 0 && c.eli_upper_pull > 0;
 }
 
-const ELI_ALTERNATIVES = [
+const USERA_ALTERNATIVES = [
   { id: 'eli_light_circuit',        label: 'Light Circuit',           type: 'circuit' },
   { id: 'eli_cardio_circuit',       label: 'Cardio Circuit',          type: 'cardio_circuit' },
   { id: 'eli_mobility_recovery',    label: 'Mobility / Recovery',     type: 'mobility_recovery' },
@@ -51,7 +51,7 @@ const ELI_ALTERNATIVES = [
   { id: 'skip_rest',                label: 'Skip / Rest Today',       type: 'skip_rest' }
 ];
 
-const ELI_HEAVY_LABELS = {
+const USERA_HEAVY_LABELS = {
   eli_upper_push: 'Upper Push — Chest & Shoulders',
   eli_lower_body: 'Lower Body — Legs & Glutes',
   eli_upper_pull: 'Upper Pull — Back & Biceps',
@@ -59,8 +59,8 @@ const ELI_HEAVY_LABELS = {
 };
 
 export function getEliSuggestion(cycleState, sessions, missedDays) {
-  const hasBreak  = eliHasBreakDay(cycleState, sessions, missedDays);
-  const nextHeavy = ELI_HEAVY_SEQUENCE[cycleState.eliSequencePointer];
+  const hasBreak  = userAHasBreakDay(cycleState, sessions, missedDays);
+  const nextHeavy = USERA_HEAVY_SEQUENCE[cycleState.userASequencePointer];
 
   if (!hasBreak) {
     return {
@@ -71,7 +71,7 @@ export function getEliSuggestion(cycleState, sessions, missedDays) {
         reason: 'Break day needed after your last heavy session.'
       },
       alternatives: [
-        ...ELI_ALTERNATIVES.filter(a => a.id !== 'eli_light_circuit'),
+        ...USERA_ALTERNATIVES.filter(a => a.id !== 'eli_light_circuit'),
         { id: 'christina_light_movement', label: 'Gentle Movement', type: 'circuit' }
       ],
       heavyBlocked: true,
@@ -82,13 +82,13 @@ export function getEliSuggestion(cycleState, sessions, missedDays) {
   return {
     primary: {
       id:     nextHeavy,
-      label:  ELI_HEAVY_LABELS[nextHeavy] || nextHeavy,
+      label:  USERA_HEAVY_LABELS[nextHeavy] || nextHeavy,
       type:   'heavy_weight',
       reason: 'Next in your rotation — cleared for a heavy session.'
     },
-    alternatives:     ELI_ALTERNATIVES,
+    alternatives:     USERA_ALTERNATIVES,
     heavyBlocked:     false,
-    eligibleForFullBody: eliEligibleForFullBody(cycleState)
+    eligibleForFullBody: userAEligibleForFullBody(cycleState)
   };
 }
 
@@ -99,7 +99,7 @@ export function getEliSuggestion(cycleState, sessions, missedDays) {
 // Recovery / Light Movement / Rest are always offered as alternatives; Christina
 // chooses them herself rather than the app forcing them.
 
-const CHRISTINA_LABELS = {
+const USERB_LABELS = {
   christina_gentle_upper:        'Gentle Upper Body',
   christina_gentle_lower:        'Gentle Lower Body',
   christina_gentle_pull_posture: 'Gentle Pull & Posture',
@@ -111,7 +111,7 @@ const CHRISTINA_LABELS = {
 // A low-pain day borrows the corresponding five-slot strength template while
 // retaining Christina's own routine id, sequence pointer, profile weight, and
 // reporting. Medium/high days continue to use the gentle templates above.
-const CHRISTINA_LOW_PAIN_TEMPLATES = {
+const USERB_LOW_PAIN_TEMPLATES = {
   christina_gentle_upper:        { id: 'eli_upper_push', label: 'Strength Upper Body' },
   christina_gentle_lower:        { id: 'eli_lower_body', label: 'Strength Lower Body' },
   christina_gentle_pull_posture: { id: 'eli_upper_pull', label: 'Strength Pull & Posture' },
@@ -121,8 +121,8 @@ const CHRISTINA_LOW_PAIN_TEMPLATES = {
 export function getChristinaSuggestion(cycleState, symptomState) {
   const painDay = symptomState?.painDay ?? 'low';
 
-  const nextId = CHRISTINA_SEQUENCE[cycleState.christinaSequencePointer % CHRISTINA_SEQUENCE.length];
-  const lowPainTemplate = CHRISTINA_LOW_PAIN_TEMPLATES[nextId];
+  const nextId = USERB_SEQUENCE[cycleState.userBSequencePointer % USERB_SEQUENCE.length];
+  const lowPainTemplate = USERB_LOW_PAIN_TEMPLATES[nextId];
 
   // Low = full gentle routine; medium/high = same routine, scaled down by the pain rules.
   const adaptationLevel = painDay === 'low' ? 'normal' : 'reduced';
@@ -131,7 +131,7 @@ export function getChristinaSuggestion(cycleState, symptomState) {
     primary: {
       id:              nextId,
       templateId:      painDay === 'low' ? lowPainTemplate?.id : nextId,
-      label:           painDay === 'low' ? lowPainTemplate?.label : (CHRISTINA_LABELS[nextId] || nextId),
+      label:           painDay === 'low' ? lowPainTemplate?.label : (USERB_LABELS[nextId] || nextId),
       adaptationLevel,
       reason:          describePainRule(painDay)
     },

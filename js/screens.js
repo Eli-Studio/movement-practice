@@ -3,10 +3,10 @@
 // ============================================================
 
 import { FATIGUE_SCALE, JOINT_PAIN_OPTIONS, JOINT_PAIN_LOCATIONS,
-         MISSED_DAY_CATEGORIES, ACTIVITY_COLORS, CHRISTINA_SYMPTOMS,
-         ELI_HEAVY_SEQUENCE, CHRISTINA_SEQUENCE,
+         MISSED_DAY_CATEGORIES, ACTIVITY_COLORS, USERB_SYMPTOMS,
+         USERA_HEAVY_SEQUENCE, USERB_SEQUENCE,
          BACKUP_NUDGE_DAYS, BACKUP_NUDGE_MIN_SESSIONS,
-         MISSED_DAYS_COMPACT_THRESHOLD } from './config.js';
+         MISSED_DAYS_COMPACT_THRESHOLD, APP_VERSION } from './config.js';
 import { getCycleDayNumber } from './cycles.js';
 import { formatDate, formatDateShort, escapeHtml, getTomorrowDate, formatTime, today, safeSpotifyUrl } from './utils.js';
 import { buildMonthCalendar, renderCalendarHTML, getEliStats, getChristinaStats,
@@ -33,8 +33,8 @@ function uiGlyph(name, label = '') {
 
 // User display helpers — names plus theme-native profile seals.
 const userName = (App, id) => App?.state?.settings?.profiles?.[id]?.displayName
-  ?? (id === 'eli' ? 'User A' : 'User B');
-const userIcon = (_App, id) => `<span class="profile-seal profile-seal--${id === 'eli' ? 'a' : 'b'}" aria-hidden="true">${id === 'eli' ? 'A' : 'B'}</span>`;
+  ?? (id === 'userA' ? 'User A' : 'User B');
+const userIcon = (_App, id) => `<span class="profile-seal profile-seal--${id === 'userA' ? 'a' : 'b'}" aria-hidden="true">${id === 'userA' ? 'A' : 'B'}</span>`;
 const userLabel = (App, id) => `${userIcon(App, id)} ${escapeHtml(userName(App, id))}`;
 const TRAINING_GOALS = [
   ['build_strength', 'Build strength'], ['improve_mobility', 'Improve mobility'],
@@ -55,7 +55,7 @@ const ADAPTATION_OPTIONS = [
 function getProfileOverview(sessions, userId) {
   const completed = sessions.filter(s => s.status === 'completed' && s.users?.includes(userId));
   const checkinFor = session => session.profileCheckins?.[userId]
-    ?? (userId === 'eli' ? session.eliEndCheckin : session.christinaCheckin) ?? {};
+    ?? (userId === 'userA' ? session.userAEndCheckin : session.userBCheckin) ?? {};
   const capacityFor = session => checkinFor(session).capacity ?? checkinFor(session);
   const effortValues = completed.map(s => checkinFor(s).effort ?? checkinFor(s).formFatigue)
     .filter(value => Number.isFinite(Number(value)) && Number(value) > 0).map(Number);
@@ -63,7 +63,7 @@ function getProfileOverview(sessions, userId) {
     const checkin = checkinFor(session);
     if (checkin.adjustmentUsed != null) return checkin.adjustmentUsed;
     if (checkin.adjustmentChanged != null) return checkin.adjustmentChanged;
-    return userId === 'christina' && ['reduced', 'recovery'].includes(session.christinaAdaptationLevel);
+    return userId === 'userB' && ['reduced', 'recovery'].includes(session.userBAdaptationLevel);
   }).length;
   const weighted = completed.filter(session => (session.exerciseLogs?.[userId] ?? []).some(log =>
     (log.setLogs ?? []).some(set => typeof set.weightUsed === 'string' && /kg/i.test(set.weightUsed))
@@ -195,7 +195,7 @@ export function renderFirstLaunch(App) {
       </div>
       <div style="margin-top:28px;">
         <div class="section-label" style="margin-bottom:12px;">Profiles</div>
-        ${profileSetup('eli')}${profileSetup('christina')}
+        ${profileSetup('userA')}${profileSetup('userB')}
         <div class="section-label" style="margin:24px 0 12px;">Household equipment</div>
         <div class="card">
           <div class="setting-row__desc" style="margin-bottom:12px;">Leave available items checked. Routines automatically avoid anything turned off.</div>
@@ -268,7 +268,7 @@ export function renderHello(state, backupNudgeDismissed = false) {
 
   const dayNum = cycleDayForDisplay(cycleState);
 
-  const ELI_LABELS = {
+  const USERA_LABELS = {
     eli_upper_push:'Upper Push — Chest & Shoulders',
     eli_lower_body:'Lower Body — Legs & Glutes',
     eli_upper_pull:'Upper Pull — Back & Biceps',
@@ -282,13 +282,13 @@ export function renderHello(state, backupNudgeDismissed = false) {
     christina_gentle_full_body:    'Full Body'
   };
 
-  const eliNextId    = ELI_HEAVY_SEQUENCE[cycleState.eliSequencePointer % ELI_HEAVY_SEQUENCE.length];
-  const eliNextLabel = ELI_LABELS[eliNextId] ?? '—';
-  const cNextId      = CHRISTINA_SEQUENCE[cycleState.christinaSequencePointer % CHRISTINA_SEQUENCE.length];
+  const userANextId    = USERA_HEAVY_SEQUENCE[cycleState.userASequencePointer % USERA_HEAVY_SEQUENCE.length];
+  const userANextLabel = USERA_LABELS[userANextId] ?? '—';
+  const cNextId      = USERB_SEQUENCE[cycleState.userBSequencePointer % USERB_SEQUENCE.length];
   const cNextLabel   = C_LABELS[cNextId] ?? '—';
 
-  const eliSessions   = sessions.filter(s => s.users.includes('eli')).length;
-  const christSessions= sessions.filter(s => s.users.includes('christina')).length;
+  const userASessions   = sessions.filter(s => s.users.includes('userA')).length;
+  const christSessions= sessions.filter(s => s.users.includes('userB')).length;
 
   return `
     <div class="page fade-in" style="display:flex;flex-direction:column;">
@@ -303,14 +303,14 @@ export function renderHello(state, backupNudgeDismissed = false) {
       ${fourWeekCycle(dayNum, cycleState.cycleNumber)}
 
       <div class="who-grid" style="margin-top:14px;flex:1;min-height:0;">
-        <button class="who-card who-card--eli" data-who="eli">
-          <div class="who-card__emoji">${userIcon({state}, 'eli')}</div>
-          <div class="who-card__name">${escapeHtml(settings.profiles.eli.displayName)}</div>
-          <div class="who-card__next">${eliNextLabel}</div>
+        <button class="who-card who-card--userA" data-who="userA">
+          <div class="who-card__emoji">${userIcon({state}, 'userA')}</div>
+          <div class="who-card__name">${escapeHtml(settings.profiles.userA.displayName)}</div>
+          <div class="who-card__next">${userANextLabel}</div>
         </button>
-        <button class="who-card who-card--christina" data-who="christina">
-          <div class="who-card__emoji">${userIcon({state}, 'christina')}</div>
-          <div class="who-card__name">${escapeHtml(settings.profiles.christina.displayName)}</div>
+        <button class="who-card who-card--userB" data-who="userB">
+          <div class="who-card__emoji">${userIcon({state}, 'userB')}</div>
+          <div class="who-card__name">${escapeHtml(settings.profiles.userB.displayName)}</div>
           <div class="who-card__next">${cNextLabel}</div>
         </button>
       </div>
@@ -327,12 +327,12 @@ export function renderHello(state, backupNudgeDismissed = false) {
 
       <div class="hello-stats" style="margin-top:12px;">
         <div class="hello-stat">
-          <div class="hello-stat__value" style="color:var(--profile-a-accent);">${eliSessions}</div>
-          <div class="hello-stat__label">${escapeHtml(settings.profiles.eli.displayName)} sessions</div>
+          <div class="hello-stat__value" style="color:var(--profile-a-accent);">${userASessions}</div>
+          <div class="hello-stat__label">${escapeHtml(settings.profiles.userA.displayName)} sessions</div>
         </div>
         <div class="hello-stat">
           <div class="hello-stat__value" style="color:var(--profile-b-accent);">${christSessions}</div>
-          <div class="hello-stat__label">${escapeHtml(settings.profiles.christina.displayName)} sessions</div>
+          <div class="hello-stat__label">${escapeHtml(settings.profiles.userB.displayName)} sessions</div>
         </div>
         <div class="hello-stat">
           <div class="hello-stat__value">${dayNum}/28</div>
@@ -424,17 +424,17 @@ export function renderLogToday(App) {
                  border:2px solid var(--action-primary);background:color-mix(in srgb, var(--action-primary) 12%, var(--surface));color:var(--action-primary);">
           ${uiGlyph('paired')}<br>Both
         </button>
-        <button data-log-who="eli" id="log-who-eli"
+        <button data-log-who="userA" id="log-who-userA"
           style="flex:1;padding:14px 8px;border-radius:12px;cursor:pointer;
                  font-size:0.95rem;font-weight:400;line-height:1.3;
                  border:1px solid var(--border);background:var(--surface);color:var(--text-2);">
-          ${userIcon(App, 'eli')}<br>${escapeHtml(userName(App, 'eli'))}
+          ${userIcon(App, 'userA')}<br>${escapeHtml(userName(App, 'userA'))}
         </button>
-        <button data-log-who="christina" id="log-who-christina"
+        <button data-log-who="userB" id="log-who-userB"
           style="flex:1;padding:14px 8px;border-radius:12px;cursor:pointer;
                  font-size:0.95rem;font-weight:400;line-height:1.3;
                  border:1px solid var(--border);background:var(--surface);color:var(--text-2);">
-          ${userIcon(App, 'christina')}<br>${escapeHtml(userName(App, 'christina'))}
+          ${userIcon(App, 'userB')}<br>${escapeHtml(userName(App, 'userB'))}
         </button>
       </div>
 
@@ -457,12 +457,12 @@ export function renderLogToday(App) {
 
 // Symptom buttons come straight from the canonical config list so the check-in
 // screen, reports, and conflict matrix can never drift apart again.
-const SYMPTOM_CLUSTERS = CHRISTINA_SYMPTOMS;
+const SYMPTOM_CLUSTERS = USERB_SYMPTOMS;
 
-export function renderSymptomCheck(App, userId = 'christina') {
+export function renderSymptomCheck(App, userId = 'userB') {
   return `
     <div class="page page--no-nav fade-in">
-      <div class="eyebrow eyebrow--christina">${userLabel(App, userId)}</div>
+      <div class="eyebrow eyebrow--userB">${userLabel(App, userId)}</div>
       <h1 class="page-title" style="margin-top:6px;">How are you feeling?</h1>
       <p class="page-subtitle" style="margin-bottom:28px;">Quick check — this shapes today's routine.</p>
 
@@ -500,7 +500,7 @@ export function renderSymptomCheck(App, userId = 'christina') {
         `).join('')}
       </div>
 
-      <button class="btn btn--christina" id="btn-symptoms-done" style="margin-top:8px;">Continue</button>
+      <button class="btn btn--userB" id="btn-symptoms-done" style="margin-top:8px;">Continue</button>
       <button class="btn btn--ghost" id="btn-capacity-skip">Use typical capacity</button>
     </div>
   `;
@@ -583,13 +583,13 @@ function capacityAdjustmentHTML(adjustment, userId, choices = {}, resolvedChoice
 }
 
 const STRENGTH_ROUTINE_CHOICES = {
-  eli: [
+  userA: [
     ['eli_upper_push', 'eli_upper_push', 'Upper Push'],
     ['eli_upper_pull', 'eli_upper_pull', 'Upper Pull'],
     ['eli_lower_body', 'eli_lower_body', 'Lower Body'],
     ['eli_full_body', 'eli_full_body', 'Full Body']
   ],
-  christina: [
+  userB: [
     ['christina_gentle_upper', 'eli_upper_push', 'Upper Push'],
     ['christina_gentle_pull_posture', 'eli_upper_pull', 'Upper Pull'],
     ['christina_gentle_lower', 'eli_lower_body', 'Lower Body'],
@@ -613,7 +613,7 @@ function strengthRoutineChooser(userId, selectedRoutine, routineTemplates) {
     <div class="strength-routine-chooser__heading"><strong>Strength routine</strong><span>The rotation is recommended; you can choose any area.</span></div>
     <div class="strength-routine-grid">${options.map(([id, templateId, label]) => `
       <button class="strength-routine-btn ${selectedRoutine?.id === id ? 'selected' : ''}" data-user="${userId}"
-        data-id="${id}" data-template-id="${templateId}" data-label="${label}" data-type="heavy_weight"${userId === 'christina' ? ' data-adaptation="normal"' : ''}>
+        data-id="${id}" data-template-id="${templateId}" data-label="${label}" data-type="heavy_weight"${userId === 'userB' ? ' data-adaptation="normal"' : ''}>
         <span class="strength-routine-btn__label">${label}<small>${routineCountLabel(routineTemplates, templateId)} default</small></span>
         ${selectedRoutine?.id === id ? '<span class="strength-routine-btn__state">Current</span>' : ''}
       </button>`).join('')}</div>
@@ -633,9 +633,9 @@ function strengthRestHTML(suggestion) {
   </div>`;
 }
 
-function buildEquipmentSummaryHTML(eliExercisePlan, christinaExercisePlan, allEquipment) {
+function buildEquipmentSummaryHTML(userAExercisePlan, userBExercisePlan, allEquipment) {
   const ids = new Set();
-  [...(eliExercisePlan ?? []), ...(christinaExercisePlan ?? [])].forEach(ex => {
+  [...(userAExercisePlan ?? []), ...(userBExercisePlan ?? [])].forEach(ex => {
     (ex.equipment ?? []).forEach(id => ids.add(id));
   });
   if (!ids.size) return '';
@@ -656,41 +656,41 @@ function buildEquipmentSummaryHTML(eliExercisePlan, christinaExercisePlan, allEq
 
 export function renderRoutineSuggestion(App) {
   const { ui, data } = App;
-  const { selectedUsers, eliSuggestion, christinaSuggestion, conflicts,
-          eliExercisePlan, christinaExercisePlan, eliAnchors,
+  const { selectedUsers, userASuggestion, userBSuggestion, conflicts,
+          userAExercisePlan, userBExercisePlan, userAAnchors,
           selectedEliRoutine, selectedChristinaRoutine } = ui;
 
-  const equipmentSummary = buildEquipmentSummaryHTML(eliExercisePlan, christinaExercisePlan, data?.equipment);
+  const equipmentSummary = buildEquipmentSummaryHTML(userAExercisePlan, userBExercisePlan, data?.equipment);
 
-  const anchorLine = eliAnchors?.length
+  const anchorLine = userAAnchors?.length
     ? `<div class="anchor-line">
          <span class="anchor-line__label">This cycle's anchors:</span>
-         ${eliAnchors.map(n => `<span class="anchor-pill">${uiGlyph('anchor')} ${escapeHtml(n)}</span>`).join('')}
+         ${userAAnchors.map(n => `<span class="anchor-pill">${uiGlyph('anchor')} ${escapeHtml(n)}</span>`).join('')}
        </div>`
     : '';
 
-  const eliSection = selectedUsers.includes('eli') && eliSuggestion ? `
+  const userASection = selectedUsers.includes('userA') && userASuggestion ? `
     <div class="reports-section">
-      <div class="section-label" style="margin-bottom:12px;">${userLabel(App, 'eli')}</div>
-      <div class="suggestion-card suggestion-card--eli">
+      <div class="section-label" style="margin-bottom:12px;">${userLabel(App, 'userA')}</div>
+      <div class="suggestion-card suggestion-card--userA">
         <div class="eyebrow" style="margin-bottom:6px;">
           ${selectedEliRoutine?.type === 'heavy_weight' ? `${uiGlyph('strength')} Strength` : `${uiGlyph('adapt')} Alternate practice`}
-          ${eliSuggestion.heavyBlocked ? ' &nbsp;<span style="color:var(--status-caution);">Break day required</span>' : ''}
+          ${userASuggestion.heavyBlocked ? ' &nbsp;<span style="color:var(--status-caution);">Break day required</span>' : ''}
         </div>
-        <div class="suggestion-card__routine">${escapeHtml(selectedEliRoutine?.label ?? eliSuggestion.primary.label)}</div>
-        <div class="suggestion-card__reason">${escapeHtml(selectedEliRoutine?.id === eliSuggestion.primary.id ? eliSuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
-        ${strengthRestHTML(eliSuggestion)}
-        ${capacityAdjustmentHTML(ui.eliCapacityAdjustment, 'eli', ui.capacityDimensionChoices?.eli, ui.capacityChoiceByUser?.eli)}
-        ${workoutCountHTML(eliExercisePlan)}
+        <div class="suggestion-card__routine">${escapeHtml(selectedEliRoutine?.label ?? userASuggestion.primary.label)}</div>
+        <div class="suggestion-card__reason">${escapeHtml(selectedEliRoutine?.id === userASuggestion.primary.id ? userASuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
+        ${strengthRestHTML(userASuggestion)}
+        ${capacityAdjustmentHTML(ui.userACapacityAdjustment, 'userA', ui.capacityDimensionChoices?.userA, ui.capacityChoiceByUser?.userA)}
+        ${workoutCountHTML(userAExercisePlan)}
         ${anchorLine}
-        ${buildExerciseListHTML(eliExercisePlan, 'eli')}
+        ${buildExerciseListHTML(userAExercisePlan, 'userA')}
         <p class="text-muted text-sm" style="margin-top:4px;">Tap an exercise to swap it.</p>
-        ${strengthRoutineChooser('eli', selectedEliRoutine, data?.routineTemplates)}
-        <button class="alternatives-toggle" id="eli-alt-toggle">Change routine <span>→</span></button>
-        <div id="eli-alternatives" class="${eliSuggestion.heavyBlocked ? '' : 'hidden'}">
+        ${strengthRoutineChooser('userA', selectedEliRoutine, data?.routineTemplates)}
+        <button class="alternatives-toggle" id="userA-alt-toggle">Change routine <span>→</span></button>
+        <div id="userA-alternatives" class="${userASuggestion.heavyBlocked ? '' : 'hidden'}">
           <div class="alternatives" style="margin-top:6px;">
-            ${eliSuggestion.alternatives.map(alt => `
-              <button class="alt-btn" data-user="eli" data-id="${alt.id}" data-label="${escapeHtml(alt.label)}" data-type="${alt.type ?? ''}">
+            ${userASuggestion.alternatives.map(alt => `
+              <button class="alt-btn" data-user="userA" data-id="${alt.id}" data-label="${escapeHtml(alt.label)}" data-type="${alt.type ?? ''}">
                 <span>${escapeHtml(alt.label)}${routineCountLabel(data?.routineTemplates, alt.id) ? `<small class="routine-default-count">${routineCountLabel(data?.routineTemplates, alt.id)} default</small>` : ''}</span><span style="color:var(--movement-text-on-paper-muted);">›</span>
               </button>
             `).join('')}
@@ -700,32 +700,32 @@ export function renderRoutineSuggestion(App) {
     </div>
   ` : '';
 
-  const christinaSection = selectedUsers.includes('christina') && christinaSuggestion ? `
+  const userBSection = selectedUsers.includes('userB') && userBSuggestion ? `
     <div class="reports-section" style="margin-top:20px;">
-      <div class="section-label" style="margin-bottom:12px;">${userLabel(App, 'christina')}</div>
-      <div class="suggestion-card suggestion-card--christina">
-        <div class="eyebrow eyebrow--christina" style="margin-bottom:6px;">
+      <div class="section-label" style="margin-bottom:12px;">${userLabel(App, 'userB')}</div>
+      <div class="suggestion-card suggestion-card--userB">
+        <div class="eyebrow eyebrow--userB" style="margin-bottom:6px;">
           ${selectedChristinaRoutine?.level === 'recovery' ? 'Recovery'
             : selectedChristinaRoutine?.level === 'reduced' ? 'Adapted'
             : selectedChristinaRoutine?.templateId?.startsWith('eli_') ? 'Strength' : 'Gentle practice'}
         </div>
-        <div class="suggestion-card__routine">${escapeHtml(selectedChristinaRoutine?.label ?? christinaSuggestion.primary.label)}</div>
-        <div class="suggestion-card__reason">${escapeHtml(selectedChristinaRoutine?.id === christinaSuggestion.primary.id ? christinaSuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
-        ${strengthRestHTML(christinaSuggestion)}
-        ${capacityAdjustmentHTML(ui.christinaCapacityAdjustment, 'christina', ui.capacityDimensionChoices?.christina, ui.capacityChoiceByUser?.christina)}
-        ${workoutCountHTML(christinaExercisePlan)}
+        <div class="suggestion-card__routine">${escapeHtml(selectedChristinaRoutine?.label ?? userBSuggestion.primary.label)}</div>
+        <div class="suggestion-card__reason">${escapeHtml(selectedChristinaRoutine?.id === userBSuggestion.primary.id ? userBSuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
+        ${strengthRestHTML(userBSuggestion)}
+        ${capacityAdjustmentHTML(ui.userBCapacityAdjustment, 'userB', ui.capacityDimensionChoices?.userB, ui.capacityChoiceByUser?.userB)}
+        ${workoutCountHTML(userBExercisePlan)}
         ${(() => {
-          const n = (christinaExercisePlan ?? []).filter(e => e.symptomConflicts?.length).length;
+          const n = (userBExercisePlan ?? []).filter(e => e.symptomConflicts?.length).length;
           return n ? `<div class="symptom-flag-summary">${uiGlyph('warning')} ${n} exercise${n>1?'s':''} flagged for today's symptoms — review below, do or swap as feels right.</div>` : '';
         })()}
-        ${buildExerciseListHTML(christinaExercisePlan, 'christina')}
+        ${buildExerciseListHTML(userBExercisePlan, 'userB')}
         <p class="text-muted text-sm" style="margin-top:4px;">Tap an exercise to swap it.</p>
-        ${strengthRoutineChooser('christina', selectedChristinaRoutine, data?.routineTemplates)}
-        <button class="alternatives-toggle" id="christina-alt-toggle">Change routine <span>→</span></button>
-        <div id="christina-alternatives" class="${christinaSuggestion.heavyBlocked ? '' : 'hidden'}">
+        ${strengthRoutineChooser('userB', selectedChristinaRoutine, data?.routineTemplates)}
+        <button class="alternatives-toggle" id="userB-alt-toggle">Change routine <span>→</span></button>
+        <div id="userB-alternatives" class="${userBSuggestion.heavyBlocked ? '' : 'hidden'}">
           <div class="alternatives" style="margin-top:6px;">
-            ${christinaSuggestion.alternatives.map(alt => `
-              <button class="alt-btn" data-user="christina" data-id="${alt.id}"
+            ${userBSuggestion.alternatives.map(alt => `
+              <button class="alt-btn" data-user="userB" data-id="${alt.id}"
                       data-label="${escapeHtml(alt.label)}" data-adaptation="${alt.adaptationLevel ?? ''}">
                 <span>${escapeHtml(alt.label)}${routineCountLabel(data?.routineTemplates, alt.id) ? `<small class="routine-default-count">${routineCountLabel(data?.routineTemplates, alt.id)} default</small>` : ''}</span><span style="color:var(--movement-text-on-paper-muted);">›</span>
               </button>
@@ -755,8 +755,8 @@ export function renderRoutineSuggestion(App) {
       <h1 class="page-title" style="margin-top:6px;">Your routine</h1>
       <p class="page-subtitle" style="margin-bottom:16px;">Tap "Change routine" to swap.</p>
       ${equipmentSummary}
-      ${eliSection}
-      ${christinaSection}
+      ${userASection}
+      ${userBSection}
       ${conflictSection}
       <div style="position:fixed;bottom:0;left:0;right:0;
                   background:var(--bg);border-top:1px solid var(--border);
@@ -964,17 +964,17 @@ export function renderWorkoutRunner(App) {
 
   // ---- BOTH: side-by-side ----
   if (mode === 'both') {
-    if (ws.eli.completed && ws.christina.completed) return renderBothDone();
+    if (ws.userA.completed && ws.userB.completed) return renderBothDone();
 
-    const eliProgress = `${Math.min(ws.eli.exerciseIdx+1, ws.eli.exercises.length)}/${ws.eli.exercises.length}`;
-    const cProgress   = `${Math.min(ws.christina.exerciseIdx+1, ws.christina.exercises.length)}/${ws.christina.exercises.length}`;
+    const userAProgress = `${Math.min(ws.userA.exerciseIdx+1, ws.userA.exercises.length)}/${ws.userA.exercises.length}`;
+    const cProgress   = `${Math.min(ws.userB.exerciseIdx+1, ws.userB.exercises.length)}/${ws.userB.exercises.length}`;
 
     return `
       <div class="workout-screen">
         <div class="workout-header">
           ${compactCycle}
           <span class="workout-header__label">
-            ${ws.eli.completed ? '✓' : eliProgress} &nbsp;·&nbsp; ${ws.christina.completed ? '✓' : cProgress}
+            ${ws.userA.completed ? '✓' : userAProgress} &nbsp;·&nbsp; ${ws.userB.completed ? '✓' : cProgress}
           </span>
           <div style="display:flex;align-items:center;gap:8px;">
             ${spotifyPill}
@@ -982,15 +982,15 @@ export function renderWorkoutRunner(App) {
           </div>
         </div>
         <div class="paired-workout fade-in">
-          ${renderSingleUserPanel(ws, 'eli')}
-          ${renderSingleUserPanel(ws, 'christina')}
+          ${renderSingleUserPanel(ws, 'userA')}
+          ${renderSingleUserPanel(ws, 'userB')}
         </div>
       </div>
     `;
   }
 
   // ---- Single user ----
-  const user = mode === 'eli_only' ? 'eli' : 'christina';
+  const user = mode === 'userA_only' ? 'userA' : 'userB';
   const us   = ws[user];
   if (us.completed) return renderBothDone();
 
@@ -1001,10 +1001,10 @@ export function renderWorkoutRunner(App) {
   const totalSets = ex.sets;
   const exNum     = us.exerciseIdx + 1;
   const exTotal   = us.exercises.length;
-  const col       = user === 'eli' ? 'eli' : 'christina';
+  const col       = user === 'userA' ? 'userA' : 'userB';
 
   const setDots = Array.from({length:totalSets},(_,i) =>
-    `<div class="set-dot ${user==='christina'?'set-dot--christina':''} ${i<setsDone?'done':i===setsDone?'current':''}">${i+1}</div>`
+    `<div class="set-dot ${user==='userB'?'set-dot--userB':''} ${i<setsDone?'done':i===setsDone?'current':''}">${i+1}</div>`
   ).join('');
 
   const targetText = ex.durationSeconds ? `${ex.durationSeconds}s` : ex.reps ? `${ex.reps} reps` : '';
@@ -1012,7 +1012,7 @@ export function renderWorkoutRunner(App) {
     ? `<div class="form-cues">
          <div class="form-cues__title">Form cues</div>
          <div class="form-cues__list">
-           ${ex.formCues.map(c=>`<div class="form-cue${user==='christina'?' form-cue--christina':''}">${escapeHtml(c)}</div>`).join('')}
+           ${ex.formCues.map(c=>`<div class="form-cue${user==='userB'?' form-cue--userB':''}">${escapeHtml(c)}</div>`).join('')}
          </div>
        </div>` : '';
   const adaptNote = ex.adaptationNote
@@ -1121,25 +1121,25 @@ export function updateRestOverlayDOM(remaining, totalSeconds) {
 
 export function renderEndCheckin(App) {
   const { selectedUsers } = App.ui;
-  const includesEli       = selectedUsers.includes('eli');
-  const includesChristina = selectedUsers.includes('christina');
+  const includesEli       = selectedUsers.includes('userA');
+  const includesChristina = selectedUsers.includes('userB');
   const session            = App.currentSession;
 
-  const humanize = id => id ? id.replace(/^(eli|christina)_/, '').replace(/_/g, ' ')
+  const humanize = id => id ? id.replace(/^(userA|userB)_/, '').replace(/_/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase()) : null;
 
-  const eliRoutineLabel       = humanize(session?.eliRoutineId);
-  const christinaRoutineLabel = humanize(session?.christinaRoutineId);
+  const userARoutineLabel       = humanize(session?.userARoutineId);
+  const userBRoutineLabel = humanize(session?.userBRoutineId);
 
   const durationMin = session?.startedAt
     ? Math.max(1, Math.round((Date.now() - new Date(session.startedAt).getTime()) / 60000))
     : null;
 
   const summaryLines = [
-    includesEli && eliRoutineLabel
-      ? `<div>${userIcon(App, 'eli')} <strong>${escapeHtml(userName(App, 'eli'))}:</strong> ${escapeHtml(eliRoutineLabel)}</div>` : '',
-    includesChristina && christinaRoutineLabel
-      ? `<div>${userIcon(App, 'christina')} <strong>${escapeHtml(userName(App, 'christina'))}:</strong> ${escapeHtml(christinaRoutineLabel)}</div>` : '',
+    includesEli && userARoutineLabel
+      ? `<div>${userIcon(App, 'userA')} <strong>${escapeHtml(userName(App, 'userA'))}:</strong> ${escapeHtml(userARoutineLabel)}</div>` : '',
+    includesChristina && userBRoutineLabel
+      ? `<div>${userIcon(App, 'userB')} <strong>${escapeHtml(userName(App, 'userB'))}:</strong> ${escapeHtml(userBRoutineLabel)}</div>` : '',
     durationMin
       ? `<div style="margin-top:6px;color:var(--text-2);">Duration: ${durationMin} min</div>` : ''
   ].filter(Boolean).join('');
@@ -1178,8 +1178,8 @@ export function renderEndCheckin(App) {
     </div>
   `;
 
-  const eliSection = includesEli ? profileCheckinSection('eli') : '';
-  const christinaSection = includesChristina ? profileCheckinSection('christina') : '';
+  const userASection = includesEli ? profileCheckinSection('userA') : '';
+  const userBSection = includesChristina ? profileCheckinSection('userB') : '';
 
   return `
     <div class="page page--no-nav fade-in" style="padding-bottom:100px;">
@@ -1187,8 +1187,8 @@ export function renderEndCheckin(App) {
       <h1 class="page-title" style="margin-top:6px;">Nice work.</h1>
       <p class="page-subtitle" style="margin-bottom:24px;">Quick check before we save.</p>
       ${summaryCard}
-      ${eliSection}
-      ${christinaSection}
+      ${userASection}
+      ${userBSection}
       <div style="position:fixed;bottom:0;left:0;right:0;
                   background:var(--bg);border-top:1px solid var(--border);
                   padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom));">
@@ -1204,7 +1204,7 @@ export function renderMeditation() {
   return `
     <div class="meditation-screen fade-in">
       <div class="meditation-card">
-        <div class="eyebrow eyebrow--christina" style="margin-bottom:8px;">Optional</div>
+        <div class="eyebrow eyebrow--userB" style="margin-bottom:8px;">Optional</div>
         <h1 class="page-title">Meditation</h1>
         <p class="page-subtitle" style="max-width:300px;margin:8px auto 0;">
           Close out with a few quiet minutes, or skip and save.
@@ -1242,25 +1242,25 @@ export function renderSessionSummary(App) {
   const calData = buildMonthCalendar(year, month, sessions, missedDays);
   const calHTML = renderCalendarHTML(year, month, calData);
 
-  const eliLine = snap.users?.includes('eli') && snap.eliRoutineId
-    ? `<div>${userIcon(App, 'eli')} <strong>${escapeHtml(userName(App, 'eli'))}:</strong> ${escapeHtml(snap.eliRoutineId.replace(/eli_/g,'').replace(/_/g,' '))}</div>`
+  const userALine = snap.users?.includes('userA') && snap.userARoutineId
+    ? `<div>${userIcon(App, 'userA')} <strong>${escapeHtml(userName(App, 'userA'))}:</strong> ${escapeHtml(snap.userARoutineId.replace(/eli_/g,'').replace(/_/g,' '))}</div>`
     : '';
-  const cLine = snap.users?.includes('christina') && snap.christinaRoutineId
-    ? `<div>${userIcon(App, 'christina')} <strong>${escapeHtml(userName(App, 'christina'))}:</strong> ${escapeHtml(snap.christinaRoutineId.replace(/christina_/g,'').replace(/_/g,' '))} (${snap.christinaAdaptationLevel ?? ''})</div>`
+  const cLine = snap.users?.includes('userB') && snap.userBRoutineId
+    ? `<div>${userIcon(App, 'userB')} <strong>${escapeHtml(userName(App, 'userB'))}:</strong> ${escapeHtml(snap.userBRoutineId.replace(/christina_/g,'').replace(/_/g,' '))} (${snap.userBAdaptationLevel ?? ''})</div>`
     : '';
 
-  const summaryCard = (eliLine || cLine || snap.meditation?.completed)
+  const summaryCard = (userALine || cLine || snap.meditation?.completed)
     ? `<div class="card card--document" style="font-size:0.875rem;line-height:1.8;color:var(--movement-text-on-paper-muted);">
-         ${eliLine}${cLine}
+         ${userALine}${cLine}
          ${snap.meditation?.completed ? `<div>${uiGlyph('breath')} Meditation: ${snap.meditation.durationMinutes} min</div>` : ''}
        </div>`
     : '';
 
   const legendHtml = `
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.eli_heavy}"></div>${escapeHtml(userName(App, 'eli'))} strength</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.eli_heavy}"></div>${escapeHtml(userName(App, 'userA'))} strength</div>
       <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.eli_circuit}"></div>Circuit</div>
-      <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.christina_normal}"></div>${escapeHtml(userName(App, 'christina'))} full</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.christina_normal}"></div>${escapeHtml(userName(App, 'userB'))} full</div>
       <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.christina_reduced}"></div>Adapted</div>
       <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.meditation}"></div>Meditation</div>
       <div class="legend-item"><div class="legend-dot" style="background:${ACTIVITY_COLORS.skip_rest}"></div>Rest</div>
@@ -1300,7 +1300,7 @@ export function renderReports(App) {
   const calHTML  = renderCalendarHTML(year, month, calData);
   const goalLabel = value => TRAINING_GOALS.find(([id]) => id === value)?.[1] ?? 'Improve general fitness';
   const approachLabel = value => ADAPTATION_OPTIONS.find(([id]) => id === value)?.[1] ?? 'Use both';
-  const profileOverviewHTML = ['eli', 'christina'].map(userId => {
+  const profileOverviewHTML = ['userA', 'userB'].map(userId => {
     const profile = state.settings.profiles[userId];
     const stats = getProfileOverview(sessions, userId);
     const capacityTotal = stats.capacity.low + stats.capacity.medium + stats.capacity.high;
@@ -1322,7 +1322,7 @@ export function renderReports(App) {
       </div>
     </section>`;
   }).join('<div class="divider"></div>');
-  const progressionSignals = ['eli','christina'].map(userId => ({ userId,
+  const progressionSignals = ['userA','userB'].map(userId => ({ userId,
     rows: getProfileProgressionSignals(sessions, userId, state.settings.profiles[userId])
   }));
   const progressionHTML = progressionSignals.map(({userId, rows}) => `
@@ -1395,7 +1395,7 @@ export function renderCycleReview(App) {
               ${baselineRow.currentKg}kg <span id="progression-arrow-baseline">→ <strong style="color:var(--action-primary);">${baselineRow.suggestedKg}kg</strong> across all lifts, reps restart</span>
             </div>
           </div>
-          <button class="btn btn--sm btn--eli"
+          <button class="btn btn--sm btn--userA"
                   id="progression-toggle-baseline"
                   data-exercise-id="baseline"
                   data-accepted="true">
@@ -1445,8 +1445,8 @@ export function renderCycleReview(App) {
       <p class="page-subtitle" style="margin-bottom:20px;">${formatDate(cycleState.startDate)} – ${formatDate(cycleState.endDate)}</p>
 
       <div class="reports-section">
-        <div class="section-label" style="margin-bottom:10px;">${userLabel(App, 'eli')} This Cycle</div>
-        <div id="cycle-review-eli-readiness"></div>
+        <div class="section-label" style="margin-bottom:10px;">${userLabel(App, 'userA')} This Cycle</div>
+        <div id="cycle-review-userA-readiness"></div>
       </div>
 
       ${baselineSection}
@@ -1454,8 +1454,8 @@ export function renderCycleReview(App) {
       ${noDataNote}
 
       <div class="reports-section" style="margin-top:24px;">
-        <div class="section-label" style="margin-bottom:10px;">${userLabel(App, 'christina')} This Cycle</div>
-        <div id="cycle-review-christina-readiness"></div>
+        <div class="section-label" style="margin-bottom:10px;">${userLabel(App, 'userB')} This Cycle</div>
+        <div id="cycle-review-userB-readiness"></div>
       </div>
 
       <div style="position:fixed;bottom:0;left:0;right:0;
@@ -1470,8 +1470,8 @@ export function renderCycleReview(App) {
 export function initCycleReviewCards(App) {
   const snap = App.ui.cycleReviewSnapshot;
   if (!snap) return;
-  renderReadinessCard('cycle-review-eli-readiness', getEliReadiness(snap.sessions, snap.cycleState), 'eli');
-  renderReadinessCard('cycle-review-christina-readiness', getChristinaReadiness(snap.sessions, snap.cycleState), 'christina');
+  renderReadinessCard('cycle-review-userA-readiness', getEliReadiness(snap.sessions, snap.cycleState), 'userA');
+  renderReadinessCard('cycle-review-userB-readiness', getChristinaReadiness(snap.sessions, snap.cycleState), 'userB');
 }
 
 // ---- 12. Settings -----------------------------------------
@@ -1634,8 +1634,8 @@ export function renderSettings(App) {
       </div>
 
       <div class="section-label" style="margin:20px 0 12px;">Profiles</div>
-      ${renderProfileCard(App, 'eli')}
-      ${renderProfileCard(App, 'christina')}
+      ${renderProfileCard(App, 'userA')}
+      ${renderProfileCard(App, 'userB')}
 
       <div class="section-label" style="margin:20px 0 12px;">Available equipment</div>
       <div class="card">
@@ -1730,6 +1730,23 @@ export function renderSettings(App) {
           <input type="file" id="restore-input" accept=".json" style="display:none;">
         </div>
         <button class="btn btn--danger" id="btn-reset-data" style="margin-top:12px;">Reset All Data</button>
+      </div>
+
+      <div class="section-label" style="margin:24px 0 12px;">About</div>
+      <div class="card about-card">
+        ${movementBrandLockup(true)}
+        <p class="about-card__blurb">
+          Built by Eli Duffy for me and my partner, when nothing else fit — a
+          frictionless routine builder with no accounts, no ads, and no health-data
+          tracking. Everything stays on your device. Easy to carry, easy to adapt.
+        </p>
+        <div class="about-card__links">
+          <a class="btn btn--sm btn--secondary" href="https://github.com/Eli-Studio"
+             target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a class="btn btn--sm btn--secondary" href="https://ko-fi.com/eli_studio"
+             target="_blank" rel="noopener noreferrer">Support on Ko-fi ↗</a>
+        </div>
+        <p class="about-card__meta">Movement Practice · v${APP_VERSION}</p>
       </div>
     </div>
     ${bottomNav('settings')}

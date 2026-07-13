@@ -258,10 +258,10 @@ export function getTemplateAnchors(template, allExercises, cycleNumber = 1) {
 
 // ---- Session management ------------------------------------
 
-export function createSession(users, eliRoutineId, eliRoutineType, christinaRoutineId, christinaAdaptationLevel, cycleId) {
+export function createSession(users, userARoutineId, userARoutineType, userBRoutineId, userBAdaptationLevel, cycleId) {
   const sessionType =
     users.length === 2 ? 'both' :
-    users[0] === 'eli' ? 'eli_only' : 'christina_only';
+    users[0] === 'userA' ? 'userA_only' : 'userB_only';
 
   return {
     sessionId:               generateUUID(),
@@ -269,16 +269,16 @@ export function createSession(users, eliRoutineId, eliRoutineType, christinaRout
     cycleId:                 cycleId ?? null,
     users,
     sessionType,
-    eliRoutineId:            eliRoutineId ?? null,
-    eliRoutineType:          eliRoutineType ?? null,
-    christinaRoutineId:      christinaRoutineId ?? null,
-    christinaAdaptationLevel:christinaAdaptationLevel ?? null,
+    userARoutineId:            userARoutineId ?? null,
+    userARoutineType:          userARoutineType ?? null,
+    userBRoutineId:      userBRoutineId ?? null,
+    userBAdaptationLevel:userBAdaptationLevel ?? null,
     status:                  'in_progress',
-    exerciseLogs:            { eli: [], christina: [] },
-    eliEndCheckin:           null,
-    christinaCheckin:        null,
+    exerciseLogs:            { userA: [], userB: [] },
+    userAEndCheckin:           null,
+    userBCheckin:        null,
     profileCheckins:         {},
-    christinaSymptomConflicts: [],   // advisory symptom flags captured at session build
+    userBSymptomConflicts: [],   // advisory symptom flags captured at session build
     meditation:              null,
     notes:                   '',
     startedAt:               new Date().toISOString(),

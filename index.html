@@ -13,6 +13,12 @@
   <meta name="theme-color" content="#111613">
   <link rel="manifest" href="manifest.json">
 
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+
   <link rel="stylesheet" href="styles.css">
 
   <!-- Apply saved theme before first paint to avoid a flash of the wrong theme.
@@ -43,8 +49,10 @@
   <!-- Screen-reader announcement region (route changes, timer start/stop, etc.) -->
   <div id="sr-announce" aria-live="polite" class="sr-only"></div>
 
-  <!-- Chart.js — required by the Reports screen charts (reports.js uses window.Chart) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Chart.js — required by the Reports screen charts (reports.js uses window.Chart).
+       Vendored locally (js/vendor/chart.umd.min.js, v4.4.0) so the app stays
+       offline-first and never phones out to a CDN. -->
+  <script src="js/vendor/chart.umd.min.js"></script>
 
   <script type="module" src="js/app.js?v=5"></script>
   <script>

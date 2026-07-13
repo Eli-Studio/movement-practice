@@ -12,7 +12,7 @@ Adaptations and readiness labels are app-defined training heuristics, not medica
 
 ## GitHub Pages
 
-The included workflow deploys `main` through GitHub Actions. In repository **Settings → Pages**, set **Source** to **GitHub Actions**. The service worker caches the app shell after the first successful visit. Chart.js is cached at runtime after reports are opened online.
+The included workflow deploys `main` through GitHub Actions. In repository **Settings → Pages**, set **Source** to **GitHub Actions**. The service worker caches the app shell after the first successful visit. Chart.js is vendored locally (`js/vendor/chart.umd.min.js`), so the app makes no third-party network requests and works fully offline.
 
 Audio assets are intentionally not included in this public release. The app continues to work silently. Internal profile and routine identifiers retain their legacy names so backups remain compatible.
 

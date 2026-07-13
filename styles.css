@@ -87,15 +87,15 @@
   --border:      var(--movement-line);
   --border-2:    var(--movement-line-strong);
 
-  --eli:         var(--profile-a-accent);
-  --eli-dim:     var(--profile-a-surface);
-  --eli-light:   var(--profile-a-accent-strong);
-  --eli-glow:    var(--profile-a-glow);
+  --userA:         var(--profile-a-accent);
+  --userA-dim:     var(--profile-a-surface);
+  --userA-light:   var(--profile-a-accent-strong);
+  --userA-glow:    var(--profile-a-glow);
 
-  --christina:   var(--profile-b-accent);
-  --christina-dim: var(--profile-b-surface);
-  --christina-light: var(--profile-b-accent-strong);
-  --christina-glow: var(--profile-b-glow);
+  --userB:   var(--profile-b-accent);
+  --userB-dim: var(--profile-b-surface);
+  --userB-light: var(--profile-b-accent-strong);
+  --userB-glow: var(--profile-b-glow);
 
   /* Shared CTA: green→violet gradient */
   --grad-start:  var(--action-shared-start);
@@ -119,6 +119,41 @@
   --info:        var(--status-info);
   --orange:      var(--status-warm);
   --muted-soft:  var(--status-muted);
+
+  /* Activity palette — calendar heatmap, legend dots, and report charts.
+     Analog family: sage/green = strength track, plum/rose = gentle track,
+     with muted utility hues for shared categories. ACTIVITY_COLORS
+     (config.js) references these as var(), so the calendar re-themes for
+     free. Chart.js can't resolve CSS vars on canvas, so the report charts
+     read the --chart-* tokens below via getComputedStyle. */
+  --activity-strength:   #7f9670;
+  --activity-circuit:    #9aad82;
+  --activity-combo:      #b7c39a;
+  --activity-cardio:     #c8a86a;
+  --activity-mobility:   #8b9d97;
+  --activity-full:       #9c7385;
+  --activity-adapted:    #b899a6;
+  --activity-recovery:   #cfbcc6;
+  --activity-rest:       #5c6157;
+  --activity-vr:         #6f93a0;
+  --activity-adventure:  #7ba05f;
+  --activity-other:      #8a8275;
+  --activity-meditation: #a98bb0;
+
+  /* Chart tokens (read by reports.js via getComputedStyle). Series 1–3 are
+     a plum ramp for grouped bars; --chart-solid is the sage single-series. */
+  --chart-series-1: #9c7385;
+  --chart-series-2: #b899a6;
+  --chart-series-3: #cfbcc6;
+  --chart-solid:    #7f9670;
+  --chart-grid:     rgb(255 255 255 / 6%);
+  --chart-tick:     #aaa294;
+
+  /* Faint hairline fills/lines (chips, track backgrounds). Tokenized so the
+     Day theme can swap the old hardcoded rgba(255,255,255,x) whites. */
+  --fill-faint: rgb(255 255 255 / 5%);
+  --fill-fainter: rgb(255 255 255 / 3%);
+  --line-faint: rgb(255 255 255 / 4%);
 
   --text:        var(--movement-text-primary);
   --text-2:      var(--movement-text-secondary);
@@ -146,8 +181,10 @@
    a soft off-white (not pure white) to stay gentle for light sensitivity, and
    the status/chart-series hues are darkened so they keep contrast on light
    backgrounds. Night (dark) remains the default in :root above.
-   Known follow-ups: a few inline rgba(255,255,255,x) fills and Chart.js canvas
-   colors are hardcoded (not tokens) and stay dark-tuned — tracked separately. */
+   Report charts now read the --chart-* tokens (see reports.js chartTheme), and
+   the faint report fills use --fill-faint/--line-faint. The remaining hardcoded
+   rgb(255 255 255 / x%) values are decorative inset highlight bevels that
+   intentionally fade out on the light surfaces. */
 html[data-theme="day"] {
   --movement-surface-app: #d8d0c3;
   --movement-surface-work: #f2eadf;
@@ -206,6 +243,32 @@ html[data-theme="day"] {
   --info:        var(--status-info);
   --orange:      var(--status-warm);
   --muted-soft:  var(--status-muted);
+
+  /* Activity + chart palette, darkened for contrast on the light paper. */
+  --activity-strength:   #5a7050;
+  --activity-circuit:    #6d8659;
+  --activity-combo:      #7a8f5c;
+  --activity-cardio:     #9a7833;
+  --activity-mobility:   #5f736c;
+  --activity-full:       #7a4f60;
+  --activity-adapted:    #96707f;
+  --activity-recovery:   #a98b98;
+  --activity-rest:       #6e7266;
+  --activity-vr:         #4d6f7c;
+  --activity-adventure:  #547d3c;
+  --activity-other:      #6f685c;
+  --activity-meditation: #7d5f86;
+
+  --chart-series-1: #7a4f60;
+  --chart-series-2: #96707f;
+  --chart-series-3: #b193a0;
+  --chart-solid:    #5a7050;
+  --chart-grid:     rgb(41 43 37 / 8%);
+  --chart-tick:     #5f625a;
+
+  --fill-faint:   rgb(41 43 37 / 5%);
+  --fill-fainter: rgb(41 43 37 / 3%);
+  --line-faint:   rgb(41 43 37 / 6%);
 }
 
 /* --- Scrollbars --------------------------------------------- */
@@ -392,13 +455,13 @@ body {
   transition: border-color .18s ease, background .18s ease, transform .12s ease;
 }
 .who-card:active { transform: translateY(1px); }
-.who-card--eli { border-color: var(--profile-a-accent); background: color-mix(in srgb, var(--profile-a-surface) 88%, var(--profile-a-accent)); }
-.who-card--christina { border-color: var(--profile-b-accent); background: color-mix(in srgb, var(--profile-b-surface) 88%, var(--profile-b-accent)); }
+.who-card--userA { border-color: var(--profile-a-accent); background: color-mix(in srgb, var(--profile-a-surface) 88%, var(--profile-a-accent)); }
+.who-card--userB { border-color: var(--profile-b-accent); background: color-mix(in srgb, var(--profile-b-surface) 88%, var(--profile-b-accent)); }
 .who-card--both  { border-color: var(--border); }
 .who-card__emoji { font-size: 2rem; line-height: 1; }
 .who-card__name  { font-size: 1.1rem; font-weight: 700; color: var(--text); }
-.who-card--eli .who-card__name        { color: var(--profile-a-accent-strong); }
-.who-card--christina .who-card__name  { color: var(--profile-b-accent-strong); }
+.who-card--userA .who-card__name        { color: var(--profile-a-accent-strong); }
+.who-card--userB .who-card__name  { color: var(--profile-b-accent-strong); }
 .who-card__next  { font-size: 0.72rem; color: var(--text-2); margin-top: 2px; line-height: 1.3; }
 
 .hello-stats {
@@ -486,7 +549,7 @@ body {
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--action-primary);
 }
-.eyebrow--christina { color: var(--profile-b-accent); }
+.eyebrow--userB { color: var(--profile-b-accent); }
 
 /* --- Four-week cycle ------------------------------------- */
 .four-week-cycle {
@@ -590,6 +653,16 @@ body {
   padding: 18px;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border) 32%, transparent), var(--shadow-control);
 }
+.about-card .movement-brand { margin-bottom: 14px; }
+.about-card__blurb {
+  color: var(--text-2); font-size: 0.86rem; line-height: 1.6; margin-bottom: 14px;
+}
+.about-card__links { display: flex; flex-wrap: wrap; gap: 8px; }
+.about-card__links .btn { text-decoration: none; }
+.about-card__meta {
+  margin-top: 14px; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--movement-brass-500);
+}
 .card--document {
   background-color: var(--movement-surface-paper);
   background-image: var(--movement-texture-paper);
@@ -599,8 +672,8 @@ body {
 }
 .card--document .text-muted,
 .card--document .setting-row__desc { color: var(--movement-text-on-paper-muted); }
-.card--eli { border-color: var(--profile-a-accent); background: color-mix(in srgb, var(--profile-a-accent) 8%, var(--surface)); }
-.card--christina { border-color: var(--profile-b-accent); background: color-mix(in srgb, var(--profile-b-accent) 8%, var(--surface)); }
+.card--userA { border-color: var(--profile-a-accent); background: color-mix(in srgb, var(--profile-a-accent) 8%, var(--surface)); }
+.card--userB { border-color: var(--profile-b-accent); background: color-mix(in srgb, var(--profile-b-accent) 8%, var(--surface)); }
 .card + .card, .card + .btn, .btn + .card, .btn + .btn { margin-top: 10px; }
 
 /* --- Buttons --------------------------------------------- */
@@ -624,8 +697,8 @@ body {
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 5%), var(--shadow-control);
 }
 .btn--primary:hover { background: var(--action-primary-hover); }
-.btn--eli       { background: var(--profile-a-accent); color: #fff; }
-.btn--christina,
+.btn--userA       { background: var(--profile-a-accent); color: #fff; }
+.btn--userB,
 .btn--indigo    { background: var(--profile-b-accent); color: #fff; }
 .btn--secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border-2); }
 .btn--ghost     { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
@@ -663,8 +736,8 @@ body {
   border-radius: var(--radius-sm);
 }
 /* Match the accent to Christina's context where relevant. */
-.btn--christina:focus-visible,
-.card--christina :focus-visible,
+.btn--userB:focus-visible,
+.card--userB :focus-visible,
 .symptom-cluster-btn:focus-visible { outline-color: var(--movement-focus); }
 /* Inputs override the base `outline:none` when focused via keyboard. */
 .input:focus-visible { outline: 3px solid var(--movement-focus); outline-offset: 2px; }
@@ -701,9 +774,9 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   color: var(--profile-b-accent); opacity: 0.85;
 }
 .choice-btn.selected,
-.choice-btn[data-who="eli"].selected { border-color: var(--profile-a-accent); color: var(--profile-a-accent); background: var(--profile-a-glow); }
+.choice-btn[data-who="userA"].selected { border-color: var(--profile-a-accent); color: var(--profile-a-accent); background: var(--profile-a-glow); }
 .choice-btn[data-who="both"].selected { border-color: var(--action-primary); color: var(--action-primary); background: color-mix(in srgb, var(--action-primary) 12%, transparent); }
-.choice-btn[data-who="christina"].selected { border-color: var(--profile-b-accent); color: var(--profile-b-accent); background: var(--profile-b-glow); }
+.choice-btn[data-who="userB"].selected { border-color: var(--profile-b-accent); color: var(--profile-b-accent); background: var(--profile-b-glow); }
 .choice-btn:active { opacity: 0.7; }
 
 /* Tactile interaction: a shallow lift and brass edge catch, like a small
@@ -725,8 +798,8 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
     background-color: color-mix(in srgb, var(--surface-2) 92%, var(--movement-brass-500));
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 9%), 0 5px 9px rgb(0 0 0 / 22%);
   }
-  .who-card--eli:hover { background-color: color-mix(in srgb, var(--profile-a-surface) 82%, var(--profile-a-accent)); }
-  .who-card--christina:hover { background-color: color-mix(in srgb, var(--profile-b-surface) 82%, var(--profile-b-accent)); }
+  .who-card--userA:hover { background-color: color-mix(in srgb, var(--profile-a-surface) 82%, var(--profile-a-accent)); }
+  .who-card--userB:hover { background-color: color-mix(in srgb, var(--profile-b-surface) 82%, var(--profile-b-accent)); }
   .btn--primary:hover {
     background-color: var(--action-primary-hover);
     border-color: var(--movement-brass-300);
@@ -839,16 +912,16 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
 }
 .paired-panel + .paired-panel { border-left: 1px solid var(--border); }
 
-.paired-panel--eli       { border-top-color: var(--profile-a-accent); }
-.paired-panel--christina { border-top-color: var(--profile-b-accent); }
+.paired-panel--userA       { border-top-color: var(--profile-a-accent); }
+.paired-panel--userB { border-top-color: var(--profile-b-accent); }
 
 .paired-panel__user {
   font-size: 0.65rem; font-weight: 800;
   letter-spacing: 0.12em; text-transform: uppercase;
   margin-bottom: 10px;
 }
-.paired-panel--eli .paired-panel__user       { color: var(--profile-a-accent); }
-.paired-panel--christina .paired-panel__user { color: var(--profile-b-accent); }
+.paired-panel--userA .paired-panel__user       { color: var(--profile-a-accent); }
+.paired-panel--userB .paired-panel__user { color: var(--profile-b-accent); }
 
 .paired-panel__exercise {
   font: 400 clamp(1.05rem, 2.3vw, 1.4rem)/1.18 var(--font-display);
@@ -868,26 +941,26 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   border: 1px solid var(--border-2); color: var(--text-2);
   background: var(--surface-2);
 }
-.paired-panel--eli .paired-set-dot.done { background: var(--profile-a-accent); border-color: var(--profile-a-accent); color: #fff; }
-.paired-panel--eli .paired-set-dot.current { border-color: var(--profile-a-accent); color: var(--profile-a-accent); }
-.paired-panel--christina .paired-set-dot.done { background: var(--profile-b-accent); border-color: var(--profile-b-accent); color: #fff; }
-.paired-panel--christina .paired-set-dot.current { border-color: var(--profile-b-accent); color: var(--profile-b-accent); }
+.paired-panel--userA .paired-set-dot.done { background: var(--profile-a-accent); border-color: var(--profile-a-accent); color: #fff; }
+.paired-panel--userA .paired-set-dot.current { border-color: var(--profile-a-accent); color: var(--profile-a-accent); }
+.paired-panel--userB .paired-set-dot.done { background: var(--profile-b-accent); border-color: var(--profile-b-accent); color: #fff; }
+.paired-panel--userB .paired-set-dot.current { border-color: var(--profile-b-accent); color: var(--profile-b-accent); }
 
 .paired-rest {
   font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 700;
   font-variant-numeric: tabular-nums;
   margin: 12px 0; min-height: 2rem; line-height: 1; text-align: center;
 }
-.paired-panel--eli .paired-rest       { color: var(--profile-a-accent); }
-.paired-panel--christina .paired-rest { color: var(--profile-b-accent); }
+.paired-panel--userA .paired-rest       { color: var(--profile-a-accent); }
+.paired-panel--userB .paired-rest { color: var(--profile-b-accent); }
 
 .paired-done-badge {
   font-size: 0.75rem; font-weight: 700;
   padding: 7px 10px; border-radius: var(--radius-sm); border: 1px solid currentColor;
   margin-bottom: 8px; display: inline-block;
 }
-.paired-panel--eli .paired-done-badge { background: var(--profile-a-surface); color: var(--profile-a-accent-strong); }
-.paired-panel--christina .paired-done-badge { background: var(--profile-b-surface); color: var(--profile-b-accent-strong); }
+.paired-panel--userA .paired-done-badge { background: var(--profile-a-surface); color: var(--profile-a-accent-strong); }
+.paired-panel--userB .paired-done-badge { background: var(--profile-b-surface); color: var(--profile-b-accent-strong); }
 
 .paired-complete-btn {
   min-height: 58px; width: 100%;
@@ -899,8 +972,8 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
 }
 .paired-complete-btn:active { opacity: 0.7; transform: scale(0.97); }
 .paired-complete-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
-.paired-panel--eli .paired-complete-btn { background: var(--profile-a-accent); color: #fff; }
-.paired-panel--christina .paired-complete-btn { background: var(--profile-b-accent); color: #fff; }
+.paired-panel--userA .paired-complete-btn { background: var(--profile-a-accent); color: #fff; }
+.paired-panel--userB .paired-complete-btn { background: var(--profile-b-accent); color: #fff; }
 
 .paired-skip-btn {
   margin-top: 6px; width: 100%;
@@ -919,8 +992,8 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   border-radius: var(--radius); padding: clamp(20px, 4vw, 34px);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 3%), 0 8px 24px rgb(0 0 0 / 18%);
 }
-.exercise-card--eli       { border-top: 2px solid var(--profile-a-accent); }
-.exercise-card--christina { border-top: 2px solid var(--profile-b-accent); }
+.exercise-card--userA       { border-top: 2px solid var(--profile-a-accent); }
+.exercise-card--userB { border-top: 2px solid var(--profile-b-accent); }
 
 .exercise-card__meta {
   font-size: 0.68rem; font-weight: 700;
@@ -941,8 +1014,8 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   background: var(--surface-2); color: var(--text-2);
   border: 1px solid var(--border);
 }
-.tag--eli { background: var(--profile-a-surface); color: var(--profile-a-accent-strong); border-color: var(--profile-a-surface); }
-.tag--christina { background: var(--profile-b-surface); color: var(--profile-b-accent-strong); border-color: var(--profile-b-surface); }
+.tag--userA { background: var(--profile-a-surface); color: var(--profile-a-accent-strong); border-color: var(--profile-a-surface); }
+.tag--userB { background: var(--profile-b-surface); color: var(--profile-b-accent-strong); border-color: var(--profile-b-surface); }
 .tag--orange { background: var(--profile-a-surface); color: var(--profile-a-accent-strong); border-color: var(--profile-a-surface); }
 .tag--indigo { background: var(--profile-b-surface); color: var(--profile-b-accent-strong); border-color: var(--profile-b-surface); }
 .tag--green { background: var(--status-positive-surface); color: var(--status-positive); border-color: var(--status-positive-surface); }
@@ -958,8 +1031,8 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
 }
 .set-dot.done { background: var(--profile-a-accent); border-color: var(--profile-a-accent); color: #fff; }
 .set-dot.current { border-color: var(--profile-a-accent); color: var(--profile-a-accent); }
-.set-dot--christina.done { background: var(--profile-b-accent); border-color: var(--profile-b-accent); color: #fff; }
-.set-dot--christina.current { border-color: var(--profile-b-accent); color: var(--profile-b-accent); }
+.set-dot--userB.done { background: var(--profile-b-accent); border-color: var(--profile-b-accent); color: #fff; }
+.set-dot--userB.current { border-color: var(--profile-b-accent); color: var(--profile-b-accent); }
 
 /* --- Form Cues ------------------------------------------- */
 .form-cues { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
@@ -972,7 +1045,7 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   padding-left: 14px; position: relative; line-height: 1.45; margin-bottom: 6px;
 }
 .form-cue::before { content: '·'; position: absolute; left: 0; color: var(--profile-a-accent); font-weight: 700; }
-.form-cue--christina::before { color: var(--profile-b-accent); }
+.form-cue--userB::before { color: var(--profile-b-accent); }
 
 /* --- Adaptation Note ------------------------------------- */
 .adaptation-note {
@@ -1025,10 +1098,10 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   color: var(--movement-text-on-paper);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 32%), var(--shadow-raised);
 }
-.suggestion-card--eli { border-color: var(--profile-a-accent); border-top: 3px solid var(--profile-a-accent); }
-.suggestion-card--christina { border-color: var(--profile-b-accent); border-top: 3px solid var(--profile-b-accent); }
+.suggestion-card--userA { border-color: var(--profile-a-accent); border-top: 3px solid var(--profile-a-accent); }
+.suggestion-card--userB { border-color: var(--profile-b-accent); border-top: 3px solid var(--profile-b-accent); }
 .suggestion-card .eyebrow { color: color-mix(in srgb, var(--profile-a-accent) 72%, #111613); }
-.suggestion-card .eyebrow--christina { color: color-mix(in srgb, var(--profile-b-accent) 72%, #111613); }
+.suggestion-card .eyebrow--userB { color: color-mix(in srgb, var(--profile-b-accent) 72%, #111613); }
 .suggestion-card .text-muted { color: var(--movement-text-on-paper-muted); }
 .suggestion-card .symptom-flag-summary {
   color: #684a20;
@@ -1304,8 +1377,8 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   margin: 6px 0;
   line-height: 1;
 }
-.paired-panel--eli .exercise-countdown { color: var(--profile-a-accent); }
-.paired-panel--christina .exercise-countdown { color: var(--profile-b-accent); }
+.paired-panel--userA .exercise-countdown { color: var(--profile-a-accent); }
+.paired-panel--userB .exercise-countdown { color: var(--profile-b-accent); }
 
 /* Single-user exercise countdown */
 .exercise-countdown-solo {
@@ -1502,8 +1575,8 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
 .routine-default-count { display: block; margin-top: 2px; font-size: .58rem; font-weight: 500; line-height: 1.2; color: var(--movement-text-on-paper-muted); }
 .strength-routine-btn__state { font-size: .55rem; text-transform: uppercase; letter-spacing: .05em; color: var(--profile-a-accent); }
 .strength-routine-btn.selected { border-color: var(--profile-a-accent); background: color-mix(in srgb, var(--profile-a-accent) 15%, var(--movement-surface-paper)); }
-.suggestion-card--christina .strength-routine-btn__state { color: var(--profile-b-accent); }
-.suggestion-card--christina .strength-routine-btn.selected { border-color: var(--profile-b-accent); background: color-mix(in srgb, var(--profile-b-accent) 15%, var(--movement-surface-paper)); }
+.suggestion-card--userB .strength-routine-btn__state { color: var(--profile-b-accent); }
+.suggestion-card--userB .strength-routine-btn.selected { border-color: var(--profile-b-accent); background: color-mix(in srgb, var(--profile-b-accent) 15%, var(--movement-surface-paper)); }
 
 @media (max-width: 430px) {
   .capacity-choice-row { align-items: stretch; flex-direction: column; }

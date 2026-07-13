@@ -31,7 +31,7 @@ export function describePainRule(painDay) {
   return `${label} pain day — ${r.maxExercises} exercises, ${r.sets} sets of ${reps} reps.`;
 }
 
-// Symptom × attribute matrix. Key = canonical symptom id (config.CHRISTINA_SYMPTOMS).
+// Symptom × attribute matrix. Key = canonical symptom id (config.USERB_SYMPTOMS).
 // Value = mechanical attributes that conflict with that symptom when active.
 // Attribute tokens match the `attributes` field on each exercise in
 // data/exercises.json (sourced from Christina's Exercise Pool matrix).

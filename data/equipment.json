@@ -8,7 +8,7 @@
     "conflictLevel": "hard",
     "canUseSimultaneously": false,
     "primaryUsers": [
-      "eli"
+      "userA"
     ],
     "secondaryUsers": [],
     "launchBaseline": "5kg_per_hand",
@@ -23,10 +23,10 @@
     "conflictLevel": "hard",
     "canUseSimultaneously": false,
     "primaryUsers": [
-      "christina"
+      "userB"
     ],
     "secondaryUsers": [
-      "eli"
+      "userA"
     ],
     "notes": "A fixed light dumbbell set for lighter weighted movements."
   },
@@ -38,7 +38,7 @@
     "unit": "set",
     "conflictLevel": "none",
     "canUseSimultaneously": true,
-    "primaryUsers": ["eli", "christina"],
+    "primaryUsers": ["userA", "userB"],
     "secondaryUsers": [],
     "notes": "A loop or long resistance-band set for accessible strength variations."
   },
@@ -51,8 +51,8 @@
     "conflictLevel": "hard",
     "canUseSimultaneously": false,
     "primaryUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "secondaryUsers": [],
     "notes": "Cannot be used by both simultaneously. Coordinate bench exercises."
@@ -66,7 +66,7 @@
     "conflictLevel": "hard",
     "canUseSimultaneously": false,
     "primaryUsers": [
-      "eli"
+      "userA"
     ],
     "secondaryUsers": [],
     "notes": "Cardio equipment that may be unsuitable when balance, pain, or energy is limited."
@@ -80,8 +80,8 @@
     "conflictLevel": "none",
     "canUseSimultaneously": true,
     "primaryUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "secondaryUsers": [],
     "notes": "Two mats available. No conflict — both users can use simultaneously."
@@ -95,8 +95,8 @@
     "conflictLevel": "none",
     "canUseSimultaneously": true,
     "primaryUsers": [
-      "eli",
-      "christina"
+      "userA",
+      "userB"
     ],
     "secondaryUsers": [],
     "notes": "Shared open space. No conflict. Farmer carries do not create a conflict."

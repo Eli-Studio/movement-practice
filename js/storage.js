@@ -24,7 +24,7 @@ function validateBackup(state) {
     && s.defaultRestSeconds >= 30 && s.defaultRestSeconds <= 300
     && ['spotify', 'chimes'].includes(s.musicMode) && ['night', 'day'].includes(s.theme)
     && (s.spotifyUrl === '' || Boolean(safeSpotifyUrl(s.spotifyUrl)))
-    && isObject(s.profiles) && isObject(s.profiles.eli) && isObject(s.profiles.christina)
+    && isObject(s.profiles) && isObject(s.profiles.userA) && isObject(s.profiles.userB)
     && Array.isArray(state.sessions) && state.sessions.length <= 10000
     && Array.isArray(state.missedDays) && state.missedDays.length <= 10000
     && Array.isArray(state.cycleReviews) && state.cycleReviews.length <= 10000
@@ -45,11 +45,11 @@ export function getDefaultState() {
       theme:              'night',    // 'night' (dark, default) | 'day' (light)
       lastBackupAt:       null,       // ISO timestamp of the last full JSON export
       unavailableEquipmentIds: [],    // household equipment intentionally turned off
-      // Per-user profiles. Internal ids (eli/christina) are stable; name, baseline
+      // Per-user profiles. Internal ids (userA/userB) are stable; name, baseline
       // weight, progression style, per-exercise weight overrides, and disabled
       // exercises are all editable in Settings. See SPEC_User_Profiles.md.
       profiles: {
-        eli: {
+        userA: {
           displayName:      'User A',
           icon:             'profile-a',
           primaryGoal:      'general_fitness',
@@ -67,7 +67,7 @@ export function getDefaultState() {
             eli_reverse_fly:       3
           }
         },
-        christina: {
+        userB: {
           displayName:      'User B',
           icon:             'profile-b',
           primaryGoal:      'general_fitness',
@@ -87,25 +87,25 @@ export function getDefaultState() {
       cycleNumber:              1,
       startDate:                null,
       endDate:                  null,
-      eliSequencePointer:       0,
-      eliLastHeavyDate:         null,
-      eliLastHeavyRoutineId:    null,
-      eliLastActivityDate:      null,
-      eliHeavyCounts: {
+      userASequencePointer:       0,
+      userALastHeavyDate:         null,
+      userALastHeavyRoutineId:    null,
+      userALastActivityDate:      null,
+      userAHeavyCounts: {
         eli_upper_push: 0,
         eli_lower_body: 0,
         eli_upper_pull: 0,
         eli_full_body:  0
       },
-      eliCircuitCount:          0,
-      eliCardioCount:           0,
-      eliMobilityCount:         0,
-      eliComboCount:            0,
-      eliExerciseWeights:       {},
-      eliExerciseRepsTarget:    {},
-      christinaSequencePointer: 0,
-      christinaLastActivityDate:null,
-      christinaRoutineCounts: {
+      userACircuitCount:          0,
+      userACardioCount:           0,
+      userAMobilityCount:         0,
+      userAComboCount:            0,
+      userAExerciseWeights:       {},
+      userAExerciseRepsTarget:    {},
+      userBSequencePointer: 0,
+      userBLastActivityDate:null,
+      userBRoutineCounts: {
         christina_gentle_upper:       0,
         christina_gentle_lower:       0,
         christina_gentle_pull_posture:0,
@@ -121,14 +121,14 @@ export function getDefaultState() {
 }
 
 // Nested cycleState sub-objects that must be deep-merged against defaults so a
-// newly-added key (e.g. a new routine in eliHeavyCounts) is filled in on an
+// newly-added key (e.g. a new routine in userAHeavyCounts) is filled in on an
 // existing save instead of silently staying undefined. The user's logged values
 // always win; defaults only supply keys the save is missing.
 const CYCLE_NESTED_KEYS = [
-  'eliHeavyCounts',
-  'christinaRoutineCounts',
-  'eliExerciseWeights',
-  'eliExerciseRepsTarget'
+  'userAHeavyCounts',
+  'userBRoutineCounts',
+  'userAExerciseWeights',
+  'userAExerciseRepsTarget'
 ];
 
 function mergeCycleState(defCycle, savedCycle) {
@@ -168,10 +168,41 @@ function mergeProfiles(defProfiles, savedProfiles) {
   return out;
 }
 
-// Merge a parsed/loaded state object against defaults. Settings and cycleState
-// (including its nested count maps) are forward-filled; the three collections
-// are array-guarded so a malformed or older save can't leave them undefined.
-function mergeAgainstDefaults(parsed) {
+// ---- Legacy profile-id migration ---------------------------------------
+// v0.5 renamed the two built-in profile ids from the original personal names
+// to neutral userA/userB. Saves and JSON backups from before the rename carry
+// the old ids as object KEYS (profiles.eli, cycleState.eliSequencePointer,
+// exerciseLogs.eli, …), as scalar VALUES (session users, per-set log.userId,
+// sessionType 'eli_only'), and nowhere else. This walks the whole tree once and
+// remaps both, so historical logs and cycle counts survive the rename. Content
+// ids ("eli_upper_push", "christina_gentle_upper") keep their prefix — the key
+// rule only fires on the bare id or a camelCase compound, never on "eli_"/"christina_".
+const LEGACY_ID_MAP = { eli: 'userA', christina: 'userB' };
+const LEGACY_VALUE_MAP = {
+  eli: 'userA', christina: 'userB',
+  eli_only: 'userA_only', christina_only: 'userB_only'
+};
+function renameLegacyKey(key) {
+  const m = key.match(/^(eli|christina)(?=[A-Z]|$)/);
+  return m ? LEGACY_ID_MAP[m[1]] + key.slice(m[1].length) : key;
+}
+function migrateLegacyIds(value) {
+  if (typeof value === 'string') return LEGACY_VALUE_MAP[value] ?? value;
+  if (Array.isArray(value)) return value.map(migrateLegacyIds);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) out[renameLegacyKey(k)] = migrateLegacyIds(v);
+    return out;
+  }
+  return value;
+}
+
+// Merge a parsed/loaded state object against defaults. Legacy profile ids are
+// migrated first; then settings and cycleState (including its nested count maps)
+// are forward-filled and the three collections are array-guarded so a malformed
+// or older save can't leave them undefined.
+function mergeAgainstDefaults(rawParsed) {
+  const parsed = migrateLegacyIds(rawParsed);
   const d = getDefaultState();
   return {
     ...d,

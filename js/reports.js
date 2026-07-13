@@ -3,7 +3,22 @@
 // ============================================================
 
 import { today, getDaysInMonth, getFirstDayOfMonth, formatDateShort } from './utils.js';
-import { ACTIVITY_COLORS, CHRISTINA_SYMPTOMS } from './config.js';
+import { ACTIVITY_COLORS, USERB_SYMPTOMS } from './config.js';
+
+// Chart.js draws to <canvas>, which can't resolve CSS custom properties, so we
+// read the current theme's --chart-* token values off <html> at build time.
+// This keeps the charts on the same analog palette as the rest of the app and
+// re-themes correctly when the charts are rebuilt after a Day/Night switch.
+function chartTheme() {
+  const s = getComputedStyle(document.documentElement);
+  const v = (name, fallback) => (s.getPropertyValue(name).trim() || fallback);
+  return {
+    series: [v('--chart-series-1', '#9c7385'), v('--chart-series-2', '#b899a6'), v('--chart-series-3', '#cfbcc6')],
+    solid:  v('--chart-solid', '#7f9670'),
+    grid:   v('--chart-grid', 'rgb(255 255 255 / 6%)'),
+    tick:   v('--chart-tick', '#aaa294')
+  };
+}
 
 // Humanize an unknown symptom id (e.g. "grip_muscle_weakness" -> "Grip Muscle Weakness")
 // so nothing silently disappears if the data carries an id not in config.
@@ -21,7 +36,7 @@ function humanizeSymptomId(id) {
 // Unknown ids fall back to a humanized label instead of being dropped.
 const _symNormKey = id => String(id).toLowerCase().replace(/[^a-z0-9]/g, '');
 const _symByNorm = {};
-for (const _sym of CHRISTINA_SYMPTOMS) _symByNorm[_symNormKey(_sym.id)] = _sym;
+for (const _sym of USERB_SYMPTOMS) _symByNorm[_symNormKey(_sym.id)] = _sym;
 function resolveSymptom(rawId) {
   const match = _symByNorm[_symNormKey(rawId)];
   return match ? { id: match.id, label: match.label }
@@ -56,12 +71,12 @@ export function buildMonthCalendar(year, month, sessions, missedDays) {
     if (d.getFullYear() !== year || d.getMonth() !== month) continue;
     const day = d.getDate();
     if (!data[day]) data[day] = { activities:[], meditation:false };
-    if (s.users.includes('eli') && s.eliRoutineType) {
-      const t = eliType(s.eliRoutineType);
+    if (s.users.includes('userA') && s.userARoutineType) {
+      const t = userAType(s.userARoutineType);
       if (!data[day].activities.includes(t)) data[day].activities.push(t);
     }
-    if (s.users.includes('christina') && s.christinaRoutineId) {
-      const t = christinaType(s.christinaAdaptationLevel);
+    if (s.users.includes('userB') && s.userBRoutineId) {
+      const t = userBType(s.userBAdaptationLevel);
       if (!data[day].activities.includes(t)) data[day].activities.push(t);
     }
     if (s.meditation?.completed) data[day].meditation = true;
@@ -76,11 +91,11 @@ export function buildMonthCalendar(year, month, sessions, missedDays) {
   return { daysInMonth, firstDay, data };
 }
 
-function eliType(rtype) {
+function userAType(rtype) {
   return ({ heavy_weight:'eli_heavy', circuit:'eli_circuit', cardio_circuit:'eli_cardio',
             mobility_recovery:'eli_mobility', combo_weight_circuit:'eli_combo' })[rtype] ?? 'other';
 }
-function christinaType(level) {
+function userBType(level) {
   return ({ normal:'christina_normal', reduced:'christina_reduced', recovery:'christina_recovery' })[level] ?? 'christina_normal';
 }
 
@@ -108,7 +123,7 @@ export function renderCalendarHTML(year, month, calData) {
     let dots = '';
     if (dayData) {
       dots = dayData.activities.slice(0, 3).map(act => {
-        const color = ACTIVITY_COLORS[act] ?? '#94a3b8';
+        const color = ACTIVITY_COLORS[act] ?? 'var(--activity-other)';
         return `<span class="calendar__dot" style="background:${color}"></span>`;
       }).join('');
       if (dayData.meditation) dots += `<span class="calendar__dot" style="background:${ACTIVITY_COLORS.meditation}"></span>`;
@@ -125,17 +140,17 @@ export function renderCalendarHTML(year, month, calData) {
 // ---- Eli stats ----------------------------------------------
 
 export function getEliStats(sessions) {
-  const eli = sessions.filter(s => s.users.includes('eli'));
-  const fatigue = eli.map(s => s.eliEndCheckin?.formFatigue).filter(f => f != null && f > 0);
+  const userA = sessions.filter(s => s.users.includes('userA'));
+  const fatigue = userA.map(s => s.userAEndCheckin?.formFatigue).filter(f => f != null && f > 0);
   return {
-    total:    eli.length,
-    heavy:    eli.filter(s => s.eliRoutineType === 'heavy_weight').length,
-    circuit:  eli.filter(s => s.eliRoutineType === 'circuit').length,
-    mobility: eli.filter(s => s.eliRoutineType === 'mobility_recovery').length,
-    cardio:   eli.filter(s => s.eliRoutineType === 'cardio_circuit').length,
-    combo:    eli.filter(s => s.eliRoutineType === 'combo_weight_circuit').length,
+    total:    userA.length,
+    heavy:    userA.filter(s => s.userARoutineType === 'heavy_weight').length,
+    circuit:  userA.filter(s => s.userARoutineType === 'circuit').length,
+    mobility: userA.filter(s => s.userARoutineType === 'mobility_recovery').length,
+    cardio:   userA.filter(s => s.userARoutineType === 'cardio_circuit').length,
+    combo:    userA.filter(s => s.userARoutineType === 'combo_weight_circuit').length,
     avgFatigue: fatigue.length ? (fatigue.reduce((a,b) => a+b, 0) / fatigue.length).toFixed(1) : null,
-    jointPainCount: eli.filter(s => s.eliEndCheckin?.jointPain && s.eliEndCheckin.jointPain !== 'no').length
+    jointPainCount: userA.filter(s => s.userAEndCheckin?.jointPain && s.userAEndCheckin.jointPain !== 'no').length
   };
 }
 
@@ -144,7 +159,7 @@ export function getEliStats(sessions) {
 export function getEliStrengthData(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
   const heavySessions = sessions
-    .filter(s => s.users.includes('eli') && s.eliRoutineType === 'heavy_weight' && s.date >= cycleStart)
+    .filter(s => s.users.includes('userA') && s.userARoutineType === 'heavy_weight' && s.date >= cycleStart)
     .sort((a,b) => a.date.localeCompare(b.date));
 
   if (!heavySessions.length) return [];
@@ -154,13 +169,13 @@ export function getEliStrengthData(sessions, cycleState) {
 
   const exMap = {};
   for (const s of heavySessions) {
-    const fatigue   = s.eliEndCheckin?.formFatigue ?? null;
-    const jointRaw  = s.eliEndCheckin?.jointPain ?? 'no';
+    const fatigue   = s.userAEndCheckin?.formFatigue ?? null;
+    const jointRaw  = s.userAEndCheckin?.jointPain ?? 'no';
     const hasJoint  = jointRaw && jointRaw !== 'no';
-    const jointLocs = s.eliEndCheckin?.jointLocations ?? [];
+    const jointLocs = s.userAEndCheckin?.jointLocations ?? [];
     const isClean   = fatigue == null || fatigue <= 3;
 
-    for (const log of (s.exerciseLogs?.eli ?? [])) {
+    for (const log of (s.exerciseLogs?.userA ?? [])) {
       if (log.skipped) continue;
       if (!exMap[log.exerciseId]) {
         exMap[log.exerciseId] = {
@@ -272,13 +287,13 @@ const MUSCLE_MAP = {
 
 export function getEliMuscleStimulus(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
-  const cycleSessions = sessions.filter(s => s.users.includes('eli') && s.date >= cycleStart);
+  const cycleSessions = sessions.filter(s => s.users.includes('userA') && s.date >= cycleStart);
 
   const counts = { chest:0, shoulders:0, triceps:0, back:0, biceps:0,
                    quads:0, glutes:0, hamstrings:0, core:0, calves:0 };
 
   for (const s of cycleSessions) {
-    for (const log of (s.exerciseLogs?.eli ?? [])) {
+    for (const log of (s.exerciseLogs?.userA ?? [])) {
       if (log.skipped) continue;
       const setCount = log.setLogs?.length ?? 0;
       if (!setCount) continue;
@@ -295,7 +310,7 @@ export function getEliMuscleStimulus(sessions, cycleState) {
 // ---- Christina stats ----------------------------------------
 
 export function getChristinaStats(sessions) {
-  const c = sessions.filter(s => s.users.includes('christina'));
+  const c = sessions.filter(s => s.users.includes('userB'));
 
   // Build counts only from symptoms that were actually logged (any truthy /
   // positive value — handles both boolean flags and numeric severities), so we
@@ -305,7 +320,7 @@ export function getChristinaStats(sessions) {
   const symptomFreq = {};
   const SYMPTOM_LABELS = {};
   for (const s of c) {
-    for (const [rawId, val] of Object.entries(s.christinaCheckin?.symptoms ?? {})) {
+    for (const [rawId, val] of Object.entries(s.userBCheckin?.symptoms ?? {})) {
       const active = typeof val === 'boolean' ? val : Number(val) > 0;
       if (!active) continue;
       const { id, label } = resolveSymptom(rawId);
@@ -318,13 +333,13 @@ export function getChristinaStats(sessions) {
   }
   return {
     total:    c.length,
-    normal:   c.filter(s => s.christinaAdaptationLevel === 'normal').length,
-    reduced:  c.filter(s => s.christinaAdaptationLevel === 'reduced').length,
-    recovery: c.filter(s => s.christinaAdaptationLevel === 'recovery').length,
+    normal:   c.filter(s => s.userBAdaptationLevel === 'normal').length,
+    reduced:  c.filter(s => s.userBAdaptationLevel === 'reduced').length,
+    recovery: c.filter(s => s.userBAdaptationLevel === 'recovery').length,
     painDays: {
-      low:    c.filter(s => s.christinaCheckin?.painDay === 'low').length,
-      medium: c.filter(s => s.christinaCheckin?.painDay === 'medium').length,
-      high:   c.filter(s => s.christinaCheckin?.painDay === 'high').length
+      low:    c.filter(s => s.userBCheckin?.painDay === 'low').length,
+      medium: c.filter(s => s.userBCheckin?.painDay === 'medium').length,
+      high:   c.filter(s => s.userBCheckin?.painDay === 'high').length
     },
     symptomFreq,
     symptomLabels: SYMPTOM_LABELS
@@ -339,7 +354,7 @@ export function getProfileProgressionSignals(sessions, userId, profile) {
   const byExercise = new Map();
   for (const session of recent) {
     const checkin = session.profileCheckins?.[userId]
-      ?? (userId === 'eli' ? session.eliEndCheckin : null) ?? {};
+      ?? (userId === 'userA' ? session.userAEndCheckin : null) ?? {};
     const effort = checkin.effort ?? checkin.formFatigue ?? null;
     const pain = checkin.jointPain ?? 'no';
     if ((effort != null && effort > 3) || !['no', 'mild'].includes(pain)) continue;
@@ -367,7 +382,7 @@ export function getProfileProgressionSignals(sessions, userId, profile) {
 export function getProfileOverview(sessions, userId) {
   const completed = sessions.filter(s => s.status === 'completed' && s.users?.includes(userId));
   const checkinFor = session => session.profileCheckins?.[userId]
-    ?? (userId === 'eli' ? session.eliEndCheckin : session.christinaCheckin) ?? {};
+    ?? (userId === 'userA' ? session.userAEndCheckin : session.userBCheckin) ?? {};
   const capacityFor = session => checkinFor(session).capacity ?? checkinFor(session);
   const effortValues = completed.map(s => checkinFor(s).effort ?? checkinFor(s).formFatigue)
     .filter(value => Number.isFinite(Number(value)) && Number(value) > 0).map(Number);
@@ -375,7 +390,7 @@ export function getProfileOverview(sessions, userId) {
     const checkin = checkinFor(session);
     if (checkin.adjustmentUsed != null) return checkin.adjustmentUsed;
     if (checkin.adjustmentChanged != null) return checkin.adjustmentChanged;
-    if (userId === 'christina') return ['reduced', 'recovery'].includes(session.christinaAdaptationLevel);
+    if (userId === 'userB') return ['reduced', 'recovery'].includes(session.userBAdaptationLevel);
     return false;
   }).length;
   const weighted = completed.filter(session => (session.exerciseLogs?.[userId] ?? []).some(log =>
@@ -413,15 +428,15 @@ function scoreToStatus(value, greenThreshold, yellowThreshold, higherIsBetter = 
 
 export function getEliReadiness(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
-  const cycleEli   = sessions.filter(s => s.users.includes('eli') && s.date >= cycleStart);
-  const heavy      = cycleEli.filter(s => s.eliRoutineType === 'heavy_weight');
-  const nonHeavy   = cycleEli.filter(s => s.eliRoutineType !== 'heavy_weight');
+  const cycleEli   = sessions.filter(s => s.users.includes('userA') && s.date >= cycleStart);
+  const heavy      = cycleEli.filter(s => s.userARoutineType === 'heavy_weight');
+  const nonHeavy   = cycleEli.filter(s => s.userARoutineType !== 'heavy_weight');
 
-  const fatigueVals = cycleEli.map(s => s.eliEndCheckin?.formFatigue).filter(f => f != null && f > 0);
+  const fatigueVals = cycleEli.map(s => s.userAEndCheckin?.formFatigue).filter(f => f != null && f > 0);
   const avgFatigue  = fatigueVals.length ? fatigueVals.reduce((a,b) => a+b, 0) / fatigueVals.length : null;
 
-  const painSessions = cycleEli.filter(s => s.eliEndCheckin?.jointPain && s.eliEndCheckin.jointPain !== 'no').length;
-  const sharpPain    = cycleEli.some(s => s.eliEndCheckin?.jointPain === 'sharp_concerning');
+  const painSessions = cycleEli.filter(s => s.userAEndCheckin?.jointPain && s.userAEndCheckin.jointPain !== 'no').length;
+  const sharpPain    = cycleEli.some(s => s.userAEndCheckin?.jointPain === 'sharp_concerning');
 
   const factors = [
     {
@@ -466,18 +481,18 @@ export function getEliReadiness(sessions, cycleState) {
 
 export function getChristinaReadiness(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
-  const cycleC     = sessions.filter(s => s.users.includes('christina') && s.date >= cycleStart);
+  const cycleC     = sessions.filter(s => s.users.includes('userB') && s.date >= cycleStart);
   if (!cycleC.length) return { factors:[], overall:'green', total:0, recommendation:'No sessions logged yet.' };
 
-  const highPain    = cycleC.filter(s => s.christinaCheckin?.painDay === 'high').length;
+  const highPain    = cycleC.filter(s => s.userBCheckin?.painDay === 'high').length;
   const highPainPct = Math.round(highPain / cycleC.length * 100);
 
-  const withSymptoms = cycleC.filter(s => Object.values(s.christinaCheckin?.symptoms ?? {}).some(v => v >= 4)).length;
+  const withSymptoms = cycleC.filter(s => Object.values(s.userBCheckin?.symptoms ?? {}).some(v => v >= 4)).length;
   const symptomPct   = Math.round(withSymptoms / cycleC.length * 100);
 
   let totalEx = 0, skippedEx = 0;
   for (const s of cycleC) {
-    for (const log of (s.exerciseLogs?.christina ?? [])) {
+    for (const log of (s.exerciseLogs?.userB ?? [])) {
       totalEx++;
       if (log.skipped) skippedEx++;
     }
@@ -581,13 +596,13 @@ export function renderStrengthProgressChart(containerId, strengthData) {
         : (JOINT_LABELS[ex.jointSeverity] || 'Joint');
       const sharp = ex.jointSeverity === 'sharp_concerning';
       const tagColor = sharp ? 'var(--status-critical)' : 'var(--text-2)';
-      const tagBg    = sharp ? 'rgba(248,113,113,0.12)' : 'rgba(255,255,255,0.05)';
+      const tagBg    = sharp ? 'rgba(248,113,113,0.12)' : 'var(--fill-faint)';
       jointTag = `<span title="Joint sensitivity logged this cycle (${JOINT_LABELS[ex.jointSeverity] || ex.jointSeverity})"
         style="font-size:0.6rem;color:${tagColor};background:${tagBg};padding:1px 6px;border-radius:8px;">${esc(locs)}</span>`;
     }
     const fatigueTag = ex.hasFormFlag
       ? `<span title="Form fatigue logged on a set; best score uses your clean set only"
-          style="font-size:0.6rem;color:var(--text-2);background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:8px;">form watch</span>`
+          style="font-size:0.6rem;color:var(--text-2);background:var(--fill-faint);padding:1px 6px;border-radius:8px;">form watch</span>`
       : '';
     const tags = [jointTag, fatigueTag].filter(Boolean).join(' ');
 
@@ -602,7 +617,7 @@ export function renderStrengthProgressChart(containerId, strengthData) {
           <span style="font-size:0.78rem;font-weight:600;color:var(--text);">${esc(ex.exerciseName)}</span>
           <span style="font-size:0.72rem;white-space:nowrap;">${badge}</span>
         </div>
-        <div style="position:relative;height:14px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;">
+        <div style="position:relative;height:14px;background:var(--fill-faint);border-radius:4px;overflow:hidden;">
           <div style="position:absolute;inset:0;width:${drawnFill}%;background:${barColor};opacity:${state === 'neutral' ? 0.35 : 0.8};border-radius:4px;transition:width .2s;"></div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.63rem;color:var(--text-2);margin-top:3px;gap:8px;">
@@ -641,7 +656,7 @@ export function renderMuscleMapChart(containerId, muscleData) {
 
   function level(sets) { return sets >= 16 ? 'high' : sets >= 10 ? 'strong' : sets >= 4 ? 'moderate' : 'low'; }
   const STYLE = {
-    low:      {bg:'rgba(148,163,184,0.08)', txt:'var(--muted-soft)', lbl:'Low'},
+    low:      {bg:'var(--fill-faint)', txt:'var(--muted-soft)', lbl:'Low'},
     moderate: {bg:'color-mix(in srgb, var(--status-info) 15%, transparent)', txt:'var(--status-info)', lbl:'Moderate'},
     strong: {bg:'color-mix(in srgb, var(--status-positive) 20%, transparent)', txt:'var(--status-positive-strong)', lbl:'Strong'},
     high: {bg:'color-mix(in srgb, var(--status-warm) 20%, transparent)', txt:'var(--status-warm)', lbl:'High'}
@@ -684,7 +699,7 @@ export function renderReadinessCard(containerId, data, user) {
   const s = STATUS[data.overall];
 
   const rows = data.factors.map(f => `
-    <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+    <div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line-faint);">
       <div style="width:9px;height:9px;border-radius:50%;background:${DOT[f.status]};margin-top:4px;flex-shrink:0;"></div>
       <div>
         <div style="font-size:0.78rem;color:var(--text);font-weight:600;">${f.label}
@@ -723,18 +738,19 @@ export function renderChristinaPainDaysChart(canvasId, painDays) {
   if (existing) existing.destroy();
   const total = painDays.low + painDays.medium + painDays.high;
   if (!total) { canvas.parentElement.innerHTML = '<p class="empty-state">No check-in data yet.</p>'; return; }
+  const t = chartTheme();
   new Chart(canvas, {
     type: 'bar',
     data: {
       labels: ['Low Pain','Medium Pain','High Pain'],
       datasets: [{ data:[painDays.low,painDays.medium,painDays.high],
-                   backgroundColor:['#818cf8','#a5b4fc','#c7d2fe'], borderRadius:6, borderSkipped:false }]
+                   backgroundColor:t.series, borderRadius:6, borderSkipped:false }]
     },
     options: {
       responsive:true,
       plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.raw} session${ctx.raw!==1?'s':''}`}} },
-      scales:{ y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#94a3b8',stepSize:1}},
-               x:{grid:{display:false},ticks:{color:'#94a3b8'}} }
+      scales:{ y:{beginAtZero:true,grid:{color:t.grid},ticks:{color:t.tick,stepSize:1}},
+               x:{grid:{display:false},ticks:{color:t.tick}} }
     }
   });
 }
@@ -750,21 +766,22 @@ export function renderChristinaSymptomChart(canvasId, symptomFreq, symptomLabels
   const entries = Object.entries(symptomFreq)
     .map(([id,count]) => ({ label:symptomLabels[id]??id, count }))
     .sort((a,b) => b.count - a.count);
+  const t = chartTheme();
   new Chart(canvas, {
     type:'bar',
-    data:{ labels:entries.map(e=>e.label), datasets:[{data:entries.map(e=>e.count), backgroundColor:'#c4b5fd', borderRadius:4, borderSkipped:false}] },
+    data:{ labels:entries.map(e=>e.label), datasets:[{data:entries.map(e=>e.count), backgroundColor:t.solid, borderRadius:4, borderSkipped:false}] },
     options:{
       indexAxis:'y', responsive:true,
       plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.raw} session${ctx.raw!==1?'s':''}`}} },
-      scales:{ x:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#94a3b8',stepSize:1}},
-               y:{grid:{display:false},ticks:{color:'#94a3b8'}} }
+      scales:{ x:{beginAtZero:true,grid:{color:t.grid},ticks:{color:t.tick,stepSize:1}},
+               y:{grid:{display:false},ticks:{color:t.tick}} }
     }
   });
 }
 
 // ---- Christina Movement Exposure Map ------------------------
 
-const CHRISTINA_MOVEMENT_GROUPS = [
+const USERB_MOVEMENT_GROUPS = [
   { id: 'shoulders',  label: 'Shoulders' },
   { id: 'upper_back', label: 'Upper Back' },
   { id: 'arms',       label: 'Arms' },
@@ -778,7 +795,7 @@ const CHRISTINA_MOVEMENT_GROUPS = [
 ];
 
 function emptyChristinaMovementCounts() {
-  return CHRISTINA_MOVEMENT_GROUPS.reduce((acc, g) => {
+  return USERB_MOVEMENT_GROUPS.reduce((acc, g) => {
     acc[g.id] = 0;
     return acc;
   }, {});
@@ -828,13 +845,13 @@ function mapChristinaExerciseToMovement(log) {
 export function getChristinaMovementExposure(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
   const cycleSessions = sessions.filter(s =>
-    s.users.includes('christina') && s.date >= cycleStart
+    s.users.includes('userB') && s.date >= cycleStart
   );
 
   const counts = emptyChristinaMovementCounts();
 
   for (const s of cycleSessions) {
-    for (const log of (s.exerciseLogs?.christina ?? [])) {
+    for (const log of (s.exerciseLogs?.userB ?? [])) {
       if (log.skipped) continue;
 
       const setCount = log.setLogs?.length
@@ -874,13 +891,13 @@ export function renderChristinaMovementExposureMap(containerId, movementData) {
   }
 
   const STYLE = {
-    low:      { bg: 'rgba(148,163,184,0.08)', txt: 'var(--muted-soft)', lbl: 'Low' },
+    low:      { bg: 'var(--fill-faint)', txt: 'var(--muted-soft)', lbl: 'Low' },
     moderate: { bg: 'color-mix(in srgb, var(--profile-b-accent) 15%, transparent)', txt: 'var(--profile-b-accent-strong)', lbl: 'Moderate' },
     strong: { bg: 'color-mix(in srgb, var(--status-positive) 16%, transparent)', txt: 'var(--status-positive-strong)', lbl: 'Strong' },
     high: { bg: 'color-mix(in srgb, var(--status-warm) 18%, transparent)', txt: 'var(--status-warm)', lbl: 'High' }
   };
 
-  const cells = CHRISTINA_MOVEMENT_GROUPS.map(g => {
+  const cells = USERB_MOVEMENT_GROUPS.map(g => {
     const count = movementData[g.id] ?? 0;
     const st = STYLE[level(count)];
     return `<div style="background:${st.bg};border-radius:8px;padding:8px 4px;text-align:center;
@@ -902,7 +919,7 @@ export function renderChristinaMovementExposureMap(containerId, movementData) {
 // ---- Christina Symptom Calendar -----------------------------
 
 // Compact labels for the tight calendar cells, keyed by canonical symptom id.
-const CHRISTINA_SYMPTOM_LABELS_SHORT = {
+const USERB_SYMPTOM_LABELS_SHORT = {
   dizziness:          'Dizzy',
   jointPain:          'Joint',
   muscleAche:         'Ache',
@@ -917,20 +934,20 @@ export function getChristinaSymptomCalendarData(year, month, sessions) {
   const data = {};
 
   for (const s of sessions) {
-    if (!s.users.includes('christina')) continue;
+    if (!s.users.includes('userB')) continue;
 
     const d = new Date(s.date + 'T12:00:00');
     if (d.getFullYear() !== year || d.getMonth() !== month) continue;
 
     const day = d.getDate();
-    const symptoms = s.christinaCheckin?.symptoms ?? {};
+    const symptoms = s.userBCheckin?.symptoms ?? {};
     const symptomEntries = Object.entries(symptoms)
       .filter(([, val]) => (typeof val === 'boolean' ? val : Number(val) > 0))
       .map(([rawId, val]) => {
         const { id, label } = resolveSymptom(rawId);
         return {
           id,
-          label: CHRISTINA_SYMPTOM_LABELS_SHORT[id] ?? label,
+          label: USERB_SYMPTOM_LABELS_SHORT[id] ?? label,
           value: typeof val === 'boolean' ? (val ? 1 : 0) : Number(val)
         };
       });
@@ -940,12 +957,12 @@ export function getChristinaSymptomCalendarData(year, month, sessions) {
 
     data[day] = {
       date: s.date,
-      painDay: s.christinaCheckin?.painDay ?? null,
-      adaptationLevel: s.christinaAdaptationLevel ?? 'normal',
+      painDay: s.userBCheckin?.painDay ?? null,
+      adaptationLevel: s.userBAdaptationLevel ?? 'normal',
       symptoms: symptomEntries,
       symptomLoad,
       activeSymptomCount,
-      routineId: s.christinaRoutineId ?? null
+      routineId: s.userBRoutineId ?? null
     };
   }
 
@@ -971,7 +988,7 @@ export function renderChristinaSymptomCalendarHTML(year, month, symptomData) {
   }
 
   const STYLE = {
-    none:   { bg: 'rgba(255,255,255,0.03)', border: 'rgba(255,255,255,0.06)', txt: 'var(--text-3)' },
+    none:   { bg: 'var(--fill-fainter)', border: 'var(--line-faint)', txt: 'var(--text-3)' },
     low: { bg: 'color-mix(in srgb, var(--profile-b-accent) 12%, transparent)', border: 'color-mix(in srgb, var(--profile-b-accent) 24%, transparent)', txt: 'var(--profile-b-accent-strong)' },
     medium: { bg: 'color-mix(in srgb, var(--status-caution) 13%, transparent)', border: 'color-mix(in srgb, var(--status-caution) 28%, transparent)', txt: 'var(--status-caution)' },
     high: { bg: 'color-mix(in srgb, var(--status-critical) 14%, transparent)', border: 'color-mix(in srgb, var(--status-critical) 30%, transparent)', txt: 'var(--status-critical)' }

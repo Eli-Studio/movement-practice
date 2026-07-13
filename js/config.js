@@ -6,14 +6,14 @@ export const APP_VERSION = '0.5.0';
 export const STORAGE_KEY = 'morningCircuit';
 export const CYCLE_LENGTH_DAYS = 28;
 
-export const ELI_HEAVY_SEQUENCE = [
+export const USERA_HEAVY_SEQUENCE = [
   'eli_upper_push',
   'eli_lower_body',
   'eli_upper_pull',
   'eli_full_body'
 ];
 
-export const CHRISTINA_SEQUENCE = [
+export const USERB_SEQUENCE = [
   'christina_gentle_upper',
   'christina_gentle_lower',
   'christina_gentle_pull_posture',
@@ -60,7 +60,7 @@ export const JOINT_PAIN_LOCATIONS = [
 // reports, and the symptom→exercise conflict matrix. Ids are camelCase; the
 // reports resolver also matches snake_case variants in stored data (e.g.
 // "joint_pain" resolves to "jointPain"), so historical logs stay readable.
-export const CHRISTINA_SYMPTOMS = [
+export const USERB_SYMPTOMS = [
   { id: 'dizziness',          icon: 'spiral', label: 'Dizziness'        },
   { id: 'jointPain',          icon: 'joint', label: 'Joint Pain'       },
   { id: 'muscleAche',         icon: 'tension', label: 'Muscle Ache'    },
@@ -80,20 +80,24 @@ export const MISSED_DAY_CATEGORIES = [
   { id: 'other',       label: 'Other' }
 ];
 
+// Activity colors resolve to CSS custom properties (defined per-theme in
+// styles.css) so calendar dots and legends re-theme with Day/Night for free.
+// Keys stay on their legacy names for saved-data compatibility; the values
+// are analog-palette roles, not the old vibrant hues.
 export const ACTIVITY_COLORS = {
-  eli_heavy:           '#f97316',
-  eli_circuit:         '#fb923c',
-  eli_combo:           '#fdba74',
-  eli_cardio:          '#fcd34d',
-  eli_mobility:        '#86efac',
-  christina_normal:    '#818cf8',
-  christina_reduced:   '#a5b4fc',
-  christina_recovery:  '#c7d2fe',
-  skip_rest:           '#475569',
-  vr_exercise:         '#06b6d4',
-  adventure:           '#22c55e',
-  other:               '#94a3b8',
-  meditation:          '#e879f9'
+  eli_heavy:           'var(--activity-strength)',
+  eli_circuit:         'var(--activity-circuit)',
+  eli_combo:           'var(--activity-combo)',
+  eli_cardio:          'var(--activity-cardio)',
+  eli_mobility:        'var(--activity-mobility)',
+  christina_normal:    'var(--activity-full)',
+  christina_reduced:   'var(--activity-adapted)',
+  christina_recovery:  'var(--activity-recovery)',
+  skip_rest:           'var(--activity-rest)',
+  vr_exercise:         'var(--activity-vr)',
+  adventure:           'var(--activity-adventure)',
+  other:               'var(--activity-other)',
+  meditation:          'var(--activity-meditation)'
 };
 
 export const DEFAULT_REST_SECONDS = 120;
