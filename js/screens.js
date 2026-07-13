@@ -355,6 +355,40 @@ export function renderHello(state, backupNudgeDismissed = false) {
   `;
 }
 
+export function renderResumeWorkout(App) {
+  const draft = App.state.workoutDraft;
+  const session = draft?.session;
+  const users = session?.users ?? [];
+  const names = users.map(id => userName(App, id)).join(' & ');
+  const completedSets = users.reduce((total, id) => total
+    + (session?.exerciseLogs?.[id] ?? []).reduce((sum, log) => sum + (log.completedSets ?? 0), 0), 0);
+  const skipped = users.reduce((total, id) => total
+    + (session?.exerciseLogs?.[id] ?? []).filter(log => log.skipped).length, 0);
+  const started = session?.startedAt ? new Date(session.startedAt) : null;
+  const startedLabel = started && !Number.isNaN(started.getTime())
+    ? started.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })
+    : 'Earlier';
+
+  return `
+    <div class="page page--no-nav fade-in" style="display:flex;flex-direction:column;justify-content:center;min-height:100dvh;">
+      <div class="eyebrow">Workout in progress</div>
+      <h1 class="page-title" style="margin-top:6px;">Pick up where you left off?</h1>
+      <p class="page-subtitle">Your workout progress was saved automatically.</p>
+      <div class="card" style="margin-top:20px;">
+        <div class="setting-row__label">${escapeHtml(names || 'Saved workout')}</div>
+        <div class="setting-row__desc" style="margin-top:6px;">Started ${escapeHtml(startedLabel)}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+          <span class="tag">${completedSets} set${completedSets === 1 ? '' : 's'} completed</span>
+          ${skipped ? `<span class="tag">${skipped} skipped</span>` : ''}
+        </div>
+      </div>
+      <button class="btn btn--primary" id="btn-resume-workout" style="margin-top:24px;">Resume Workout</button>
+      <button class="btn btn--ghost" id="btn-discard-workout" style="margin-top:10px;">Discard Saved Workout</button>
+      <p class="text-muted text-sm" style="text-align:center;margin-top:12px;">Discarding removes this unfinished workout. Completed workout history is unaffected.</p>
+    </div>
+  `;
+}
+
 // ---- 3. Missed Days (past) --------------------------------
 
 export function renderMissedDays(missedDates) {
@@ -1180,7 +1214,7 @@ export function renderEndCheckin(App) {
       <div class="section-label" style="margin-bottom:8px;">How hard did this session feel?</div>
       <div class="fatigue-scale">
         ${FATIGUE_SCALE.map(f => `
-          <button class="fatigue-btn" data-effort-user="${userId}" data-value="${f.value}">
+          <button class="fatigue-btn ${App.ui.endCheckins?.[userId]?.effort === f.value ? 'selected' : ''}" data-effort-user="${userId}" data-value="${f.value}">
             <span class="fatigue-btn__num">${f.value}</span>
             <span class="fatigue-btn__text">
               <span class="fatigue-btn__label">${f.label}</span>
@@ -1192,12 +1226,12 @@ export function renderEndCheckin(App) {
       <div class="section-label" style="margin-top:20px;margin-bottom:8px;">Joint pain?</div>
       <div class="pain-options">
         ${JOINT_PAIN_OPTIONS.map(opt => `
-          <button class="pain-option-btn" data-joint-pain-user="${userId}" data-value="${opt.value}">${opt.label}</button>
+          <button class="pain-option-btn ${App.ui.endCheckins?.[userId]?.jointPain === opt.value ? (opt.value === 'no' ? 'selected--none' : 'selected') : ''}" data-joint-pain-user="${userId}" data-value="${opt.value}">${opt.label}</button>
         `).join('')}
       </div>
       <div class="input-group" style="margin-top:16px;">
         <label class="input-label" for="notes-${userId}">Anything to remember? (optional)</label>
-        <textarea class="input" id="notes-${userId}" placeholder="What felt good, what was hard, or what to change next time..."></textarea>
+        <textarea class="input" id="notes-${userId}" placeholder="What felt good, what was hard, or what to change next time...">${escapeHtml(App.ui.endCheckins?.[userId]?.notes ?? '')}</textarea>
       </div>
     </div>
   `;
