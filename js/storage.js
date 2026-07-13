@@ -25,6 +25,7 @@ function validateBackup(state) {
     && s.defaultRestSeconds >= 30 && s.defaultRestSeconds <= 300
     && ['spotify', 'chimes'].includes(s.musicMode) && ['night', 'day'].includes(s.theme)
     && (s.spotifyUrl === '' || Boolean(safeSpotifyUrl(s.spotifyUrl)))
+    && typeof s.gettingStartedGuideCompleted === 'boolean'
     && isObject(s.profiles) && isObject(s.profiles.userA) && isObject(s.profiles.userB)
     && Array.isArray(s.activeProfileIds) && s.activeProfileIds.length >= 1
     && s.activeProfileIds.every(id => PROFILE_IDS.includes(id))
@@ -50,6 +51,9 @@ export function getDefaultState() {
       lastBackupAt:       null,       // ISO timestamp of the last full JSON export
       unavailableEquipmentIds: [],    // household equipment intentionally turned off
       activeProfileIds: ['userA', 'userB'], // old saves remain in two-profile mode
+      // Defaults true so existing installs are never interrupted by a newly
+      // introduced tour. First-launch explicitly sets false for new installs.
+      gettingStartedGuideCompleted: true,
       // Per-user profiles. Internal ids (userA/userB) are stable; name, baseline
       // weight, progression style, per-exercise weight overrides, and disabled
       // exercises are all editable in Settings. See SPEC_User_Profiles.md.

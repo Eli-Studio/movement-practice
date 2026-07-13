@@ -2,6 +2,8 @@
 
 A static, local-first movement practice tracker for one or two profiles. It includes routine rotation, timers, capacity check-ins, four-week cycle reports, and JSON/CSV/Markdown exports. New installs can start with one profile and add a second later; turning off the second profile keeps its settings and history intact.
 
+The optional getting-started guide explains the important settings and leads into a short two-exercise workout. Daily capacity defaults are medium energy, low pain, low soreness, and no active symptoms; each check-in affects only that day's plan.
+
 Deferred engineering work and the latest review checkpoint are tracked in [NEXT_STEPS.md](NEXT_STEPS.md).
 
 ## Privacy and backups

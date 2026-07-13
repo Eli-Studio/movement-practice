@@ -54,7 +54,9 @@ window.App = {
     calYear:                null,
     calMonth:               null,
     lastSessionSummary:     null,  // snapshot for session_summary screen
-    backupNudgeDismissed:   false  // session-only; "Later" returns next app load
+    backupNudgeDismissed:   false, // session-only; "Later" returns next app load
+    guideActive:            false,
+    tutorialWorkout:        false
   },
   workoutState:   null,
   currentSession: null
@@ -299,6 +301,13 @@ function navigate(screen) {
         App.ui.routineSuggestionBuilt = true;
       }
 
+      // Re-apply after every render so changing the selected routine during the
+      // guide cannot expand the practice session back to full length.
+      if (App.ui.tutorialWorkout) {
+        App.ui.userAExercisePlan = shortenTutorialPlan(App.ui.userAExercisePlan);
+        App.ui.userBExercisePlan = shortenTutorialPlan(App.ui.userBExercisePlan);
+      }
+
       html = renderRoutineSuggestion(App);
       break;
     }
@@ -325,7 +334,9 @@ function navigate(screen) {
       break;
 
     case 'session_summary': {
+      const tutorialWasActive = App.ui.tutorialWorkout;
       finalizeSession();    // saves state, stores lastSessionSummary, nulls currentSession
+      if (tutorialWasActive) completeGettingStartedGuide();
       html = renderSessionSummary(App);
       break;
     }
@@ -419,6 +430,19 @@ function setupListeners(screen) {
     });
   });
 
+  document.querySelectorAll('[data-guide-skip]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      completeGettingStartedGuide();
+      App.ui.tutorialWorkout = false;
+      navigate('hello');
+    });
+  });
+
+  on('btn-guide-hide', 'click', () => {
+    completeGettingStartedGuide();
+    navigate('workout_runner');
+  });
+
   switch (screen) {
 
     case 'first_launch':
@@ -445,6 +469,7 @@ function setupListeners(screen) {
         const launch = dateEl?.value || getTomorrowDate();
         const twoProfiles = get('onboard-profile-two')?.classList.contains('active');
         App.state.settings.activeProfileIds = twoProfiles ? ['userA', 'userB'] : ['userA'];
+        App.state.settings.gettingStartedGuideCompleted = false;
         App.state.settings.activeProfileIds.forEach(userId => {
           const profile = App.state.settings.profiles[userId];
           profile.displayName = get(`onboard-name-${userId}`)?.value.trim() || profile.displayName;
@@ -465,6 +490,10 @@ function setupListeners(screen) {
       break;
 
     case 'hello':
+      on('btn-guide-start', 'click', () => {
+        App.ui.guideActive = true;
+        navigate('settings');
+      });
       document.querySelectorAll('[data-who]').forEach(btn => {
         btn.addEventListener('click', e => {
           const who = e.currentTarget.dataset.who;
@@ -843,7 +872,7 @@ function setupListeners(screen) {
         }
         App.ui.selectedUsers = activeUsers;
         App.workoutState = null;   // force fresh build
-        navigate('warmup');
+        navigate(App.ui.tutorialWorkout ? 'workout_runner' : 'warmup');
       });
       break;
     }
@@ -1101,6 +1130,18 @@ function setupListeners(screen) {
 
     case 'settings': {
       // ---- Profiles ----
+      on('btn-guide-start-settings', 'click', () => {
+        App.ui.guideActive = true;
+        App.state.settings.gettingStartedGuideCompleted = false;
+        saveState(App.state);
+        navigate('settings');
+      });
+      on('btn-guide-short-workout', 'click', () => {
+        App.ui.guideActive = true;
+        App.ui.tutorialWorkout = true;
+        App.ui.selectedUsers = [getActiveProfileIds(App.state.settings)[0]];
+        afterMissedDays();
+      });
       on('btn-enable-second-profile', 'click', () => {
         setSecondProfileActive(App.state.settings, true);
         saveState(App.state);
@@ -1326,6 +1367,21 @@ function reorderToReduceConflicts(userAPlan, userBPlan, allExercises) {
   return result;
 }
 
+function shortenTutorialPlan(plan = []) {
+  return plan.slice(0, 2).map(exercise => ({
+    ...exercise,
+    sets: 1,
+    reps: exercise.durationSeconds ? exercise.reps : '5',
+    currentReps: exercise.durationSeconds ? exercise.currentReps : 5
+  }));
+}
+
+function completeGettingStartedGuide() {
+  App.state.settings.gettingStartedGuideCompleted = true;
+  App.ui.guideActive = false;
+  saveState(App.state);
+}
+
 // ============================================================
 // Backup Nudge
 // ============================================================
@@ -1392,6 +1448,7 @@ function buildWorkoutState() {
       const adjusted = adaptWorkoutToCapacity(userAExercises, App.ui.symptomsByUser.userA, App.state.settings.profiles.userA);
       userAExercises = composeCapacityPlan(userAExercises, adjusted.plan, App.ui.capacityDimensionChoices.userA);
       userAExercises = annotateSymptomConflicts(userAExercises, App.ui.symptomsByUser.userA);
+      if (App.ui.tutorialWorkout) userAExercises = shortenTutorialPlan(userAExercises);
     }
   }
 
@@ -1402,6 +1459,7 @@ function buildWorkoutState() {
       const adjusted = adaptWorkoutToCapacity(plan, App.ui.symptomsByUser.userB, App.state.settings.profiles.userB);
       plan = composeCapacityPlan(plan, adjusted.plan, App.ui.capacityDimensionChoices.userB);
       userBExercises = annotateSymptomConflicts(plan, App.ui.symptomsByUser.userB);
+      if (App.ui.tutorialWorkout) userBExercises = shortenTutorialPlan(userBExercises);
     }
   }
 
@@ -1804,6 +1862,7 @@ function finalizeSession() {
   // Central reset so the next session always rebuilds its routine plan, rather
   // than relying on every entry path to clear this guard (audit R4).
   App.ui.routineSuggestionBuilt = false;
+  App.ui.tutorialWorkout = false;
 }
 
 // ============================================================

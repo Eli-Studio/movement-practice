@@ -300,6 +300,15 @@ export function renderHello(state, backupNudgeDismissed = false) {
   return `
     <div class="page fade-in" style="display:flex;flex-direction:column;">
       ${backupNudgeBanner(settings, sessions, backupNudgeDismissed)}
+      ${settings.gettingStartedGuideCompleted === false ? `<div class="card" style="margin-top:16px;border-color:var(--action-primary);">
+        <div class="eyebrow">Optional guide</div>
+        <div class="setting-row__label" style="margin-top:6px;">Want a quick walkthrough?</div>
+        <div class="setting-row__desc" style="margin-top:6px;line-height:1.5;">Review the important settings, then try a short two-exercise workout.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <button class="btn btn--sm btn--secondary" id="btn-guide-start">Show me how it works</button>
+          <button class="btn btn--sm btn--ghost" data-guide-skip>Skip</button>
+        </div>
+      </div>` : ''}
       <div style="margin-top:20px;margin-bottom:10px;position:relative;">
         ${movementBrandLockup()}
         <div class="eyebrow">Cycle ${cycleState.cycleNumber} · Day ${dayNum} of 28</div>
@@ -461,6 +470,11 @@ const SYMPTOM_CLUSTERS = USERB_SYMPTOMS;
 export function renderSymptomCheck(App, userId = 'userB') {
   return `
     <div class="page page--no-nav fade-in">
+      ${App.ui.guideActive ? `<div class="card" style="border-color:var(--action-primary);margin-bottom:16px;">
+        <div class="eyebrow">Guide · Daily check-in</div>
+        <div class="setting-row__desc" style="margin-top:6px;line-height:1.5;">Energy is overall readiness; soreness is muscle recovery. These choices adjust only today’s workout.</div>
+        <button class="btn btn--sm btn--ghost" data-guide-skip style="margin-top:10px;">Exit guide</button>
+      </div>` : ''}
       <div class="eyebrow eyebrow--userB">${userLabel(App, userId)}</div>
       <h1 class="page-title" style="margin-top:6px;">How are you feeling?</h1>
       <p class="page-subtitle" style="margin-bottom:28px;">Quick check — this shapes today's routine.</p>
@@ -500,7 +514,7 @@ export function renderSymptomCheck(App, userId = 'userB') {
       </div>
 
       <button class="btn btn--userB" id="btn-symptoms-done" style="margin-top:8px;">Continue</button>
-      <button class="btn btn--ghost" id="btn-capacity-skip">Use typical capacity</button>
+      <button class="btn btn--ghost" id="btn-capacity-skip">Use app defaults · Medium energy, low pain &amp; soreness</button>
     </div>
   `;
 }
@@ -514,7 +528,7 @@ function buildExerciseListHTML(exercises, user) {
       ${exercises.map((ex, idx) => {
         const label = weightLabel(ex);
         const parts = [
-          ex.sets ? `${ex.sets} sets` : null,
+          ex.sets ? `${ex.sets} set${ex.sets === 1 ? '' : 's'}` : null,
           ex.reps ? ex.reps : (ex.durationSeconds ? `${ex.durationSeconds}s` : null),
           label ?? null
         ].filter(Boolean).join(' · ');
@@ -679,7 +693,7 @@ export function renderRoutineSuggestion(App) {
         <div class="suggestion-card__routine">${escapeHtml(selectedEliRoutine?.label ?? userASuggestion.primary.label)}</div>
         <div class="suggestion-card__reason">${escapeHtml(selectedEliRoutine?.id === userASuggestion.primary.id ? userASuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
         ${strengthRestHTML(userASuggestion)}
-        ${capacityAdjustmentHTML(ui.userACapacityAdjustment, 'userA', ui.capacityDimensionChoices?.userA, ui.capacityChoiceByUser?.userA)}
+        ${ui.tutorialWorkout ? '' : capacityAdjustmentHTML(ui.userACapacityAdjustment, 'userA', ui.capacityDimensionChoices?.userA, ui.capacityChoiceByUser?.userA)}
         ${workoutCountHTML(userAExercisePlan)}
         ${anchorLine}
         ${buildExerciseListHTML(userAExercisePlan, 'userA')}
@@ -711,7 +725,7 @@ export function renderRoutineSuggestion(App) {
         <div class="suggestion-card__routine">${escapeHtml(selectedChristinaRoutine?.label ?? userBSuggestion.primary.label)}</div>
         <div class="suggestion-card__reason">${escapeHtml(selectedChristinaRoutine?.id === userBSuggestion.primary.id ? userBSuggestion.primary.reason : 'Selected by you. The suggested rotation remains available below.')}</div>
         ${strengthRestHTML(userBSuggestion)}
-        ${capacityAdjustmentHTML(ui.userBCapacityAdjustment, 'userB', ui.capacityDimensionChoices?.userB, ui.capacityChoiceByUser?.userB)}
+        ${ui.tutorialWorkout ? '' : capacityAdjustmentHTML(ui.userBCapacityAdjustment, 'userB', ui.capacityDimensionChoices?.userB, ui.capacityChoiceByUser?.userB)}
         ${workoutCountHTML(userBExercisePlan)}
         ${(() => {
           const n = (userBExercisePlan ?? []).filter(e => e.symptomConflicts?.length).length;
@@ -750,6 +764,11 @@ export function renderRoutineSuggestion(App) {
 
   return `
     <div class="page page--no-nav fade-in" style="padding-bottom:100px;">
+      ${ui.guideActive ? `<div class="card" style="border-color:var(--action-primary);margin-bottom:16px;">
+        <div class="eyebrow">Guide · Your short workout</div>
+        <div class="setting-row__desc" style="margin-top:6px;line-height:1.5;">This is a real workout shortened to two exercises and one set each. Review the plan, then start when ready.</div>
+        <button class="btn btn--sm btn--ghost" data-guide-skip style="margin-top:10px;">Exit guide</button>
+      </div>` : ''}
       <div class="eyebrow">Today's Plan</div>
       <h1 class="page-title" style="margin-top:6px;">Your routine</h1>
       <p class="page-subtitle" style="margin-bottom:16px;">Tap "Change routine" to swap.</p>
@@ -960,6 +979,10 @@ export function renderWorkoutRunner(App) {
     : '';
   const cycleDay = cycleDayForDisplay(App.state?.cycleState);
   const compactCycle = fourWeekCycle(cycleDay, App.state?.cycleState?.cycleNumber ?? 1, 'compact');
+  const guideNote = App.ui.guideActive ? `<div class="card" style="margin:10px 12px 0;border-color:var(--action-primary);padding:10px 12px;">
+    <div class="setting-row__desc"><strong>Guided first workout:</strong> log the set normally, skip an exercise, or end whenever you need.</div>
+    <button class="btn btn--sm btn--ghost" id="btn-guide-hide" style="margin-top:8px;">Hide guide</button>
+  </div>` : '';
 
   // ---- BOTH: side-by-side ----
   if (mode === 'both') {
@@ -970,6 +993,7 @@ export function renderWorkoutRunner(App) {
 
     return `
       <div class="workout-screen">
+        ${guideNote}
         <div class="workout-header">
           ${compactCycle}
           <span class="workout-header__label">
@@ -1027,6 +1051,7 @@ export function renderWorkoutRunner(App) {
 
   return `
     <div class="workout-screen">
+      ${guideNote}
       <div class="workout-header">
         ${compactCycle}
         <span class="workout-header__label">
@@ -1613,6 +1638,20 @@ export function renderSettings(App) {
       <h1 class="page-title" style="margin-top:8px;">Settings</h1>
       <p class="page-subtitle" style="margin-bottom:24px;">App configuration.</p>
 
+      ${App.ui.guideActive ? `<div class="card" style="border-color:var(--action-primary);">
+        <div class="eyebrow">Guide · Step 1 of 2</div>
+        <div class="setting-row__label" style="margin-top:6px;">Your settings shape every suggestion</div>
+        <div class="setting-row__desc" style="margin-top:6px;line-height:1.5;">Profiles hold goals and progression preferences. Equipment removes incompatible exercises. Capacity is checked fresh before each workout.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <button class="btn btn--sm btn--secondary" id="btn-guide-short-workout">Next · Try a short workout</button>
+          <button class="btn btn--sm btn--ghost" data-guide-skip>Skip guide</button>
+        </div>
+      </div>` : `<div class="card">
+        <div class="setting-row__label">Getting started</div>
+        <div class="setting-row__desc" style="margin-top:6px;line-height:1.5;">Take a quick Settings walkthrough followed by a short two-exercise workout. The guide is always optional.</div>
+        <button class="btn btn--secondary" id="btn-guide-start-settings" style="margin-top:12px;">Show me how it works</button>
+      </div>`}
+
       <div class="card" style="border-color:var(--status-caution);">
         <div class="setting-row__label">Health &amp; safety</div>
         <div class="setting-row__desc" style="margin-top:6px;line-height:1.55;">
@@ -1651,6 +1690,16 @@ export function renderSettings(App) {
           <div class="setting-row__desc" style="margin-top:6px;">Add a second profile for individual or paired workouts.</div>
           <button class="btn btn--secondary" id="btn-enable-second-profile" style="margin-top:14px;">Add second profile</button>
         </div>`}
+
+      <div class="section-label" style="margin:20px 0 12px;">Daily capacity</div>
+      <div class="card">
+        <div class="setting-row__label">App defaults</div>
+        <div class="setting-row__desc" style="margin-top:6px;line-height:1.55;">
+          Choosing “Use app defaults” means <strong>medium energy, low pain, low soreness, and no active symptoms</strong>.
+          Energy describes overall readiness; soreness describes muscle recovery, so they can differ on the same day.
+        </div>
+        <div class="setting-row__desc" style="margin-top:8px;">Capacity choices affect only that day’s workout and do not change progression history.</div>
+      </div>
 
       <div class="section-label" style="margin:20px 0 12px;">Available equipment</div>
       <div class="card">
