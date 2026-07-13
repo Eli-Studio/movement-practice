@@ -1,55 +1,40 @@
-# Next Steps
+# Release Checkpoint
 
-Review checkpoint from July 13, 2026. The current development branch is functional,
-deployable, and passes manual browser checks, including offline startup. These
-items are intentionally deferred for the next development session.
+Version 0.6.0 is the finished public demo candidate. The current branch is
+functional, deployable, and manually verified across phone, tablet, and desktop
+viewports.
 
-## Completed — Protect active workouts
+## Completed for 0.6.0
 
-- Persist the in-progress session and workout runner state after meaningful
-  changes, including completed sets, skipped exercises, timer state, and check-ins.
-- Detect an interrupted workout during startup and offer **Resume** or **Discard**.
-- Clear the draft only after a session is finalized or explicitly discarded.
-- Manual browser checks cover reload/resume, paused rest timers, partial
-  check-ins, discard, and final draft cleanup.
+- One- or two-profile onboarding with an optional guided first workout.
+- Daily capacity choices with transparent defaults.
+- Single and paired workouts, timers, cycle rotation, reports, and exports.
+- Interrupted-workout **Resume** and **Discard** recovery.
+- Device-local storage, full JSON backup, and structural migration of older saves.
+- Neutral public exercise, routine, report, export, and activity identifiers.
+- Keyboard-operable controls, accessible names and selected states, focus handling,
+  calendar descriptions, visible focus indicators, and reduced-motion support.
+- Responsive layouts at 320, 390, 768, and 1440 pixels, including 44px paired
+  workout controls at the narrowest tested width.
+- Accessible Day and Night color combinations for confirmed text and control cases.
+- Spreadsheet-safe CSV cells for profile names and free-text notes.
+- Dependency-free automated release checks in pull requests and before Pages deploys.
 
-## Completed — Align the public audio experience
+## Release procedure
 
-- Audio capability is explicitly disabled for this public build, so it creates no
-  media elements and makes no missing-asset requests.
-- Chime controls are hidden and Settings accurately describes silent operation.
-- Warm-up and meditation timers remain available without bundled audio, while an
-  optional Spotify URL still provides an external music shortcut.
+1. Run `npm test` locally.
+2. Merge the release branch into `main`.
+3. Confirm the GitHub Pages workflow succeeds.
+4. On the deployed HTTPS URL, smoke-test fresh onboarding, one short workout,
+   resume/discard, backup restore, second-profile controls, paired phone layout,
+   install, and offline reload.
+5. Tag the verified commit as `v0.6.0`.
 
-## Priority 3 — Add release checks
+## Intentionally deferred beyond the demo
 
-- Add unit tests for storage migration, cycle rotation, workout plan generation,
-  capacity adaptation, and exports.
-- Keep a legacy `0.4.x` backup fixture and test its migration to neutral profile
-  IDs (`userA` and `userB`).
-- Add data-integrity checks for duplicate IDs and missing exercise, equipment, and
-  substitution references.
-- Add a small browser smoke suite covering onboarding, a single-user workout,
-  a paired workout, interrupted-workout recovery, reports, backup restore, and
-  offline startup.
-- Run syntax, data, and smoke checks in GitHub Actions before Pages deployment.
-
-## Priority 4 — Hardening and cleanup
-
-- Update the persisted schema version to match the displayed app version and make
-  future migrations explicitly versioned.
-- Neutralize spreadsheet formula prefixes in user-controlled CSV fields.
-- Add accessible grouping and selected-state semantics to training-experience and
-  adaptation-preference controls.
-- Keep README compatibility wording aligned with the neutral profile-ID migration.
-
-## Verified at this checkpoint
-
-- JavaScript syntax and JSON parsing pass.
-- The data graph contains 84 exercises, 14 routines, and 7 equipment records with
-  no broken references found.
-- Legacy profile IDs migrate successfully in profiles, cycle state, sessions, and
-  exercise logs.
-- Onboarding, capacity check-in, routine suggestion, workout startup, Settings,
-  workout recovery, Settings, and offline reload work in browser testing.
-- No committed secrets or unexpected third-party runtime requests were found.
+- A broader automated browser suite for every complete workflow.
+- Styled in-app dialogs in place of native browser confirm/prompt dialogs.
+- Physical-device Safari and installed-PWA regression coverage.
+- Explicitly versioned migration functions for every future schema release.
+- An open-source license, if public code reuse is desired later. Until then, all
+  rights remain reserved.

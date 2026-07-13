@@ -54,7 +54,7 @@ function isValidWorkoutDraft(draft) {
 
 export function getDefaultState() {
   return {
-    version: '0.4.0',
+    version: '0.6.0',
     settings: {
       launchDate:         null,
       currentCycleStart:  null,
@@ -85,10 +85,10 @@ export function getDefaultState() {
           progressionMode:  'cycle_review',   // climbs via cycle review
           disabledExerciseIds: [],
           weightOverridesKg: {                // light isolation moves stay at 3kg
-            eli_lateral_raise_3kg: 3,
-            eli_front_raise_3kg:   3,
-            eli_rear_delt_raise_3kg: 3,
-            eli_reverse_fly:       3
+            strength_lateral_raise_3kg: 3,
+            strength_front_raise_3kg:   3,
+            strength_rear_delt_raise_3kg: 3,
+            strength_reverse_fly:       3
           }
         },
         userB: {
@@ -116,10 +116,10 @@ export function getDefaultState() {
       userALastHeavyRoutineId:    null,
       userALastActivityDate:      null,
       userAHeavyCounts: {
-        eli_upper_push: 0,
-        eli_lower_body: 0,
-        eli_upper_pull: 0,
-        eli_full_body:  0
+        strength_upper_push: 0,
+        strength_lower_body: 0,
+        strength_upper_pull: 0,
+        strength_full_body:  0
       },
       userACircuitCount:          0,
       userACardioCount:           0,
@@ -130,12 +130,12 @@ export function getDefaultState() {
       userBSequencePointer: 0,
       userBLastActivityDate:null,
       userBRoutineCounts: {
-        christina_gentle_upper:       0,
-        christina_gentle_lower:       0,
-        christina_gentle_pull_posture:0,
-        christina_gentle_full_body:   0,
-        christina_light_movement:     0,
-        christina_recovery_minimum:   0
+        adaptive_gentle_upper:       0,
+        adaptive_gentle_lower:       0,
+        adaptive_gentle_pull_posture:0,
+        adaptive_gentle_full_body:   0,
+        adaptive_light_movement:     0,
+        adaptive_recovery_minimum:   0
       }
     },
     sessions:    [],
@@ -193,33 +193,62 @@ function mergeProfiles(defProfiles, savedProfiles) {
   return out;
 }
 
-// ---- Legacy profile-id migration ---------------------------------------
-// v0.5 renamed the two built-in profile ids from the original personal names
-// to neutral userA/userB. Saves and JSON backups from before the rename carry
-// the old ids as object KEYS (profiles.eli, cycleState.eliSequencePointer,
-// exerciseLogs.eli, …), as scalar VALUES (session users, per-set log.userId,
-// sessionType 'eli_only'), and nowhere else. This walks the whole tree once and
-// remaps both, so historical logs and cycle counts survive the rename. Content
-// ids ("eli_upper_push", "christina_gentle_upper") keep their prefix — the key
-// rule only fires on the bare id or a camelCase compound, never on "eli_"/"christina_".
-const LEGACY_ID_MAP = { eli: 'userA', christina: 'userB' };
-const LEGACY_VALUE_MAP = {
-  eli: 'userA', christina: 'userB',
-  eli_only: 'userA_only', christina_only: 'userB_only'
-};
-function renameLegacyKey(key) {
-  const m = key.match(/^(eli|christina)(?=[A-Z]|$)/);
-  return m ? LEGACY_ID_MAP[m[1]] + key.slice(m[1].length) : key;
+// ---- Legacy namespace migration ----------------------------------------
+// Older saves used non-neutral namespace tokens for both profile and content
+// ids. Infer those tokens from stable routine suffixes, then rewrite the whole
+// tree without retaining the retired identifiers in this public source.
+function inferLegacyNamespaces(value) {
+  const markers = [
+    { suffix: 'upper_push', canonical: 'strength', profile: 'userA' },
+    { suffix: 'gentle_upper', canonical: 'adaptive', profile: 'userB' }
+  ];
+  const found = new Map();
+  const inspect = text => {
+    if (typeof text !== 'string') return;
+    for (const marker of markers) {
+      const ending = `_${marker.suffix}`;
+      if (!text.endsWith(ending)) continue;
+      const token = text.slice(0, -ending.length);
+      if (token && token !== marker.canonical && !token.includes('_')) found.set(token, marker);
+    }
+  };
+  const walk = item => {
+    if (typeof item === 'string') inspect(item);
+    else if (Array.isArray(item)) item.forEach(walk);
+    else if (item && typeof item === 'object') {
+      Object.entries(item).forEach(([key, child]) => { inspect(key); walk(child); });
+    }
+  };
+  walk(value);
+  return found;
 }
+
 function migrateLegacyIds(value) {
-  if (typeof value === 'string') return LEGACY_VALUE_MAP[value] ?? value;
-  if (Array.isArray(value)) return value.map(migrateLegacyIds);
-  if (value && typeof value === 'object') {
-    const out = {};
-    for (const [k, v] of Object.entries(value)) out[renameLegacyKey(k)] = migrateLegacyIds(v);
-    return out;
-  }
-  return value;
+  const namespaces = inferLegacyNamespaces(value);
+  if (!namespaces.size) return value;
+
+  const rename = text => {
+    for (const [token, marker] of namespaces) {
+      if (text === token) return marker.profile;
+      if (text === `${token}_only`) return `${marker.profile}_only`;
+      if (text.startsWith(`${token}_`)) return `${marker.canonical}_${text.slice(token.length + 1)}`;
+      if (text.startsWith(token) && /^[A-Z]/.test(text.slice(token.length, token.length + 1))) {
+        return marker.profile + text.slice(token.length);
+      }
+    }
+    return text;
+  };
+  const walk = item => {
+    if (typeof item === 'string') return rename(item);
+    if (Array.isArray(item)) return item.map(walk);
+    if (item && typeof item === 'object') {
+      const out = {};
+      for (const [key, child] of Object.entries(item)) out[rename(key)] = walk(child);
+      return out;
+    }
+    return item;
+  };
+  return walk(value);
 }
 
 // Merge a parsed/loaded state object against defaults. Legacy profile ids are

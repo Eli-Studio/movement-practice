@@ -35,7 +35,7 @@ export function initCycleFromLaunchDate(launchDate) {
     userALastHeavyDate:         null,
     userALastHeavyRoutineId:    null,
     userALastActivityDate:      null,
-    userAHeavyCounts:           { eli_upper_push: 0, eli_lower_body: 0, eli_upper_pull: 0, eli_full_body: 0 },
+    userAHeavyCounts:           { strength_upper_push: 0, strength_lower_body: 0, strength_upper_pull: 0, strength_full_body: 0 },
     userACircuitCount:          0,
     userACardioCount:           0,
     userAMobilityCount:         0,
@@ -45,12 +45,12 @@ export function initCycleFromLaunchDate(launchDate) {
     userBSequencePointer: 0,
     userBLastActivityDate:null,
     userBRoutineCounts: {
-      christina_gentle_upper:       0,
-      christina_gentle_lower:       0,
-      christina_gentle_pull_posture:0,
-      christina_gentle_full_body:   0,
-      christina_light_movement:     0,
-      christina_recovery_minimum:   0
+      adaptive_gentle_upper:       0,
+      adaptive_gentle_lower:       0,
+      adaptive_gentle_pull_posture:0,
+      adaptive_gentle_full_body:   0,
+      adaptive_light_movement:     0,
+      adaptive_recovery_minimum:   0
     }
   };
 }
@@ -67,7 +67,7 @@ export function startNewCycle(current) {
     userALastHeavyDate:         current.userALastHeavyDate,
     userALastHeavyRoutineId:    current.userALastHeavyRoutineId,
     userALastActivityDate:      current.userALastActivityDate,
-    userAHeavyCounts:           { eli_upper_push: 0, eli_lower_body: 0, eli_upper_pull: 0, eli_full_body: 0 },
+    userAHeavyCounts:           { strength_upper_push: 0, strength_lower_body: 0, strength_upper_pull: 0, strength_full_body: 0 },
     userACircuitCount:          0,
     userACardioCount:           0,
     userAMobilityCount:         0,
@@ -80,12 +80,12 @@ export function startNewCycle(current) {
     userBSequencePointer: current.userBSequencePointer,
     userBLastActivityDate:current.userBLastActivityDate,
     userBRoutineCounts: {
-      christina_gentle_upper:       0,
-      christina_gentle_lower:       0,
-      christina_gentle_pull_posture:0,
-      christina_gentle_full_body:   0,
-      christina_light_movement:     0,
-      christina_recovery_minimum:   0
+      adaptive_gentle_upper:       0,
+      adaptive_gentle_lower:       0,
+      adaptive_gentle_pull_posture:0,
+      adaptive_gentle_full_body:   0,
+      adaptive_light_movement:     0,
+      adaptive_recovery_minimum:   0
     }
   };
 }
@@ -158,13 +158,13 @@ export function updateCycleAfterSession(cycleState, session, allExercises = []) 
   if (session.users.includes('userB') && session.userBRoutineId) {
     c.userBLastActivityDate = date;
     const cid    = session.userBRoutineId;
-    const cLevel = session.userBAdaptationLevel;
+    const userBLevel = session.userBAdaptationLevel;
 
-    const isRealWorkout = cLevel === 'normal' || cLevel === 'reduced';
+    const isRealWorkout = userBLevel === 'normal' || userBLevel === 'reduced';
     if (isRealWorkout) {
-      const cIdx = USERB_SEQUENCE.indexOf(cid);
-      if (cIdx >= 0) {
-        c.userBSequencePointer = (cIdx + 1) % USERB_SEQUENCE.length;
+      const userBIdx = USERB_SEQUENCE.indexOf(cid);
+      if (userBIdx >= 0) {
+        c.userBSequencePointer = (userBIdx + 1) % USERB_SEQUENCE.length;
       }
     }
 
@@ -180,7 +180,7 @@ export function updateCycleAfterSession(cycleState, session, allExercises = []) 
 // plates across every lift at once), so this returns: per-anchor REP suggestions
 // (keep earning reps toward the range max), plus a SINGLE 'baseline' weight
 // recommendation for cycle_review profiles — bumped only once every tracked anchor
-// has topped out its rep range and readiness isn't red. `fixed` profiles (Christina)
+// has topped out its rep range and readiness isn't red. `fixed` profiles (User B)
 // get no weight recommendation.
 export function getCycleProgressionSuggestions(cycleState, allExercises, heavyTemplates, readinessOverall, profile = null) {
   const repsRows = [];

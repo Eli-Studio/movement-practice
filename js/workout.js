@@ -68,7 +68,7 @@ export function adjustWeight(ex, direction) {
  *                   Rotates to a different option only when cycleNumber changes.
  *   - "accessory" → rotates session-to-session within the cycle.
  *   - "optional"  → generated like an accessory, marked skippable so the
- *                   Christina pain-scaler drops it first.
+ *                   User B pain-scaler drops it first.
  */
 export function parseDefaultReps(repsStr) {
   if (!repsStr) return null;
@@ -130,8 +130,8 @@ export function buildExercisePlan(template, allExercises, sessionCount = 0, cycl
     used.add(exId);
 
     // Use the highest weight previously logged for this exercise (if any),
-    // otherwise fall back to the template default. Only tracked for Eli weighted
-    // exercises; Christina's exercises don't have weightOverrides passed in.
+    // otherwise fall back to the template default. Only tracked for User A weighted
+    // exercises; User B's exercises don't have weightOverrides passed in.
     // Previously-logged weight (in-cycle continuity) wins; otherwise start from
     // the profile's override-or-baseline; legacy defaultWeight is the final fallback.
     const savedKg = (weightOverrides && weightOverrides[exId] != null)
@@ -156,7 +156,7 @@ export function buildExercisePlan(template, allExercises, sessionCount = 0, cycl
       cautions:        def.cautions       ?? [],
       equipment:       normalizeDumbbellIds(def.equipment),
       conflictEquipment: normalizeDumbbellIds(def.conflictEquipment),
-      attributes:      def.attributes     ?? [],   // mechanical demands (Christina symptom matrix)
+      attributes:      def.attributes     ?? [],   // mechanical demands (User B symptom matrix)
       symptomConflicts:[],                          // filled by annotateSymptomConflicts (advisory)
       slotId:          slot.slotId,
       poolIds:         pool,

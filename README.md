@@ -4,7 +4,8 @@ A static, local-first movement practice tracker for one or two profiles. It incl
 
 The optional getting-started guide explains the important settings and leads into a short two-exercise workout. Daily capacity defaults are medium energy, low pain, low soreness, and no active symptoms; each check-in affects only that day's plan.
 
-Deferred engineering work and the latest review checkpoint are tracked in [NEXT_STEPS.md](NEXT_STEPS.md).
+The current public demo is version 0.6.0. Release verification and intentionally
+deferred production work are tracked in [NEXT_STEPS.md](NEXT_STEPS.md).
 
 ## Privacy and backups
 
@@ -18,7 +19,11 @@ Adaptations and readiness labels are app-defined training heuristics, not medica
 
 The included workflow deploys `main` through GitHub Actions. In repository **Settings → Pages**, set **Source** to **GitHub Actions**. The service worker caches the app shell after the first successful visit. Chart.js is vendored locally (`js/vendor/chart.umd.min.js`), so the app makes no third-party network requests and works fully offline.
 
-Audio assets are intentionally not included in this public release. The app does not request missing audio files, chime controls are hidden, and warm-up and meditation timers continue to work silently. Internal profile and routine identifiers retain their legacy names so backups remain compatible.
+Audio assets are intentionally not included in this public release. The app does not request missing audio files, chime controls are hidden, and warm-up and meditation timers continue to work silently. Public content identifiers use neutral `strength_*` and `adaptive_*` namespaces. Older backups are migrated by structure so their workout history remains usable without retaining retired personal identifiers in the current source.
+
+## Release checks
+
+Run `npm test` before publishing. The dependency-free checker validates JavaScript syntax, JSON structure, exercise/routine/equipment references, neutral content namespaces, saved-data migration, and CSV spreadsheet safety. GitHub Actions runs the same check on pull requests and before every Pages deployment.
 
 ## Licenses
 

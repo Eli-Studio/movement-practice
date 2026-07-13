@@ -1,6 +1,6 @@
 [
   {
-    "id": "eli_incline_dumbbell_bench_press",
+    "id": "strength_incline_dumbbell_bench_press",
     "name": "Incline Dumbbell Bench Press",
     "eligibleUsers": [
       "userA"
@@ -30,11 +30,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_flat_dumbbell_bench_press"
+      "strength_flat_dumbbell_bench_press"
     ]
   },
   {
-    "id": "eli_flat_dumbbell_bench_press",
+    "id": "strength_flat_dumbbell_bench_press",
     "name": "Flat Dumbbell Bench Press",
     "eligibleUsers": [
       "userA"
@@ -63,11 +63,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_incline_dumbbell_bench_press"
+      "strength_incline_dumbbell_bench_press"
     ]
   },
   {
-    "id": "eli_incline_pushup",
+    "id": "strength_incline_pushup",
     "name": "Incline Pushup",
     "eligibleUsers": [
       "userA"
@@ -96,7 +96,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_seated_dumbbell_shoulder_press",
+    "id": "strength_seated_dumbbell_shoulder_press",
     "name": "Seated Dumbbell Shoulder Press",
     "eligibleUsers": [
       "userA"
@@ -125,11 +125,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_standing_dumbbell_shoulder_press"
+      "strength_standing_dumbbell_shoulder_press"
     ]
   },
   {
-    "id": "eli_standing_dumbbell_shoulder_press",
+    "id": "strength_standing_dumbbell_shoulder_press",
     "name": "Standing Dumbbell Shoulder Press",
     "eligibleUsers": [
       "userA"
@@ -156,11 +156,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_seated_dumbbell_shoulder_press"
+      "strength_seated_dumbbell_shoulder_press"
     ]
   },
   {
-    "id": "eli_overhead_tricep_extension",
+    "id": "strength_overhead_tricep_extension",
     "name": "Overhead Tricep Extension",
     "eligibleUsers": [
       "userA"
@@ -189,7 +189,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_lateral_raise_3kg",
+    "id": "strength_lateral_raise_3kg",
     "name": "Lateral Raise",
     "eligibleUsers": [
       "userA"
@@ -219,7 +219,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_one_arm_dumbbell_row",
+    "id": "strength_one_arm_dumbbell_row",
     "name": "One-Arm Dumbbell Row",
     "eligibleUsers": [
       "userA"
@@ -249,11 +249,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_bench_supported_dumbbell_row"
+      "strength_bench_supported_dumbbell_row"
     ]
   },
   {
-    "id": "eli_bench_supported_dumbbell_row",
+    "id": "strength_bench_supported_dumbbell_row",
     "name": "Bench-Supported Dumbbell Row",
     "eligibleUsers": [
       "userA"
@@ -282,11 +282,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_one_arm_dumbbell_row"
+      "strength_one_arm_dumbbell_row"
     ]
   },
   {
-    "id": "eli_reverse_fly",
+    "id": "strength_reverse_fly",
     "name": "Reverse Fly",
     "eligibleUsers": [
       "userA"
@@ -316,7 +316,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_hammer_curl",
+    "id": "strength_hammer_curl",
     "name": "Hammer Curl",
     "eligibleUsers": [
       "userA"
@@ -346,7 +346,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_renegade_row",
+    "id": "strength_renegade_row",
     "name": "Renegade Row",
     "eligibleUsers": [
       "userA"
@@ -378,11 +378,11 @@
       "shoulder discomfort"
     ],
     "substitutions": [
-      "eli_bench_supported_dumbbell_row"
+      "strength_bench_supported_dumbbell_row"
     ]
   },
   {
-    "id": "eli_goblet_squat",
+    "id": "strength_goblet_squat",
     "name": "Goblet Squat",
     "eligibleUsers": [
       "userA"
@@ -414,7 +414,7 @@
     ]
   },
   {
-    "id": "eli_dumbbell_rdl",
+    "id": "strength_dumbbell_rdl",
     "name": "Dumbbell Romanian Deadlift",
     "eligibleUsers": [
       "userA"
@@ -444,7 +444,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_split_squat",
+    "id": "strength_split_squat",
     "name": "Split Squat",
     "eligibleUsers": [
       "userA"
@@ -478,7 +478,7 @@
     ]
   },
   {
-    "id": "eli_bench_glute_bridge",
+    "id": "strength_bench_glute_bridge",
     "name": "Bench Glute Bridge",
     "eligibleUsers": [
       "userA"
@@ -506,11 +506,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_glute_bridge"
+      "adaptive_glute_bridge"
     ]
   },
   {
-    "id": "eli_calf_raises",
+    "id": "strength_calf_raises",
     "name": "Calf Raises",
     "eligibleUsers": [
       "userA"
@@ -537,7 +537,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_farmer_carry",
+    "id": "strength_farmer_carry",
     "name": "Farmer Carry",
     "eligibleUsers": [
       "userA"
@@ -568,7 +568,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_incline_situp",
+    "id": "strength_incline_situp",
     "name": "Incline Sit-Up",
     "eligibleUsers": [
       "userA"
@@ -595,12 +595,12 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_bench_reverse_crunch",
+      "strength_bench_reverse_crunch",
       "dead_bug"
     ]
   },
   {
-    "id": "eli_bench_reverse_crunch",
+    "id": "strength_bench_reverse_crunch",
     "name": "Bench Reverse Crunch",
     "eligibleUsers": [
       "userA"
@@ -631,7 +631,7 @@
     ]
   },
   {
-    "id": "eli_side_plank",
+    "id": "strength_side_plank",
     "name": "Side Plank",
     "eligibleUsers": [
       "userA"
@@ -660,7 +660,7 @@
     ]
   },
   {
-    "id": "eli_speed_rope_intervals",
+    "id": "strength_speed_rope_intervals",
     "name": "Speed Rope Intervals",
     "eligibleUsers": [
       "userA"
@@ -724,7 +724,7 @@
       "dizziness"
     ],
     "substitutions": [
-      "christina_marching_in_place"
+      "adaptive_marching_in_place"
     ]
   },
   {
@@ -759,7 +759,7 @@
       "dizziness"
     ],
     "substitutions": [
-      "christina_sit_to_stand"
+      "adaptive_sit_to_stand"
     ]
   },
   {
@@ -897,7 +897,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_seated_dumbbell_shoulder_press",
+    "id": "adaptive_seated_dumbbell_shoulder_press",
     "name": "Seated Shoulder Press",
     "eligibleUsers": [
       "userB"
@@ -934,11 +934,11 @@
       "grip weakness"
     ],
     "substitutions": [
-      "christina_wall_pushup"
+      "adaptive_wall_pushup"
     ]
   },
   {
-    "id": "christina_light_dumbbell_row",
+    "id": "adaptive_light_dumbbell_row",
     "name": "Light Dumbbell Row",
     "eligibleUsers": [
       "userB"
@@ -977,7 +977,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_sit_to_stand",
+    "id": "adaptive_sit_to_stand",
     "name": "Sit-to-Stand",
     "eligibleUsers": [
       "userB"
@@ -1013,7 +1013,7 @@
     ]
   },
   {
-    "id": "christina_glute_bridge",
+    "id": "adaptive_glute_bridge",
     "name": "Glute Bridge",
     "eligibleUsers": [
       "userB"
@@ -1044,7 +1044,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_supported_hinge",
+    "id": "adaptive_supported_hinge",
     "name": "Supported Hinge",
     "eligibleUsers": [
       "userB"
@@ -1076,7 +1076,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_light_goblet_squat",
+    "id": "adaptive_light_goblet_squat",
     "name": "Light Goblet Squat",
     "eligibleUsers": [
       "userB"
@@ -1110,12 +1110,12 @@
       "fatigue"
     ],
     "substitutions": [
-      "christina_sit_to_stand",
+      "adaptive_sit_to_stand",
       "bodyweight_squat"
     ]
   },
   {
-    "id": "christina_wall_pushup",
+    "id": "adaptive_wall_pushup",
     "name": "Wall Pushup",
     "eligibleUsers": [
       "userB"
@@ -1145,7 +1145,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_incline_pushup",
+    "id": "adaptive_incline_pushup",
     "name": "Incline Pushup",
     "eligibleUsers": [
       "userB"
@@ -1175,11 +1175,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_wall_pushup"
+      "adaptive_wall_pushup"
     ]
   },
   {
-    "id": "christina_marching_in_place",
+    "id": "adaptive_marching_in_place",
     "name": "Marching in Place",
     "eligibleUsers": [
       "userB"
@@ -1213,7 +1213,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_low_impact_side_steps",
+    "id": "adaptive_low_impact_side_steps",
     "name": "Low-Impact Side Steps",
     "eligibleUsers": [
       "userB"
@@ -1245,11 +1245,11 @@
       "dizziness"
     ],
     "substitutions": [
-      "christina_marching_in_place"
+      "adaptive_marching_in_place"
     ]
   },
   {
-    "id": "christina_seated_mobility",
+    "id": "adaptive_seated_mobility",
     "name": "Seated Mobility",
     "eligibleUsers": [
       "userB"
@@ -1279,11 +1279,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_floor_mobility"
+      "adaptive_floor_mobility"
     ]
   },
   {
-    "id": "christina_floor_mobility",
+    "id": "adaptive_floor_mobility",
     "name": "Floor Mobility",
     "eligibleUsers": [
       "userB"
@@ -1312,11 +1312,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_seated_mobility"
+      "adaptive_seated_mobility"
     ]
   },
   {
-    "id": "eli_floor_press",
+    "id": "strength_floor_press",
     "name": "Floor Press",
     "eligibleUsers": [
       "userA"
@@ -1344,11 +1344,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_incline_dumbbell_bench_press"
+      "strength_incline_dumbbell_bench_press"
     ]
   },
   {
-    "id": "eli_tempo_incline_pushup",
+    "id": "strength_tempo_incline_pushup",
     "name": "Tempo Incline Pushup",
     "eligibleUsers": [
       "userA"
@@ -1375,11 +1375,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_incline_pushup"
+      "strength_incline_pushup"
     ]
   },
   {
-    "id": "eli_close_grip_incline_pushup",
+    "id": "strength_close_grip_incline_pushup",
     "name": "Close-Grip Incline Pushup",
     "eligibleUsers": [
       "userA"
@@ -1406,11 +1406,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_incline_pushup"
+      "strength_incline_pushup"
     ]
   },
   {
-    "id": "eli_standing_arnold_press",
+    "id": "strength_standing_arnold_press",
     "name": "Standing Arnold Press",
     "eligibleUsers": [
       "userA"
@@ -1437,11 +1437,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_standing_dumbbell_shoulder_press"
+      "strength_standing_dumbbell_shoulder_press"
     ]
   },
   {
-    "id": "eli_single_dumbbell_tricep_extension",
+    "id": "strength_single_dumbbell_tricep_extension",
     "name": "Single-Dumbbell Overhead Triceps Extension",
     "eligibleUsers": [
       "userA"
@@ -1468,11 +1468,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_overhead_tricep_extension"
+      "strength_overhead_tricep_extension"
     ]
   },
   {
-    "id": "eli_bench_tricep_extension",
+    "id": "strength_bench_tricep_extension",
     "name": "Bench Triceps Extension",
     "eligibleUsers": [
       "userA"
@@ -1501,11 +1501,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_overhead_tricep_extension"
+      "strength_overhead_tricep_extension"
     ]
   },
   {
-    "id": "eli_front_raise_3kg",
+    "id": "strength_front_raise_3kg",
     "name": "Front Raise",
     "eligibleUsers": [
       "userA"
@@ -1532,11 +1532,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_lateral_raise_3kg"
+      "strength_lateral_raise_3kg"
     ]
   },
   {
-    "id": "eli_rear_delt_raise_3kg",
+    "id": "strength_rear_delt_raise_3kg",
     "name": "Rear Delt Raise",
     "eligibleUsers": [
       "userA"
@@ -1563,11 +1563,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_reverse_fly"
+      "strength_reverse_fly"
     ]
   },
   {
-    "id": "eli_kettlebell_style_deadlift",
+    "id": "strength_kettlebell_style_deadlift",
     "name": "Kettlebell-Style Deadlift",
     "eligibleUsers": [
       "userA"
@@ -1594,11 +1594,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_dumbbell_rdl"
+      "strength_dumbbell_rdl"
     ]
   },
   {
-    "id": "eli_single_dumbbell_rdl",
+    "id": "strength_single_dumbbell_rdl",
     "name": "Single-Dumbbell RDL",
     "eligibleUsers": [
       "userA"
@@ -1627,11 +1627,11 @@
       "lower back"
     ],
     "substitutions": [
-      "eli_dumbbell_rdl"
+      "strength_dumbbell_rdl"
     ]
   },
   {
-    "id": "eli_reverse_lunge",
+    "id": "strength_reverse_lunge",
     "name": "Reverse Lunge",
     "eligibleUsers": [
       "userA"
@@ -1656,11 +1656,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_split_squat"
+      "strength_split_squat"
     ]
   },
   {
-    "id": "eli_step_up",
+    "id": "strength_step_up",
     "name": "Step-Up",
     "eligibleUsers": [
       "userA"
@@ -1687,11 +1687,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_split_squat"
+      "strength_split_squat"
     ]
   },
   {
-    "id": "eli_floor_glute_bridge",
+    "id": "strength_floor_glute_bridge",
     "name": "Floor Glute Bridge",
     "eligibleUsers": [
       "userA"
@@ -1716,11 +1716,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_bench_glute_bridge"
+      "strength_bench_glute_bridge"
     ]
   },
   {
-    "id": "eli_weighted_glute_bridge",
+    "id": "strength_weighted_glute_bridge",
     "name": "Weighted Glute Bridge",
     "eligibleUsers": [
       "userA"
@@ -1748,11 +1748,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_floor_glute_bridge"
+      "strength_floor_glute_bridge"
     ]
   },
   {
-    "id": "eli_bodyweight_tempo_squat",
+    "id": "strength_bodyweight_tempo_squat",
     "name": "Bodyweight Tempo Squat",
     "eligibleUsers": [
       "userA"
@@ -1777,11 +1777,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_goblet_squat"
+      "strength_goblet_squat"
     ]
   },
   {
-    "id": "eli_wall_sit",
+    "id": "strength_wall_sit",
     "name": "Wall Sit",
     "eligibleUsers": [
       "userA"
@@ -1808,7 +1808,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_weighted_calf_raises",
+    "id": "strength_weighted_calf_raises",
     "name": "Weighted Calf Raises",
     "eligibleUsers": [
       "userA"
@@ -1835,11 +1835,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_calf_raises"
+      "strength_calf_raises"
     ]
   },
   {
-    "id": "eli_two_dumbbell_bent_row",
+    "id": "strength_two_dumbbell_bent_row",
     "name": "Two-Dumbbell Bent Row",
     "eligibleUsers": [
       "userA"
@@ -1866,11 +1866,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_one_arm_dumbbell_row"
+      "strength_one_arm_dumbbell_row"
     ]
   },
   {
-    "id": "eli_single_dumbbell_row",
+    "id": "strength_single_dumbbell_row",
     "name": "Single-Dumbbell Row",
     "eligibleUsers": [
       "userA"
@@ -1897,11 +1897,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_one_arm_dumbbell_row"
+      "strength_one_arm_dumbbell_row"
     ]
   },
   {
-    "id": "eli_standard_dumbbell_curl",
+    "id": "strength_standard_dumbbell_curl",
     "name": "Standard Dumbbell Curl",
     "eligibleUsers": [
       "userA"
@@ -1928,11 +1928,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_hammer_curl"
+      "strength_hammer_curl"
     ]
   },
   {
-    "id": "eli_slow_eccentric_curl",
+    "id": "strength_slow_eccentric_curl",
     "name": "Slow-Eccentric Curl",
     "eligibleUsers": [
       "userA"
@@ -1959,11 +1959,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "eli_hammer_curl"
+      "strength_hammer_curl"
     ]
   },
   {
-    "id": "eli_prone_y_raise",
+    "id": "strength_prone_y_raise",
     "name": "Prone Y-Raise",
     "eligibleUsers": [
       "userA"
@@ -1990,7 +1990,7 @@
     "substitutions": []
   },
   {
-    "id": "eli_plank",
+    "id": "strength_plank",
     "name": "Plank",
     "eligibleUsers": [
       "userA"
@@ -2017,7 +2017,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_seated_row_motion_no_weight",
+    "id": "adaptive_seated_row_motion_no_weight",
     "name": "Seated Row Motion (No Weight)",
     "eligibleUsers": [
       "userB"
@@ -2045,7 +2045,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_supported_squat",
+    "id": "adaptive_supported_squat",
     "name": "Supported Squat",
     "eligibleUsers": [
       "userB"
@@ -2073,11 +2073,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_sit_to_stand"
+      "adaptive_sit_to_stand"
     ]
   },
   {
-    "id": "christina_floor_glute_squeeze",
+    "id": "adaptive_floor_glute_squeeze",
     "name": "Floor Glute Squeeze",
     "eligibleUsers": [
       "userB"
@@ -2105,11 +2105,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_glute_bridge"
+      "adaptive_glute_bridge"
     ]
   },
   {
-    "id": "christina_seated_shoulder_blade_squeeze",
+    "id": "adaptive_seated_shoulder_blade_squeeze",
     "name": "Seated Shoulder Blade Squeeze",
     "eligibleUsers": [
       "userB"
@@ -2137,7 +2137,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_seated_core_brace",
+    "id": "adaptive_seated_core_brace",
     "name": "Seated Core Brace",
     "eligibleUsers": [
       "userB"
@@ -2165,7 +2165,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_calf_raise_supported",
+    "id": "adaptive_calf_raise_supported",
     "name": "Supported Calf Raise",
     "eligibleUsers": [
       "userB"
@@ -2195,7 +2195,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_light_rdl_3kg",
+    "id": "adaptive_light_rdl_3kg",
     "name": "Light RDL",
     "eligibleUsers": [
       "userB"
@@ -2229,11 +2229,11 @@
       "lower back"
     ],
     "substitutions": [
-      "christina_supported_hinge"
+      "adaptive_supported_hinge"
     ]
   },
   {
-    "id": "christina_standing_scapular_wall_slide",
+    "id": "adaptive_standing_scapular_wall_slide",
     "name": "Standing Scapular Wall Slide",
     "eligibleUsers": [
       "userB"
@@ -2264,7 +2264,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_bench_single_arm_row_3kg",
+    "id": "adaptive_bench_single_arm_row_3kg",
     "name": "Bench-Supported Single-Arm Row",
     "eligibleUsers": [
       "userB"
@@ -2297,11 +2297,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_light_dumbbell_row"
+      "adaptive_light_dumbbell_row"
     ]
   },
   {
-    "id": "christina_standing_glute_squeeze",
+    "id": "adaptive_standing_glute_squeeze",
     "name": "Standing Glute Squeeze",
     "eligibleUsers": [
       "userB"
@@ -2329,11 +2329,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_floor_glute_squeeze"
+      "adaptive_floor_glute_squeeze"
     ]
   },
   {
-    "id": "christina_standing_hip_abduction",
+    "id": "adaptive_standing_hip_abduction",
     "name": "Standing Hip Abduction (Wall-Supported)",
     "eligibleUsers": [
       "userB"
@@ -2364,7 +2364,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_side_lying_leg_lift",
+    "id": "adaptive_side_lying_leg_lift",
     "name": "Side-Lying Leg Lift",
     "eligibleUsers": [
       "userB"
@@ -2395,7 +2395,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_quadruped_hip_extension",
+    "id": "adaptive_quadruped_hip_extension",
     "name": "Quadruped Hip Extension",
     "eligibleUsers": [
       "userB"
@@ -2426,11 +2426,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_floor_glute_squeeze"
+      "adaptive_floor_glute_squeeze"
     ]
   },
   {
-    "id": "christina_bench_hip_thrust",
+    "id": "adaptive_bench_hip_thrust",
     "name": "Bench-Supported Hip Thrust",
     "eligibleUsers": [
       "userB"
@@ -2460,11 +2460,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_glute_bridge"
+      "adaptive_glute_bridge"
     ]
   },
   {
-    "id": "christina_standing_hip_hinge",
+    "id": "adaptive_standing_hip_hinge",
     "name": "Standing Hip Hinge (Bodyweight)",
     "eligibleUsers": [
       "userB"
@@ -2493,11 +2493,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_supported_hinge"
+      "adaptive_supported_hinge"
     ]
   },
   {
-    "id": "christina_wall_supported_hip_hinge",
+    "id": "adaptive_wall_supported_hip_hinge",
     "name": "Wall-Supported Hip Hinge",
     "eligibleUsers": [
       "userB"
@@ -2526,11 +2526,11 @@
     ],
     "cautions": [],
     "substitutions": [
-      "christina_supported_hinge"
+      "adaptive_supported_hinge"
     ]
   },
   {
-    "id": "christina_seated_forward_hinge",
+    "id": "adaptive_seated_forward_hinge",
     "name": "Seated Forward Hinge (Gentle Stretch)",
     "eligibleUsers": [
       "userB"
@@ -2560,7 +2560,7 @@
     "substitutions": []
   },
   {
-    "id": "christina_bench_light_rdl_3kg",
+    "id": "adaptive_bench_light_rdl_3kg",
     "name": "Bench-Supported Light RDL",
     "eligibleUsers": [
       "userB"
@@ -2597,7 +2597,7 @@
       "lower back"
     ],
     "substitutions": [
-      "christina_light_rdl_3kg"
+      "adaptive_light_rdl_3kg"
     ]
   },
   {
@@ -2618,7 +2618,7 @@
     "intensity": "low_medium",
     "formCues": ["Keep shoulders down", "Pull the band toward the chest", "Return slowly with control"],
     "cautions": ["shoulder"],
-    "substitutions": ["christina_seated_shoulder_blade_squeeze", "eli_reverse_fly"]
+    "substitutions": ["adaptive_seated_shoulder_blade_squeeze", "strength_reverse_fly"]
   },
   {
     "id": "band_shoulder_external_rotation",
@@ -2638,7 +2638,7 @@
     "intensity": "low",
     "formCues": ["Keep elbows close to the ribs", "Use a light band", "Move only through a comfortable range"],
     "cautions": ["shoulder"],
-    "substitutions": ["christina_seated_shoulder_blade_squeeze"]
+    "substitutions": ["adaptive_seated_shoulder_blade_squeeze"]
   },
   {
     "id": "band_clamshell",
@@ -2658,6 +2658,6 @@
     "intensity": "low_medium",
     "formCues": ["Keep hips stacked", "Open the top knee without rolling backward", "Lower slowly"],
     "cautions": ["hip"],
-    "substitutions": ["christina_side_lying_leg_lift", "christina_standing_hip_abduction"]
+    "substitutions": ["adaptive_side_lying_leg_lift", "adaptive_standing_hip_abduction"]
   }
 ]

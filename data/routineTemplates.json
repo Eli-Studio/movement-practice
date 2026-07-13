@@ -1,7 +1,7 @@
 [
   {
-    "id": "eli_upper_push",
-    "name": "Eli Upper Push",
+    "id": "strength_upper_push",
+    "name": "User A Upper Push",
     "displayName": "Upper Push",
     "user": "userA",
     "routineType": "heavy_weight",
@@ -14,9 +14,9 @@
         "slotType": "anchor",
         "required": true,
         "allowedExerciseIds": [
-          "eli_incline_dumbbell_bench_press",
-          "eli_flat_dumbbell_bench_press",
-          "eli_floor_press"
+          "strength_incline_dumbbell_bench_press",
+          "strength_flat_dumbbell_bench_press",
+          "strength_floor_press"
         ]
       },
       {
@@ -25,9 +25,9 @@
         "slotType": "anchor",
         "required": true,
         "allowedExerciseIds": [
-          "eli_seated_dumbbell_shoulder_press",
-          "eli_standing_dumbbell_shoulder_press",
-          "eli_standing_arnold_press"
+          "strength_seated_dumbbell_shoulder_press",
+          "strength_standing_dumbbell_shoulder_press",
+          "strength_standing_arnold_press"
         ]
       },
       {
@@ -36,9 +36,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_incline_pushup",
-          "eli_tempo_incline_pushup",
-          "eli_close_grip_incline_pushup"
+          "strength_incline_pushup",
+          "strength_tempo_incline_pushup",
+          "strength_close_grip_incline_pushup"
         ]
       },
       {
@@ -47,9 +47,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_overhead_tricep_extension",
-          "eli_single_dumbbell_tricep_extension",
-          "eli_bench_tricep_extension"
+          "strength_overhead_tricep_extension",
+          "strength_single_dumbbell_tricep_extension",
+          "strength_bench_tricep_extension"
         ]
       },
       {
@@ -59,17 +59,17 @@
         "required": false,
         "conflictNote": "May use shared light weights; paired workouts can reorder equipment use.",
         "allowedExerciseIds": [
-          "eli_lateral_raise_3kg",
-          "eli_front_raise_3kg",
-          "eli_rear_delt_raise_3kg",
+          "strength_lateral_raise_3kg",
+          "strength_front_raise_3kg",
+          "strength_rear_delt_raise_3kg",
           "band_shoulder_external_rotation"
         ]
       }
     ]
   },
   {
-    "id": "eli_lower_body",
-    "name": "Eli Lower Body",
+    "id": "strength_lower_body",
+    "name": "User A Lower Body",
     "displayName": "Lower Body",
     "user": "userA",
     "routineType": "heavy_weight",
@@ -82,8 +82,8 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_goblet_squat",
-          "eli_bodyweight_tempo_squat"
+          "strength_goblet_squat",
+          "strength_bodyweight_tempo_squat"
         ]
       },
       {
@@ -92,9 +92,9 @@
         "slotType": "anchor",
         "required": true,
         "allowedExerciseIds": [
-          "eli_dumbbell_rdl",
-          "eli_kettlebell_style_deadlift",
-          "eli_single_dumbbell_rdl"
+          "strength_dumbbell_rdl",
+          "strength_kettlebell_style_deadlift",
+          "strength_single_dumbbell_rdl"
         ]
       },
       {
@@ -103,9 +103,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_split_squat",
-          "eli_reverse_lunge",
-          "eli_step_up"
+          "strength_split_squat",
+          "strength_reverse_lunge",
+          "strength_step_up"
         ]
       },
       {
@@ -114,9 +114,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_bench_glute_bridge",
-          "eli_floor_glute_bridge",
-          "eli_weighted_glute_bridge",
+          "strength_bench_glute_bridge",
+          "strength_floor_glute_bridge",
+          "strength_weighted_glute_bridge",
           "band_clamshell"
         ]
       },
@@ -126,18 +126,18 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "eli_calf_raises",
-          "eli_weighted_calf_raises",
-          "eli_wall_sit",
-          "eli_farmer_carry",
-          "eli_side_plank"
+          "strength_calf_raises",
+          "strength_weighted_calf_raises",
+          "strength_wall_sit",
+          "strength_farmer_carry",
+          "strength_side_plank"
         ]
       }
     ]
   },
   {
-    "id": "eli_upper_pull",
-    "name": "Eli Upper Pull",
+    "id": "strength_upper_pull",
+    "name": "User A Upper Pull",
     "displayName": "Upper Pull",
     "user": "userA",
     "routineType": "heavy_weight",
@@ -150,8 +150,8 @@
         "slotType": "anchor",
         "required": true,
         "allowedExerciseIds": [
-          "eli_one_arm_dumbbell_row",
-          "eli_two_dumbbell_bent_row"
+          "strength_one_arm_dumbbell_row",
+          "strength_two_dumbbell_bent_row"
         ]
       },
       {
@@ -160,8 +160,8 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_bench_supported_dumbbell_row",
-          "eli_single_dumbbell_row"
+          "strength_bench_supported_dumbbell_row",
+          "strength_single_dumbbell_row"
         ]
       },
       {
@@ -170,9 +170,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_reverse_fly",
-          "eli_rear_delt_raise_3kg",
-          "eli_prone_y_raise",
+          "strength_reverse_fly",
+          "strength_rear_delt_raise_3kg",
+          "strength_prone_y_raise",
           "band_pull_apart"
         ]
       },
@@ -182,9 +182,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_hammer_curl",
-          "eli_standard_dumbbell_curl",
-          "eli_slow_eccentric_curl"
+          "strength_hammer_curl",
+          "strength_standard_dumbbell_curl",
+          "strength_slow_eccentric_curl"
         ]
       },
       {
@@ -193,18 +193,18 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "eli_renegade_row",
-          "eli_side_plank",
-          "eli_plank",
-          "eli_incline_situp",
-          "eli_bench_reverse_crunch"
+          "strength_renegade_row",
+          "strength_side_plank",
+          "strength_plank",
+          "strength_incline_situp",
+          "strength_bench_reverse_crunch"
         ]
       }
     ]
   },
   {
-    "id": "eli_full_body",
-    "name": "Eli Full Body",
+    "id": "strength_full_body",
+    "name": "User A Full Body",
     "displayName": "Full Body",
     "user": "userA",
     "routineType": "heavy_weight",
@@ -217,10 +217,10 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_goblet_squat",
-          "eli_reverse_lunge",
-          "eli_split_squat",
-          "eli_bodyweight_tempo_squat"
+          "strength_goblet_squat",
+          "strength_reverse_lunge",
+          "strength_split_squat",
+          "strength_bodyweight_tempo_squat"
         ]
       },
       {
@@ -229,10 +229,10 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_dumbbell_rdl",
-          "eli_kettlebell_style_deadlift",
-          "eli_weighted_glute_bridge",
-          "eli_floor_glute_bridge"
+          "strength_dumbbell_rdl",
+          "strength_kettlebell_style_deadlift",
+          "strength_weighted_glute_bridge",
+          "strength_floor_glute_bridge"
         ]
       },
       {
@@ -241,9 +241,9 @@
         "slotType": "anchor",
         "required": true,
         "allowedExerciseIds": [
-          "eli_standing_dumbbell_shoulder_press",
-          "eli_standing_arnold_press",
-          "eli_incline_dumbbell_bench_press"
+          "strength_standing_dumbbell_shoulder_press",
+          "strength_standing_arnold_press",
+          "strength_incline_dumbbell_bench_press"
         ]
       },
       {
@@ -252,9 +252,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_one_arm_dumbbell_row",
-          "eli_two_dumbbell_bent_row",
-          "eli_hammer_curl"
+          "strength_one_arm_dumbbell_row",
+          "strength_two_dumbbell_bent_row",
+          "strength_hammer_curl"
         ]
       },
       {
@@ -263,17 +263,17 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "eli_farmer_carry",
-          "eli_side_plank",
-          "eli_plank",
-          "eli_incline_situp"
+          "strength_farmer_carry",
+          "strength_side_plank",
+          "strength_plank",
+          "strength_incline_situp"
         ]
       }
     ]
   },
   {
-    "id": "eli_light_circuit",
-    "name": "Eli Light Circuit",
+    "id": "strength_light_circuit",
+    "name": "User A Light Circuit",
     "displayName": "Light Circuit",
     "user": "userA",
     "routineType": "circuit",
@@ -287,7 +287,7 @@
         "required": true,
         "allowedExerciseIds": [
           "step_jacks",
-          "eli_speed_rope_intervals"
+          "strength_speed_rope_intervals"
         ]
       },
       {
@@ -297,8 +297,8 @@
         "required": true,
         "allowedExerciseIds": [
           "bodyweight_squat",
-          "eli_reverse_lunge",
-          "eli_bodyweight_tempo_squat"
+          "strength_reverse_lunge",
+          "strength_bodyweight_tempo_squat"
         ]
       },
       {
@@ -307,9 +307,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_incline_pushup",
-          "eli_close_grip_incline_pushup",
-          "eli_farmer_carry"
+          "strength_incline_pushup",
+          "strength_close_grip_incline_pushup",
+          "strength_farmer_carry"
         ]
       },
       {
@@ -320,8 +320,8 @@
         "allowedExerciseIds": [
           "bird_dog",
           "dead_bug",
-          "eli_side_plank",
-          "eli_plank"
+          "strength_side_plank",
+          "strength_plank"
         ]
       },
       {
@@ -330,15 +330,15 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "eli_lateral_raise_3kg",
-          "eli_front_raise_3kg"
+          "strength_lateral_raise_3kg",
+          "strength_front_raise_3kg"
         ]
       }
     ]
   },
   {
-    "id": "eli_cardio_circuit",
-    "name": "Eli Cardio Circuit",
+    "id": "strength_cardio_circuit",
+    "name": "User A Cardio Circuit",
     "displayName": "Cardio Circuit",
     "user": "userA",
     "routineType": "cardio_circuit",
@@ -351,7 +351,7 @@
         "slotType": "anchor",
         "required": true,
         "allowedExerciseIds": [
-          "eli_speed_rope_intervals",
+          "strength_speed_rope_intervals",
           "step_jacks"
         ]
       },
@@ -362,8 +362,8 @@
         "required": true,
         "allowedExerciseIds": [
           "bodyweight_squat",
-          "eli_bodyweight_tempo_squat",
-          "eli_wall_sit"
+          "strength_bodyweight_tempo_squat",
+          "strength_wall_sit"
         ]
       },
       {
@@ -372,9 +372,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_incline_pushup",
-          "eli_tempo_incline_pushup",
-          "eli_close_grip_incline_pushup"
+          "strength_incline_pushup",
+          "strength_tempo_incline_pushup",
+          "strength_close_grip_incline_pushup"
         ]
       },
       {
@@ -385,8 +385,8 @@
         "allowedExerciseIds": [
           "bird_dog",
           "dead_bug",
-          "eli_side_plank",
-          "eli_plank"
+          "strength_side_plank",
+          "strength_plank"
         ]
       },
       {
@@ -395,15 +395,15 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "eli_lateral_raise_3kg",
-          "eli_front_raise_3kg"
+          "strength_lateral_raise_3kg",
+          "strength_front_raise_3kg"
         ]
       }
     ]
   },
   {
-    "id": "eli_mobility_recovery",
-    "name": "Eli Mobility Recovery",
+    "id": "strength_mobility_recovery",
+    "name": "User A Mobility Recovery",
     "displayName": "Mobility / Recovery",
     "user": "userA",
     "routineType": "mobility_recovery",
@@ -428,8 +428,8 @@
         "allowedExerciseIds": [
           "bird_dog",
           "dead_bug",
-          "eli_side_plank",
-          "eli_prone_y_raise"
+          "strength_side_plank",
+          "strength_prone_y_raise"
         ]
       },
       {
@@ -438,15 +438,15 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "eli_rear_delt_raise_3kg",
-          "eli_reverse_fly"
+          "strength_rear_delt_raise_3kg",
+          "strength_reverse_fly"
         ]
       }
     ]
   },
   {
-    "id": "eli_combo_weight_circuit",
-    "name": "Eli Combo",
+    "id": "strength_combo_weight_circuit",
+    "name": "User A Combo",
     "displayName": "Combo: Weight + Circuit",
     "user": "userA",
     "routineType": "combo_weight_circuit",
@@ -459,10 +459,10 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_incline_dumbbell_bench_press",
-          "eli_goblet_squat",
-          "eli_one_arm_dumbbell_row",
-          "eli_dumbbell_rdl"
+          "strength_incline_dumbbell_bench_press",
+          "strength_goblet_squat",
+          "strength_one_arm_dumbbell_row",
+          "strength_dumbbell_rdl"
         ]
       },
       {
@@ -471,10 +471,10 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "eli_standing_dumbbell_shoulder_press",
-          "eli_hammer_curl",
-          "eli_split_squat",
-          "eli_farmer_carry"
+          "strength_standing_dumbbell_shoulder_press",
+          "strength_hammer_curl",
+          "strength_split_squat",
+          "strength_farmer_carry"
         ]
       },
       {
@@ -485,7 +485,7 @@
         "allowedExerciseIds": [
           "step_jacks",
           "bodyweight_squat",
-          "eli_reverse_lunge"
+          "strength_reverse_lunge"
         ]
       },
       {
@@ -496,8 +496,8 @@
         "allowedExerciseIds": [
           "bird_dog",
           "dead_bug",
-          "eli_side_plank",
-          "eli_plank"
+          "strength_side_plank",
+          "strength_plank"
         ]
       },
       {
@@ -506,15 +506,15 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "eli_lateral_raise_3kg",
-          "eli_front_raise_3kg"
+          "strength_lateral_raise_3kg",
+          "strength_front_raise_3kg"
         ]
       }
     ]
   },
   {
-    "id": "christina_gentle_upper",
-    "name": "Christina Gentle Upper",
+    "id": "adaptive_gentle_upper",
+    "name": "User B Gentle Upper",
     "displayName": "Gentle Upper Body",
     "user": "userB",
     "routineType": "gentle_strength",
@@ -527,9 +527,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_wall_pushup",
-          "christina_incline_pushup",
-          "christina_seated_dumbbell_shoulder_press"
+          "adaptive_wall_pushup",
+          "adaptive_incline_pushup",
+          "adaptive_seated_dumbbell_shoulder_press"
         ]
       },
       {
@@ -538,9 +538,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_light_dumbbell_row",
-          "christina_seated_row_motion_no_weight",
-          "christina_bench_single_arm_row_3kg"
+          "adaptive_light_dumbbell_row",
+          "adaptive_seated_row_motion_no_weight",
+          "adaptive_bench_single_arm_row_3kg"
         ]
       },
       {
@@ -549,9 +549,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_seated_mobility",
+          "adaptive_seated_mobility",
           "mobility_flow",
-          "christina_floor_mobility",
+          "adaptive_floor_mobility",
           "band_shoulder_external_rotation"
         ]
       },
@@ -561,17 +561,17 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "christina_seated_core_brace",
+          "adaptive_seated_core_brace",
           "bird_dog",
           "dead_bug",
-          "christina_seated_shoulder_blade_squeeze"
+          "adaptive_seated_shoulder_blade_squeeze"
         ]
       }
     ]
   },
   {
-    "id": "christina_gentle_lower",
-    "name": "Christina Gentle Lower",
+    "id": "adaptive_gentle_lower",
+    "name": "User B Gentle Lower",
     "displayName": "Gentle Lower Body",
     "user": "userB",
     "routineType": "gentle_strength",
@@ -584,9 +584,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_sit_to_stand",
-          "christina_light_goblet_squat",
-          "christina_supported_squat",
+          "adaptive_sit_to_stand",
+          "adaptive_light_goblet_squat",
+          "adaptive_supported_squat",
           "bodyweight_squat"
         ]
       },
@@ -596,13 +596,13 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_glute_bridge",
-          "christina_floor_glute_squeeze",
-          "christina_standing_glute_squeeze",
-          "christina_standing_hip_abduction",
-          "christina_side_lying_leg_lift",
-          "christina_quadruped_hip_extension",
-          "christina_bench_hip_thrust",
+          "adaptive_glute_bridge",
+          "adaptive_floor_glute_squeeze",
+          "adaptive_standing_glute_squeeze",
+          "adaptive_standing_hip_abduction",
+          "adaptive_side_lying_leg_lift",
+          "adaptive_quadruped_hip_extension",
+          "adaptive_bench_hip_thrust",
           "band_clamshell"
         ]
       },
@@ -612,12 +612,12 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_supported_hinge",
-          "christina_light_rdl_3kg",
-          "christina_standing_hip_hinge",
-          "christina_wall_supported_hip_hinge",
-          "christina_seated_forward_hinge",
-          "christina_bench_light_rdl_3kg"
+          "adaptive_supported_hinge",
+          "adaptive_light_rdl_3kg",
+          "adaptive_standing_hip_hinge",
+          "adaptive_wall_supported_hip_hinge",
+          "adaptive_seated_forward_hinge",
+          "adaptive_bench_light_rdl_3kg"
         ]
       },
       {
@@ -626,17 +626,17 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "christina_floor_mobility",
-          "christina_seated_mobility",
-          "christina_calf_raise_supported",
+          "adaptive_floor_mobility",
+          "adaptive_seated_mobility",
+          "adaptive_calf_raise_supported",
           "dead_bug"
         ]
       }
     ]
   },
   {
-    "id": "christina_gentle_pull_posture",
-    "name": "Christina Gentle Pull & Posture",
+    "id": "adaptive_gentle_pull_posture",
+    "name": "User B Gentle Pull & Posture",
     "displayName": "Gentle Pull & Posture",
     "user": "userB",
     "routineType": "gentle_strength",
@@ -649,9 +649,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_light_dumbbell_row",
-          "christina_seated_row_motion_no_weight",
-          "christina_bench_single_arm_row_3kg"
+          "adaptive_light_dumbbell_row",
+          "adaptive_seated_row_motion_no_weight",
+          "adaptive_bench_single_arm_row_3kg"
         ]
       },
       {
@@ -660,9 +660,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_seated_shoulder_blade_squeeze",
-          "christina_seated_core_brace",
-          "christina_standing_scapular_wall_slide",
+          "adaptive_seated_shoulder_blade_squeeze",
+          "adaptive_seated_core_brace",
+          "adaptive_standing_scapular_wall_slide",
           "band_pull_apart"
         ]
       },
@@ -674,7 +674,7 @@
         "allowedExerciseIds": [
           "bird_dog",
           "dead_bug",
-          "christina_floor_mobility"
+          "adaptive_floor_mobility"
         ]
       },
       {
@@ -683,15 +683,15 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "christina_seated_mobility",
+          "adaptive_seated_mobility",
           "gentle_yoga_flow"
         ]
       }
     ]
   },
   {
-    "id": "christina_gentle_full_body",
-    "name": "Christina Gentle Full Body",
+    "id": "adaptive_gentle_full_body",
+    "name": "User B Gentle Full Body",
     "displayName": "Gentle Full Body",
     "user": "userB",
     "routineType": "gentle_strength",
@@ -704,9 +704,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_sit_to_stand",
-          "christina_glute_bridge",
-          "christina_supported_squat",
+          "adaptive_sit_to_stand",
+          "adaptive_glute_bridge",
+          "adaptive_supported_squat",
           "bodyweight_squat"
         ]
       },
@@ -716,9 +716,9 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_wall_pushup",
-          "christina_light_dumbbell_row",
-          "christina_seated_dumbbell_shoulder_press"
+          "adaptive_wall_pushup",
+          "adaptive_light_dumbbell_row",
+          "adaptive_seated_dumbbell_shoulder_press"
         ]
       },
       {
@@ -729,7 +729,7 @@
         "allowedExerciseIds": [
           "bird_dog",
           "dead_bug",
-          "christina_seated_core_brace"
+          "adaptive_seated_core_brace"
         ]
       },
       {
@@ -738,17 +738,17 @@
         "slotType": "optional",
         "required": false,
         "allowedExerciseIds": [
-          "christina_floor_mobility",
-          "christina_seated_mobility",
+          "adaptive_floor_mobility",
+          "adaptive_seated_mobility",
           "gentle_yoga_flow",
-          "christina_calf_raise_supported"
+          "adaptive_calf_raise_supported"
         ]
       }
     ]
   },
   {
-    "id": "christina_light_movement",
-    "name": "Christina Light Movement",
+    "id": "adaptive_light_movement",
+    "name": "User B Light Movement",
     "displayName": "Light Movement",
     "user": "userB",
     "routineType": "light_movement",
@@ -761,8 +761,8 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_marching_in_place",
-          "christina_low_impact_side_steps",
+          "adaptive_marching_in_place",
+          "adaptive_low_impact_side_steps",
           "step_jacks"
         ]
       },
@@ -774,15 +774,15 @@
         "allowedExerciseIds": [
           "gentle_yoga_flow",
           "mobility_flow",
-          "christina_floor_mobility",
-          "christina_seated_mobility"
+          "adaptive_floor_mobility",
+          "adaptive_seated_mobility"
         ]
       }
     ]
   },
   {
-    "id": "christina_recovery_minimum",
-    "name": "Christina Recovery / Minimum",
+    "id": "adaptive_recovery_minimum",
+    "name": "User B Recovery / Minimum",
     "displayName": "Recovery / Minimum",
     "user": "userB",
     "routineType": "recovery_minimum",
@@ -795,8 +795,8 @@
         "slotType": "accessory",
         "required": true,
         "allowedExerciseIds": [
-          "christina_seated_mobility",
-          "christina_floor_mobility",
+          "adaptive_seated_mobility",
+          "adaptive_floor_mobility",
           "gentle_yoga_flow",
           "bird_dog",
           "dead_bug"

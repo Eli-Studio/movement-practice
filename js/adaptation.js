@@ -1,13 +1,13 @@
 // ============================================================
-// adaptation.js — Christina intensity scaling + symptom flagging
+// adaptation.js — User B intensity scaling + symptom flagging
 //
 // Pain level (low / medium / high) is the intensity control: it scales
 // sets, reps, and the number of exercises (PAIN_RULES).
 //
 // Active symptom buttons drive ADVISORY conflict flagging only — see
-// SYMPTOM_ATTRIBUTE_EXCLUSIONS. Per the v1 decision (Eli + Christina,
+// SYMPTOM_ATTRIBUTE_EXCLUSIONS. Per the v1 decision (User A + User B,
 // 2026-06-30), a symptom conflict does NOT remove or reorder an exercise:
-// the slot's pick is kept and the conflict is surfaced so Christina makes
+// the slot's pick is kept and the conflict is surfaced so User B makes
 // the call, and so we can see how often conflicts occur before deciding
 // whether to harden the behavior.
 // ============================================================
@@ -34,14 +34,14 @@ export function describePainRule(painDay) {
 // Symptom × attribute matrix. Key = canonical symptom id (config.USERB_SYMPTOMS).
 // Value = mechanical attributes that conflict with that symptom when active.
 // Attribute tokens match the `attributes` field on each exercise in
-// data/exercises.json (sourced from Christina's Exercise Pool matrix).
+// data/exercises.json (sourced from User B's Exercise Pool matrix).
 //
 // The three symptoms carried over from the previous vocabulary keep their
-// Christina-reviewed exclusions (dizziness was formerly "dizzinessLightheadedness").
+// User B-reviewed exclusions (dizziness was formerly "dizzinessLightheadedness").
 // The five symptoms added with the canonical set — jointPain, muscleAche,
 // headache, nausea, sensitivityToLight — are intentionally left UNMAPPED for now:
 // they track in check-ins and reports but flag no exercise conflicts until
-// Christina reviews and supplies a clinical mapping. A symptom absent from this
+// User B reviews and supplies a clinical mapping. A symptom absent from this
 // object simply contributes no exclusions (see getAvoidedAttributes).
 export const SYMPTOM_ATTRIBUTE_EXCLUSIONS = {
   dizziness: ['standing', 'floor_transition', 'elevated_hr', 'balance_single_leg'],
@@ -70,11 +70,11 @@ function parseFirstNum(s) {
 }
 
 /**
- * Scale a Christina plan by today's pain level.
+ * Scale a User B plan by today's pain level.
  * @param exercises    the generated plan (from buildExercisePlan)
  * @param symptomState { painDay: 'low'|'medium'|'high', symptoms: {...} }
  */
-export function adaptChristinaExercises(exercises, symptomState) {
+export function adaptUserBExercises(exercises, symptomState) {
   const painDay = symptomState?.painDay ?? 'low';
   const rules   = PAIN_RULES[painDay] ?? PAIN_RULES.low;
 
@@ -181,7 +181,7 @@ export function getAvoidedAttributes(symptomState) {
 /**
  * ADVISORY annotation. For each plan item, record which of its mechanical
  * attributes conflict with today's active symptoms in `symptomConflicts`.
- * Does NOT drop, reorder, or substitute anything — Christina keeps the call.
+ * Does NOT drop, reorder, or substitute anything — User B keeps the call.
  * `symptomConflicts` is [] when an exercise is clear (or no symptoms active).
  */
 export function annotateSymptomConflicts(exercises, symptomState) {
