@@ -22,6 +22,7 @@ export const USERB_SEQUENCE = [
 
 export const SCREENS = {
   FIRST_LAUNCH:       'first_launch',
+  RESUME_WORKOUT:     'resume_workout',
   HELLO:              'hello',
   MISSED_DAYS:        'missed_days',
   LOG_TODAY:          'log_today',

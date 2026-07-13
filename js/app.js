@@ -2,7 +2,7 @@
 // app.js — Movement Practice · Main orchestrator  v0.4.1
 // ============================================================
 
-import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js?v=2';
+import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js?v=3';
 import { loadAllData } from './data.js';
 import { unlockAudio, playSessionComplete, playMeditation, stopMeditation, playTimerComplete, playButtonClick } from './audio.js?v=2';
 import { initCycleFromLaunchDate, startNewCycle, isCycleExpired, updateCycleAfterSession, getCycleProgressionSuggestions } from './cycles.js';
@@ -11,7 +11,7 @@ import { getEliSuggestion, getChristinaSuggestion, getMissedDays } from './rotat
 import { adaptChristinaExercises, adaptWorkoutToCapacity, composeCapacityPlan, annotateSymptomConflicts } from './adaptation.js';
 import { analyzePairedConflicts, getConflictingItems } from './equipment.js';
 import { buildExercisePlan, createSession, logSet, skipExercise,
-         completeSession, abandonSession, getTemplateAnchors,
+         completeSession, getTemplateAnchors,
          adjustWeight, weightLabel, adjustReps, repsLabel, swapExercise } from './workout.js';
 import { startTimer, stopTimer, pauseTimer, resumeTimer, isTimerPaused, skipTimer } from './timer.js';
 import { exportFullBackupJSON, exportMonthCSV, exportMonthMarkdown, exportCycleMarkdown } from './exports.js';
@@ -20,11 +20,11 @@ import { DEFAULT_REST_SECONDS, USERA_HEAVY_SEQUENCE, USERB_SEQUENCE } from './co
 import { getActiveProfileIds, setSecondProfileActive } from './profiles.js';
 
 import {
-  renderFirstLaunch, renderHello, renderMissedDays, renderLogToday, renderSymptomCheck,
+  renderFirstLaunch, renderHello, renderResumeWorkout, renderMissedDays, renderLogToday, renderSymptomCheck,
   renderRoutineSuggestion, renderWarmup, renderWorkoutRunner, renderRestOverlay, updateRestOverlayDOM,
   renderEndCheckin, renderMeditation, renderSessionSummary, renderReports,
   initReportCharts, renderSettings, renderCycleReview, initCycleReviewCards
-} from './screens.js?v=2';
+} from './screens.js?v=3';
 
 // ============================================================
 // Global App object
@@ -50,6 +50,7 @@ window.App = {
     userACheckin:             null,
     userBCheckin:       null,
     meditationChoice:       null,
+    endCheckins:            {},
     missedDayChoices:       {},
     calYear:                null,
     calMonth:               null,
@@ -63,6 +64,82 @@ window.App = {
 };
 
 const App = window.App;
+
+const cloneSerializable = value => JSON.parse(JSON.stringify(value));
+
+function persistWorkoutDraft(screen = App.ui.currentScreen) {
+  if (!App.state || !App.currentSession || !App.workoutState) return;
+  const workoutState = cloneSerializable(App.workoutState);
+  for (const user of ['userA', 'userB']) {
+    if (!workoutState[user]) continue;
+    workoutState[user].restInterval = null;
+    workoutState[user].exerciseTimerInterval = null;
+  }
+  App.state.workoutDraft = {
+    version: 1,
+    savedAt: new Date().toISOString(),
+    screen: ['workout_runner', 'end_checkin', 'meditation'].includes(screen) ? screen : 'workout_runner',
+    session: cloneSerializable(App.currentSession),
+    workoutState,
+    ui: cloneSerializable({
+      selectedUsers: App.ui.selectedUsers,
+      symptomsByUser: App.ui.symptomsByUser,
+      userACheckin: App.ui.userACheckin,
+      userBCheckin: App.ui.userBCheckin,
+      endCheckins: App.ui.endCheckins,
+      meditationChoice: App.ui.meditationChoice,
+      tutorialWorkout: App.ui.tutorialWorkout,
+      guideActive: App.ui.guideActive
+    })
+  };
+  saveState(App.state);
+}
+
+function resumeWorkoutDraft() {
+  const draft = App.state?.workoutDraft;
+  if (!draft) return;
+  clearAllRestTimers();
+  App.currentSession = cloneSerializable(draft.session);
+  App.workoutState = cloneSerializable(draft.workoutState);
+  for (const user of ['userA', 'userB']) {
+    if (!App.workoutState[user]) continue;
+    App.workoutState[user].restInterval = null;
+    App.workoutState[user].exerciseTimerInterval = null;
+  }
+  const restoredUsers = Array.isArray(draft.ui?.selectedUsers)
+    ? draft.ui.selectedUsers
+    : (draft.session.users ?? []);
+  Object.assign(App.ui, {
+    selectedUsers: [...restoredUsers],
+    symptomsByUser: cloneSerializable(draft.ui?.symptomsByUser ?? {}),
+    userACheckin: draft.ui?.userACheckin ?? null,
+    userBCheckin: draft.ui?.userBCheckin ?? null,
+    endCheckins: cloneSerializable(draft.ui?.endCheckins ?? {}),
+    meditationChoice: draft.ui?.meditationChoice ?? null,
+    tutorialWorkout: Boolean(draft.ui?.tutorialWorkout),
+    guideActive: Boolean(draft.ui?.guideActive)
+  });
+  navigate(draft.screen ?? 'workout_runner');
+  showToast('Workout resumed', 'success');
+}
+
+function discardWorkoutDraft() {
+  clearAllRestTimers();
+  App.state.workoutDraft = null;
+  App.currentSession = null;
+  App.workoutState = null;
+  App.ui.selectedUsers = [];
+  App.ui.symptomsByUser = {};
+  App.ui.endCheckins = {};
+  App.ui.tutorialWorkout = false;
+  App.ui.guideActive = false;
+  saveState(App.state);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') persistWorkoutDraft();
+});
+window.addEventListener('pagehide', () => persistWorkoutDraft());
 
 // ============================================================
 // Bootstrap
@@ -116,6 +193,8 @@ async function init() {
 
     if (!App.state.settings.launchDate) {
       navigate('first_launch');
+    } else if (App.state.workoutDraft) {
+      navigate('resume_workout');
     } else {
       if (App.state.cycleState?.endDate && isCycleExpired(App.state.cycleState)) {
         // Cycle has ended — show the review screen instead of rolling over
@@ -163,6 +242,10 @@ function navigate(screen) {
 
     case 'hello':
       html = renderHello(App.state, App.ui.backupNudgeDismissed);
+      break;
+
+    case 'resume_workout':
+      html = renderResumeWorkout(App);
       break;
 
     case 'missed_days': {
@@ -409,10 +492,17 @@ function navigate(screen) {
           startExerciseTimer(u);
         }
       });
+    } else if (ws.restActive && ws.restRemaining > 0) {
+      const user = ws.mode === 'userA_only' ? 'userA' : 'userB';
+      showRestTimer(ws.restRemaining, ws[user], ws.restTotalSeconds || ws.restRemaining, ws.restPaused);
     } else {
       const user = ws.mode === 'userA_only' ? 'userA' : 'userB';
       startExerciseTimer(user);
     }
+  }
+
+  if (['workout_runner', 'end_checkin', 'meditation'].includes(screen) && App.currentSession) {
+    persistWorkoutDraft(screen);
   }
 }
 
@@ -444,6 +534,15 @@ function setupListeners(screen) {
   });
 
   switch (screen) {
+
+    case 'resume_workout':
+      on('btn-resume-workout', 'click', resumeWorkoutDraft);
+      on('btn-discard-workout', 'click', () => {
+        if (!confirm('Discard this unfinished workout? Completed workout history will not be changed.')) return;
+        discardWorkoutDraft();
+        navigate('hello');
+      });
+      break;
 
     case 'first_launch':
       document.querySelectorAll('[data-profile-count]').forEach(btn => {
@@ -922,8 +1021,10 @@ function setupListeners(screen) {
       break;
 
     case 'end_checkin': {
-      const checkins = {};
-      App.ui.selectedUsers.forEach(userId => { checkins[userId] = { effort: null, jointPain: 'no', notes: '' }; });
+      const checkins = App.ui.endCheckins ??= {};
+      App.ui.selectedUsers.forEach(userId => {
+        checkins[userId] ??= { effort: null, jointPain: 'no', notes: '' };
+      });
 
       document.querySelectorAll('[data-effort-user]').forEach(btn => {
         btn.addEventListener('click', e => {
@@ -931,6 +1032,7 @@ function setupListeners(screen) {
           document.querySelectorAll(`[data-effort-user="${userId}"]`).forEach(b => b.classList.remove('selected'));
           e.currentTarget.classList.add('selected');
           checkins[userId].effort = parseInt(e.currentTarget.dataset.value);
+          persistWorkoutDraft('end_checkin');
         });
       });
 
@@ -941,13 +1043,21 @@ function setupListeners(screen) {
           const pain = e.currentTarget.dataset.value;
           e.currentTarget.classList.add(pain === 'no' ? 'selected--none' : 'selected');
           checkins[userId].jointPain = pain;
+          persistWorkoutDraft('end_checkin');
+        });
+      });
+
+      App.ui.selectedUsers.forEach(userId => {
+        get(`notes-${userId}`)?.addEventListener('input', e => {
+          checkins[userId].notes = e.currentTarget.value;
+          persistWorkoutDraft('end_checkin');
         });
       });
 
       on('btn-checkin-done', 'click', () => {
         const users = App.ui.selectedUsers;
         users.forEach(userId => {
-          checkins[userId].notes = get(`notes-${userId}`)?.value ?? '';
+          checkins[userId].notes = get(`notes-${userId}`)?.value ?? checkins[userId].notes ?? '';
           App.currentSession.profileCheckins[userId] = {
             ...(App.currentSession.profileCheckins[userId] ?? {}), ...checkins[userId]
           };
@@ -1490,7 +1600,9 @@ function buildWorkoutState() {
     userA:      userState(userAExercises,      userAR?.templateId ?? userAR?.id),
     userB:userState(userBExercises, christR?.templateId ?? christR?.id),
     restActive:      false,
-    restTotalSeconds:0
+    restRemaining:   0,
+    restTotalSeconds:0,
+    restPaused:      false
   };
 
   App.currentSession = createSession(
@@ -1602,6 +1714,7 @@ function setupWorkoutListeners() {
       adjustWeight(ex, dir);
       const display = document.getElementById(`${user}-weight-display`);
       if (display) display.textContent = weightLabel(ex);
+      persistWorkoutDraft('workout_runner');
     });
   });
 
@@ -1615,6 +1728,7 @@ function setupWorkoutListeners() {
       adjustReps(ex, dir);
       const display = document.getElementById(`${user}-reps-display`);
       if (display) display.textContent = repsLabel(ex);
+      persistWorkoutDraft('workout_runner');
     });
   });
 }
@@ -1689,6 +1803,7 @@ function startUserRestTimer(user, seconds) {
   clearRestTimer(user);
   us.restRemaining = seconds;
   us.restTotal     = seconds;
+  persistWorkoutDraft('workout_runner');
 
   // Initial button state
   const btn = document.getElementById(`${user}-complete-btn`);
@@ -1696,6 +1811,7 @@ function startUserRestTimer(user, seconds) {
 
   us.restInterval = setInterval(() => {
     us.restRemaining--;
+    persistWorkoutDraft('workout_runner');
 
     // Update the countdown in the resting panel (the big number)
     const display = document.getElementById(`${user}-rest-display`);
@@ -1744,6 +1860,7 @@ export function startExerciseTimer(user) {
   us.exerciseTimerInterval = setInterval(() => {
     remaining--;
     us.exerciseTimerRemaining = remaining;
+    persistWorkoutDraft('workout_runner');
     if (el) el.textContent = remaining > 0 ? formatTime(remaining) : '✓ Done';
 
     if (remaining <= 0) {
@@ -1784,7 +1901,7 @@ function clearAllRestTimers() {
 
 // ---- Single-user rest overlay -----------------------------
 
-function showRestTimer(restSecs, currentUserState) {
+function showRestTimer(restSecs, currentUserState, totalSecs = restSecs, paused = false) {
   const nextExName = (() => {
     if (!currentUserState) return null;
     const { exerciseIdx, exercises, completed } = currentUserState;
@@ -1793,29 +1910,47 @@ function showRestTimer(restSecs, currentUserState) {
   })();
 
   const appEl = document.getElementById('app');
-  appEl.insertAdjacentHTML('beforeend', renderRestOverlay(restSecs, restSecs, nextExName, null));
+  appEl.insertAdjacentHTML('beforeend', renderRestOverlay(restSecs, totalSecs, nextExName, null));
 
   App.workoutState.restActive       = true;
-  App.workoutState.restTotalSeconds = restSecs;
+  App.workoutState.restRemaining    = restSecs;
+  App.workoutState.restTotalSeconds = totalSecs;
+  App.workoutState.restPaused       = paused;
 
   const playSound = App.state.settings.musicMode === 'chimes';
   startTimer(restSecs,
-    (remaining) => { updateRestOverlayDOM(remaining, restSecs); },
+    (remaining) => {
+      App.workoutState.restRemaining = remaining;
+      updateRestOverlayDOM(remaining, totalSecs);
+      persistWorkoutDraft('workout_runner');
+    },
     () => {
       App.workoutState.restActive = false;
+      App.workoutState.restRemaining = 0;
+      App.workoutState.restPaused = false;
       navigate('workout_runner');
     },
     playSound && App.state.settings.audioEnabled
   );
 
+  if (paused) {
+    pauseTimer();
+    const pauseButton = document.getElementById('btn-pause-timer');
+    if (pauseButton) pauseButton.textContent = 'Resume';
+  }
+  persistWorkoutDraft('workout_runner');
+
   document.getElementById('btn-pause-timer')?.addEventListener('click', (e) => {
     if (isTimerPaused()) {
       resumeTimer();
       e.currentTarget.textContent = 'Pause';
+      App.workoutState.restPaused = false;
     } else {
       pauseTimer();
       e.currentTarget.textContent = 'Resume';
+      App.workoutState.restPaused = true;
     }
+    persistWorkoutDraft('workout_runner');
   });
 
   document.getElementById('btn-skip-rest')?.addEventListener('click', () => {
@@ -1838,6 +1973,7 @@ function finalizeSession() {
   App.state.sessions.push(s);
   App.state.cycleState = updateCycleAfterSession(App.state.cycleState, s, App.data.exercises);
   App.state.cycleState.cycleId = App.state.cycleState.cycleId ?? 'cycle_001';
+  App.state.workoutDraft = null;
   saveState(App.state);
   playSessionComplete(App.state.settings.audioEnabled);
 
@@ -1857,6 +1993,7 @@ function finalizeSession() {
   App.ui.userACheckin         = null;
   App.ui.userBCheckin   = null;
   App.ui.meditationChoice   = null;
+  App.ui.endCheckins        = {};
   App.ui.userBSymptoms  = null;
   App.ui.userAAnchors         = [];
   // Central reset so the next session always rebuilds its routine plan, rather

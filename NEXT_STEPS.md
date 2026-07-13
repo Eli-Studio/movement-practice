@@ -1,17 +1,17 @@
 # Next Steps
 
-Review checkpoint from July 12, 2026. The current `main` branch is functional,
+Review checkpoint from July 13, 2026. The current development branch is functional,
 deployable, and passes manual browser checks, including offline startup. These
 items are intentionally deferred for the next development session.
 
-## Priority 1 — Protect active workouts
+## Completed — Protect active workouts
 
 - Persist the in-progress session and workout runner state after meaningful
   changes, including completed sets, skipped exercises, timer state, and check-ins.
 - Detect an interrupted workout during startup and offer **Resume** or **Discard**.
 - Clear the draft only after a session is finalized or explicitly discarded.
-- Add a browser test that reloads halfway through a workout and verifies that no
-  progress is lost.
+- Manual browser checks cover reload/resume, paused rest timers, partial
+  check-ins, discard, and final draft cleanup.
 
 ## Completed — Align the public audio experience
 
@@ -30,7 +30,8 @@ items are intentionally deferred for the next development session.
 - Add data-integrity checks for duplicate IDs and missing exercise, equipment, and
   substitution references.
 - Add a small browser smoke suite covering onboarding, a single-user workout,
-  a paired workout, reports, backup restore, and offline startup.
+  a paired workout, interrupted-workout recovery, reports, backup restore, and
+  offline startup.
 - Run syntax, data, and smoke checks in GitHub Actions before Pages deployment.
 
 ## Priority 4 — Hardening and cleanup
@@ -50,5 +51,5 @@ items are intentionally deferred for the next development session.
 - Legacy profile IDs migrate successfully in profiles, cycle state, sessions, and
   exercise logs.
 - Onboarding, capacity check-in, routine suggestion, workout startup, Settings,
-  and offline reload work in browser testing.
+  workout recovery, Settings, and offline reload work in browser testing.
 - No committed secrets or unexpected third-party runtime requests were found.

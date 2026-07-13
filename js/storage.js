@@ -33,8 +33,23 @@ function validateBackup(state) {
     && Array.isArray(state.sessions) && state.sessions.length <= 10000
     && Array.isArray(state.missedDays) && state.missedDays.length <= 10000
     && Array.isArray(state.cycleReviews) && state.cycleReviews.length <= 10000
+    && isValidWorkoutDraft(state.workoutDraft)
     && state.sessions.every(x => isObject(x) && typeof x.date === 'string' && isDate(x.date))
     && state.missedDays.every(x => isObject(x) && typeof x.date === 'string' && isDate(x.date));
+}
+
+function isValidWorkoutDraft(draft) {
+  if (draft === null || draft === undefined) return true;
+  if (!isObject(draft) || draft.version !== 1 || !isObject(draft.session)
+      || draft.session.status !== 'in_progress' || !isObject(draft.workoutState)) return false;
+  const mode = draft.workoutState.mode;
+  if (!['userA_only', 'userB_only', 'both'].includes(mode)) return false;
+  if (!['workout_runner', 'end_checkin', 'meditation'].includes(draft.screen ?? 'workout_runner')) return false;
+  const users = draft.session.users;
+  if (!Array.isArray(users) || users.length < 1 || users.length > 2
+      || !users.every(id => PROFILE_IDS.includes(id))) return false;
+  return users.every(id => isObject(draft.workoutState[id])
+    && Array.isArray(draft.workoutState[id].exercises));
 }
 
 export function getDefaultState() {
@@ -125,7 +140,8 @@ export function getDefaultState() {
     },
     sessions:    [],
     missedDays:  [],
-    cycleReviews:[]
+    cycleReviews:[],
+    workoutDraft:null
   };
 }
 
@@ -226,7 +242,8 @@ function mergeAgainstDefaults(rawParsed) {
     cycleState:   mergeCycleState(d.cycleState, parsed.cycleState),
     sessions:     Array.isArray(parsed.sessions)     ? parsed.sessions     : d.sessions,
     missedDays:   Array.isArray(parsed.missedDays)   ? parsed.missedDays   : d.missedDays,
-    cycleReviews: Array.isArray(parsed.cycleReviews) ? parsed.cycleReviews : d.cycleReviews
+    cycleReviews: Array.isArray(parsed.cycleReviews) ? parsed.cycleReviews : d.cycleReviews,
+    workoutDraft: isValidWorkoutDraft(parsed.workoutDraft) ? (parsed.workoutDraft ?? null) : null
   };
   // Audio files are not part of the public build. Normalize old backups that
   // selected chimes so the UI and workout controls consistently use Spotify's
