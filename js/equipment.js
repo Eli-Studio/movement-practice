@@ -27,10 +27,10 @@ export function analyzePairedConflicts(userAExercises, userBExercises, allExerci
 
   for (let i = 0; i < len; i++) {
     const eDef = allExercises.find(e => e.id === userAExercises[i].id);
-    const cDef = allExercises.find(e => e.id === userBExercises[i].id);
-    if (!eDef || !cDef) continue;
+    const userBDef = allExercises.find(e => e.id === userBExercises[i].id);
+    if (!eDef || !userBDef) continue;
 
-    const conflicts = getConflictingItems(eDef, cDef);
+    const conflicts = getConflictingItems(eDef, userBDef);
     if (conflicts.length > 0) {
       warnings.push({
         position:            i + 1,

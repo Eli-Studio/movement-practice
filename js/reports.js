@@ -92,11 +92,11 @@ export function buildMonthCalendar(year, month, sessions, missedDays) {
 }
 
 function userAType(rtype) {
-  return ({ heavy_weight:'eli_heavy', circuit:'eli_circuit', cardio_circuit:'eli_cardio',
-            mobility_recovery:'eli_mobility', combo_weight_circuit:'eli_combo' })[rtype] ?? 'other';
+  return ({ heavy_weight:'strength_heavy', circuit:'strength_circuit', cardio_circuit:'strength_cardio',
+            mobility_recovery:'strength_mobility', combo_weight_circuit:'strength_combo' })[rtype] ?? 'other';
 }
 function userBType(level) {
-  return ({ normal:'christina_normal', reduced:'christina_reduced', recovery:'christina_recovery' })[level] ?? 'christina_normal';
+  return ({ normal:'adaptive_normal', reduced:'adaptive_reduced', recovery:'adaptive_recovery' })[level] ?? 'adaptive_normal';
 }
 
 export function renderCalendarHTML(year, month, calData) {
@@ -106,6 +106,12 @@ export function renderCalendarHTML(year, month, calData) {
   const todayStr = today();
   const todayDate = new Date(todayStr + 'T12:00:00');
   const todayDay = (todayDate.getFullYear() === year && todayDate.getMonth() === month) ? todayDate.getDate() : -1;
+  const activityLabels = {
+    strength_heavy: 'strength workout', strength_circuit: 'circuit', strength_combo: 'combined workout',
+    strength_cardio: 'cardio', strength_mobility: 'mobility', adaptive_normal: 'full workout',
+    adaptive_reduced: 'adapted workout', adaptive_recovery: 'recovery', skip_rest: 'rest day',
+    vr_exercise: 'VR exercise', adventure: 'adventure', other: 'other activity'
+  };
 
   let html = `<div class="calendar">
     <div class="calendar__header">
@@ -113,10 +119,10 @@ export function renderCalendarHTML(year, month, calData) {
       <h3 class="calendar__month">${monthName}</h3>
       <button class="btn-icon" id="cal-next" aria-label="Next month">&#8250;</button>
     </div>
-    <div class="calendar__grid">
-      ${DAY_LABELS.map(d => `<div class="calendar__day-label">${d}</div>`).join('')}`;
+    <div class="calendar__grid" role="grid" aria-label="${monthName} activity calendar">
+      ${DAY_LABELS.map(d => `<div class="calendar__day-label" role="columnheader">${d}</div>`).join('')}`;
 
-  for (let i = 0; i < firstDay; i++) html += `<div class="calendar__cell calendar__cell--empty"></div>`;
+  for (let i = 0; i < firstDay; i++) html += `<div class="calendar__cell calendar__cell--empty" aria-hidden="true"></div>`;
   for (let day = 1; day <= daysInMonth; day++) {
     const dayData = data[day];
     const isToday = day === todayDay;
@@ -128,7 +134,10 @@ export function renderCalendarHTML(year, month, calData) {
       }).join('');
       if (dayData.meditation) dots += `<span class="calendar__dot" style="background:${ACTIVITY_COLORS.meditation}"></span>`;
     }
-    html += `<div class="calendar__cell ${isToday?'calendar__cell--today':''} ${dayData?'calendar__cell--active':''}">
+    const descriptions = dayData?.activities?.map(act => activityLabels[act] ?? 'activity') ?? [];
+    if (dayData?.meditation) descriptions.push('meditation');
+    const dateLabel = `${monthName.replace(/ \d{4}$/, '')} ${day}, ${year}${isToday ? ', today' : ''}${descriptions.length ? `: ${descriptions.join(', ')}` : ': no activity logged'}`;
+    html += `<div class="calendar__cell ${isToday?'calendar__cell--today':''} ${dayData?'calendar__cell--active':''}" role="gridcell" aria-label="${dateLabel}">
       <span class="calendar__day-num">${day}</span>
       <div class="calendar__dots">${dots}</div>
     </div>`;
@@ -137,9 +146,9 @@ export function renderCalendarHTML(year, month, calData) {
   return html;
 }
 
-// ---- Eli stats ----------------------------------------------
+// ---- User A stats ----------------------------------------------
 
-export function getEliStats(sessions) {
+export function getUserAStats(sessions) {
   const userA = sessions.filter(s => s.users.includes('userA'));
   const fatigue = userA.map(s => s.userAEndCheckin?.formFatigue).filter(f => f != null && f > 0);
   return {
@@ -156,7 +165,7 @@ export function getEliStats(sessions) {
 
 // ---- Strength Progress Index --------------------------------
 
-export function getEliStrengthData(sessions, cycleState) {
+export function getUserAStrengthData(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
   const heavySessions = sessions
     .filter(s => s.users.includes('userA') && s.userARoutineType === 'heavy_weight' && s.date >= cycleStart)
@@ -236,56 +245,56 @@ export function getEliStrengthData(sessions, cycleState) {
 // ---- Muscle Group Stimulus Map ------------------------------
 
 const MUSCLE_MAP = {
-  eli_incline_dumbbell_bench_press: { p:['chest','shoulders'], s:['triceps'] },
-  eli_flat_dumbbell_bench_press:    { p:['chest'], s:['shoulders','triceps'] },
-  eli_floor_press:                  { p:['chest'], s:['shoulders','triceps'] },
-  eli_incline_pushup:               { p:['chest','shoulders'], s:['triceps','core'] },
-  eli_tempo_incline_pushup:         { p:['chest','shoulders'], s:['triceps'] },
-  eli_close_grip_incline_pushup:    { p:['triceps','chest'], s:['shoulders'] },
-  eli_seated_dumbbell_shoulder_press:   { p:['shoulders'], s:['triceps'] },
-  eli_standing_dumbbell_shoulder_press: { p:['shoulders'], s:['triceps'] },
-  eli_standing_arnold_press:        { p:['shoulders'], s:['triceps'] },
-  eli_lateral_raise_3kg:            { p:['shoulders'], s:[] },
-  eli_front_raise_3kg:              { p:['shoulders'], s:[] },
-  eli_rear_delt_raise_3kg:          { p:['shoulders'], s:['back'] },
-  eli_reverse_fly:                  { p:['shoulders','back'], s:[] },
-  eli_prone_y_raise:                { p:['back','shoulders'], s:[] },
-  eli_overhead_tricep_extension:    { p:['triceps'], s:[] },
-  eli_single_dumbbell_tricep_extension: { p:['triceps'], s:[] },
-  eli_bench_tricep_extension:       { p:['triceps'], s:[] },
-  eli_one_arm_dumbbell_row:         { p:['back','biceps'], s:['core'] },
-  eli_two_dumbbell_bent_row:        { p:['back'], s:['biceps'] },
-  eli_bench_supported_dumbbell_row: { p:['back'], s:['biceps'] },
-  eli_single_dumbbell_row:          { p:['back','biceps'], s:[] },
-  eli_renegade_row:                 { p:['back','core'], s:['biceps','chest'] },
-  eli_hammer_curl:                  { p:['biceps'], s:['core'] },
-  eli_standard_dumbbell_curl:       { p:['biceps'], s:[] },
-  eli_slow_eccentric_curl:          { p:['biceps'], s:[] },
-  eli_goblet_squat:                 { p:['quads','glutes'], s:['hamstrings','core'] },
+  strength_incline_dumbbell_bench_press: { p:['chest','shoulders'], s:['triceps'] },
+  strength_flat_dumbbell_bench_press:    { p:['chest'], s:['shoulders','triceps'] },
+  strength_floor_press:                  { p:['chest'], s:['shoulders','triceps'] },
+  strength_incline_pushup:               { p:['chest','shoulders'], s:['triceps','core'] },
+  strength_tempo_incline_pushup:         { p:['chest','shoulders'], s:['triceps'] },
+  strength_close_grip_incline_pushup:    { p:['triceps','chest'], s:['shoulders'] },
+  strength_seated_dumbbell_shoulder_press:   { p:['shoulders'], s:['triceps'] },
+  strength_standing_dumbbell_shoulder_press: { p:['shoulders'], s:['triceps'] },
+  strength_standing_arnold_press:        { p:['shoulders'], s:['triceps'] },
+  strength_lateral_raise_3kg:            { p:['shoulders'], s:[] },
+  strength_front_raise_3kg:              { p:['shoulders'], s:[] },
+  strength_rear_delt_raise_3kg:          { p:['shoulders'], s:['back'] },
+  strength_reverse_fly:                  { p:['shoulders','back'], s:[] },
+  strength_prone_y_raise:                { p:['back','shoulders'], s:[] },
+  strength_overhead_tricep_extension:    { p:['triceps'], s:[] },
+  strength_single_dumbbell_tricep_extension: { p:['triceps'], s:[] },
+  strength_bench_tricep_extension:       { p:['triceps'], s:[] },
+  strength_one_arm_dumbbell_row:         { p:['back','biceps'], s:['core'] },
+  strength_two_dumbbell_bent_row:        { p:['back'], s:['biceps'] },
+  strength_bench_supported_dumbbell_row: { p:['back'], s:['biceps'] },
+  strength_single_dumbbell_row:          { p:['back','biceps'], s:[] },
+  strength_renegade_row:                 { p:['back','core'], s:['biceps','chest'] },
+  strength_hammer_curl:                  { p:['biceps'], s:['core'] },
+  strength_standard_dumbbell_curl:       { p:['biceps'], s:[] },
+  strength_slow_eccentric_curl:          { p:['biceps'], s:[] },
+  strength_goblet_squat:                 { p:['quads','glutes'], s:['hamstrings','core'] },
   bodyweight_squat:                 { p:['quads'], s:['glutes'] },
-  eli_bodyweight_tempo_squat:       { p:['quads','glutes'], s:['hamstrings'] },
-  eli_split_squat:                  { p:['quads','glutes'], s:['hamstrings'] },
-  eli_reverse_lunge:                { p:['quads','glutes'], s:['hamstrings'] },
-  eli_step_up:                      { p:['quads','glutes'], s:['hamstrings'] },
-  eli_wall_sit:                     { p:['quads'], s:['glutes'] },
-  eli_dumbbell_rdl:                 { p:['hamstrings','glutes'], s:['back'] },
-  eli_kettlebell_style_deadlift:    { p:['hamstrings','glutes','back'], s:['quads'] },
-  eli_single_dumbbell_rdl:          { p:['hamstrings','glutes'], s:['back'] },
-  eli_bench_glute_bridge:           { p:['glutes'], s:['hamstrings'] },
-  eli_floor_glute_bridge:           { p:['glutes'], s:['hamstrings'] },
-  eli_weighted_glute_bridge:        { p:['glutes'], s:['hamstrings'] },
-  eli_calf_raises:                  { p:['calves'], s:[] },
-  eli_weighted_calf_raises:         { p:['calves'], s:[] },
-  eli_side_plank:                   { p:['core'], s:[] },
-  eli_plank:                        { p:['core'], s:[] },
-  eli_incline_situp:                { p:['core'], s:[] },
-  eli_bench_reverse_crunch:         { p:['core'], s:[] },
-  eli_farmer_carry:                 { p:['core','back'], s:['shoulders','quads'] },
+  strength_bodyweight_tempo_squat:       { p:['quads','glutes'], s:['hamstrings'] },
+  strength_split_squat:                  { p:['quads','glutes'], s:['hamstrings'] },
+  strength_reverse_lunge:                { p:['quads','glutes'], s:['hamstrings'] },
+  strength_step_up:                      { p:['quads','glutes'], s:['hamstrings'] },
+  strength_wall_sit:                     { p:['quads'], s:['glutes'] },
+  strength_dumbbell_rdl:                 { p:['hamstrings','glutes'], s:['back'] },
+  strength_kettlebell_style_deadlift:    { p:['hamstrings','glutes','back'], s:['quads'] },
+  strength_single_dumbbell_rdl:          { p:['hamstrings','glutes'], s:['back'] },
+  strength_bench_glute_bridge:           { p:['glutes'], s:['hamstrings'] },
+  strength_floor_glute_bridge:           { p:['glutes'], s:['hamstrings'] },
+  strength_weighted_glute_bridge:        { p:['glutes'], s:['hamstrings'] },
+  strength_calf_raises:                  { p:['calves'], s:[] },
+  strength_weighted_calf_raises:         { p:['calves'], s:[] },
+  strength_side_plank:                   { p:['core'], s:[] },
+  strength_plank:                        { p:['core'], s:[] },
+  strength_incline_situp:                { p:['core'], s:[] },
+  strength_bench_reverse_crunch:         { p:['core'], s:[] },
+  strength_farmer_carry:                 { p:['core','back'], s:['shoulders','quads'] },
   step_jacks:                       { p:['quads','calves'], s:['core'] },
-  eli_speed_rope_intervals:         { p:['calves'], s:['core','shoulders'] },
+  strength_speed_rope_intervals:         { p:['calves'], s:['core','shoulders'] },
 };
 
-export function getEliMuscleStimulus(sessions, cycleState) {
+export function getUserAMuscleStimulus(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
   const cycleSessions = sessions.filter(s => s.users.includes('userA') && s.date >= cycleStart);
 
@@ -307,9 +316,9 @@ export function getEliMuscleStimulus(sessions, cycleState) {
   return counts;
 }
 
-// ---- Christina stats ----------------------------------------
+// ---- User B stats ----------------------------------------
 
-export function getChristinaStats(sessions) {
+export function getUserBStats(sessions) {
   const c = sessions.filter(s => s.users.includes('userB'));
 
   // Build counts only from symptoms that were actually logged (any truthy /
@@ -426,17 +435,17 @@ function scoreToStatus(value, greenThreshold, yellowThreshold, higherIsBetter = 
   return value <= greenThreshold ? 'green' : value <= yellowThreshold ? 'yellow' : 'red';
 }
 
-export function getEliReadiness(sessions, cycleState) {
+export function getUserAReadiness(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
-  const cycleEli   = sessions.filter(s => s.users.includes('userA') && s.date >= cycleStart);
-  const heavy      = cycleEli.filter(s => s.userARoutineType === 'heavy_weight');
-  const nonHeavy   = cycleEli.filter(s => s.userARoutineType !== 'heavy_weight');
+  const cycleUserA   = sessions.filter(s => s.users.includes('userA') && s.date >= cycleStart);
+  const heavy      = cycleUserA.filter(s => s.userARoutineType === 'heavy_weight');
+  const nonHeavy   = cycleUserA.filter(s => s.userARoutineType !== 'heavy_weight');
 
-  const fatigueVals = cycleEli.map(s => s.userAEndCheckin?.formFatigue).filter(f => f != null && f > 0);
+  const fatigueVals = cycleUserA.map(s => s.userAEndCheckin?.formFatigue).filter(f => f != null && f > 0);
   const avgFatigue  = fatigueVals.length ? fatigueVals.reduce((a,b) => a+b, 0) / fatigueVals.length : null;
 
-  const painSessions = cycleEli.filter(s => s.userAEndCheckin?.jointPain && s.userAEndCheckin.jointPain !== 'no').length;
-  const sharpPain    = cycleEli.some(s => s.userAEndCheckin?.jointPain === 'sharp_concerning');
+  const painSessions = cycleUserA.filter(s => s.userAEndCheckin?.jointPain && s.userAEndCheckin.jointPain !== 'no').length;
+  const sharpPain    = cycleUserA.some(s => s.userAEndCheckin?.jointPain === 'sharp_concerning');
 
   const factors = [
     {
@@ -470,7 +479,7 @@ export function getEliReadiness(sessions, cycleState) {
   const overall = reds > 0 ? 'red' : yellows >= 2 ? 'yellow' : 'green';
 
   return {
-    factors, overall, total: cycleEli.length,
+    factors, overall, total: cycleUserA.length,
     recommendation: {
       green:  'Ready to progress. Consider increasing anchor weights at next 28-day review.',
       yellow: 'Maintain current load. Monitor flagged areas before adding volume or weight.',
@@ -479,7 +488,7 @@ export function getEliReadiness(sessions, cycleState) {
   };
 }
 
-export function getChristinaReadiness(sessions, cycleState) {
+export function getUserBReadiness(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
   const cycleC     = sessions.filter(s => s.users.includes('userB') && s.date >= cycleStart);
   if (!cycleC.length) return { factors:[], overall:'green', total:0, recommendation:'No sessions logged yet.' };
@@ -730,7 +739,7 @@ export function renderReadinessCard(containerId, data, user) {
     </div>`;
 }
 
-export function renderChristinaPainDaysChart(canvasId, painDays) {
+export function renderUserBPainDaysChart(canvasId, painDays) {
   if (!window.Chart) return;
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
@@ -755,7 +764,7 @@ export function renderChristinaPainDaysChart(canvasId, painDays) {
   });
 }
 
-export function renderChristinaSymptomChart(canvasId, symptomFreq, symptomLabels) {
+export function renderUserBSymptomChart(canvasId, symptomFreq, symptomLabels) {
   if (!window.Chart) return;
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
@@ -779,7 +788,7 @@ export function renderChristinaSymptomChart(canvasId, symptomFreq, symptomLabels
   });
 }
 
-// ---- Christina Movement Exposure Map ------------------------
+// ---- User B Movement Exposure Map ------------------------
 
 const USERB_MOVEMENT_GROUPS = [
   { id: 'shoulders',  label: 'Shoulders' },
@@ -794,14 +803,14 @@ const USERB_MOVEMENT_GROUPS = [
   { id: 'mobility',   label: 'Mobility' }
 ];
 
-function emptyChristinaMovementCounts() {
+function emptyUserBMovementCounts() {
   return USERB_MOVEMENT_GROUPS.reduce((acc, g) => {
     acc[g.id] = 0;
     return acc;
   }, {});
 }
 
-function mapChristinaExerciseToMovement(log) {
+function mapUserBExerciseToMovement(log) {
   const text = `${log.exerciseId ?? ''} ${log.exerciseName ?? ''}`.toLowerCase();
   const primary = [];
   const secondary = [];
@@ -842,13 +851,13 @@ function mapChristinaExerciseToMovement(log) {
   };
 }
 
-export function getChristinaMovementExposure(sessions, cycleState) {
+export function getUserBMovementExposure(sessions, cycleState) {
   const cycleStart = cycleState?.startDate ?? '0000-00-00';
   const cycleSessions = sessions.filter(s =>
     s.users.includes('userB') && s.date >= cycleStart
   );
 
-  const counts = emptyChristinaMovementCounts();
+  const counts = emptyUserBMovementCounts();
 
   for (const s of cycleSessions) {
     for (const log of (s.exerciseLogs?.userB ?? [])) {
@@ -858,7 +867,7 @@ export function getChristinaMovementExposure(sessions, cycleState) {
         ? log.setLogs.length
         : 1;
 
-      const movement = mapChristinaExerciseToMovement(log);
+      const movement = mapUserBExerciseToMovement(log);
 
       for (const area of movement.p) {
         if (counts[area] !== undefined) counts[area] += setCount;
@@ -873,13 +882,13 @@ export function getChristinaMovementExposure(sessions, cycleState) {
   return counts;
 }
 
-export function renderChristinaMovementExposureMap(containerId, movementData) {
+export function renderUserBMovementExposureMap(containerId, movementData) {
   const el = document.getElementById(containerId);
   if (!el) return;
 
   const total = Object.values(movementData ?? {}).reduce((a, b) => a + b, 0);
   if (!total) {
-    el.innerHTML = '<p class="empty-state">No Christina movement exposure logged yet. This map fills in after completed exercises.</p>';
+    el.innerHTML = '<p class="empty-state">No User B movement exposure logged yet. This map fills in after completed exercises.</p>';
     return;
   }
 
@@ -912,11 +921,11 @@ export function renderChristinaMovementExposureMap(containerId, movementData) {
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px;">${cells}</div>
     <div style="font-size:0.63rem;color:var(--text-2);line-height:1.5;">
       Estimated movement exposure this cycle. Direct movement counts as 1×. Supporting movement counts as 0.5×.
-      <em>For Christina, high exposure means repeated load. It is not automatically good or bad.</em>
+      <em>For User B, high exposure means repeated load. It is not automatically good or bad.</em>
     </div>`;
 }
 
-// ---- Christina Symptom Calendar -----------------------------
+// ---- User B Symptom Calendar -----------------------------
 
 // Compact labels for the tight calendar cells, keyed by canonical symptom id.
 const USERB_SYMPTOM_LABELS_SHORT = {
@@ -930,7 +939,7 @@ const USERB_SYMPTOM_LABELS_SHORT = {
   sensitivityToLight: 'Light'
 };
 
-export function getChristinaSymptomCalendarData(year, month, sessions) {
+export function getUserBSymptomCalendarData(year, month, sessions) {
   const data = {};
 
   for (const s of sessions) {
@@ -969,7 +978,7 @@ export function getChristinaSymptomCalendarData(year, month, sessions) {
   return data;
 }
 
-export function renderChristinaSymptomCalendarHTML(year, month, symptomData) {
+export function renderUserBSymptomCalendarHTML(year, month, symptomData) {
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);
   const monthName = new Date(year, month, 1).toLocaleDateString('en-US', {

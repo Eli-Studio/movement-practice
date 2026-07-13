@@ -2,22 +2,22 @@
 // config.js — App constants and configuration
 // ============================================================
 
-export const APP_VERSION = '0.5.0';
+export const APP_VERSION = '0.6.0';
 export const STORAGE_KEY = 'morningCircuit';
 export const CYCLE_LENGTH_DAYS = 28;
 
 export const USERA_HEAVY_SEQUENCE = [
-  'eli_upper_push',
-  'eli_lower_body',
-  'eli_upper_pull',
-  'eli_full_body'
+  'strength_upper_push',
+  'strength_lower_body',
+  'strength_upper_pull',
+  'strength_full_body'
 ];
 
 export const USERB_SEQUENCE = [
-  'christina_gentle_upper',
-  'christina_gentle_lower',
-  'christina_gentle_pull_posture',
-  'christina_gentle_full_body'
+  'adaptive_gentle_upper',
+  'adaptive_gentle_lower',
+  'adaptive_gentle_pull_posture',
+  'adaptive_gentle_full_body'
 ];
 
 export const SCREENS = {
@@ -86,14 +86,14 @@ export const MISSED_DAY_CATEGORIES = [
 // Keys stay on their legacy names for saved-data compatibility; the values
 // are analog-palette roles, not the old vibrant hues.
 export const ACTIVITY_COLORS = {
-  eli_heavy:           'var(--activity-strength)',
-  eli_circuit:         'var(--activity-circuit)',
-  eli_combo:           'var(--activity-combo)',
-  eli_cardio:          'var(--activity-cardio)',
-  eli_mobility:        'var(--activity-mobility)',
-  christina_normal:    'var(--activity-full)',
-  christina_reduced:   'var(--activity-adapted)',
-  christina_recovery:  'var(--activity-recovery)',
+  strength_heavy:           'var(--activity-strength)',
+  strength_circuit:         'var(--activity-circuit)',
+  strength_combo:           'var(--activity-combo)',
+  strength_cardio:          'var(--activity-cardio)',
+  strength_mobility:        'var(--activity-mobility)',
+  adaptive_normal:    'var(--activity-full)',
+  adaptive_reduced:   'var(--activity-adapted)',
+  adaptive_recovery:  'var(--activity-recovery)',
   skip_rest:           'var(--activity-rest)',
   vr_exercise:         'var(--activity-vr)',
   adventure:           'var(--activity-adventure)',
@@ -142,5 +142,5 @@ export const WEIGHT_STEP_KG = 0.5;
 // Suggested weight bump (kg) per anchor lift at cycle review, when readiness is green.
 // Suggested weight bump (kg) per anchor lift at cycle review, once the rep
 // target has topped out its range. 0.5kg matches the smallest real jump
-// achievable with Eli's plate set (1kg / 1.5kg / 2kg, mix and match).
+// achievable with User A's plate set (1kg / 1.5kg / 2kg, mix and match).
 export const CYCLE_PROGRESSION_STEP_KG = 0.5;

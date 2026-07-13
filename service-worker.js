@@ -1,11 +1,11 @@
-const CACHE = 'movement-network-first-v13';
-const CORE = ['./', './index.html', './styles.css?v=6', './manifest.json', './icons/icon.svg',
+const CACHE = 'movement-network-first-v14';
+const CORE = ['./', './index.html', './styles.css?v=7', './manifest.json', './icons/icon.svg',
   './icons/icon-120.png', './icons/icon-152.png', './icons/icon-167.png', './icons/icon-180.png',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png',
   './data/equipment.json', './data/exercises.json', './data/routineTemplates.json',
-  './js/adaptation.js', './js/app.js?v=10', './js/audio.js?v=2', './js/config.js', './js/config.js?v=2', './js/cycles.js',
+  './js/adaptation.js', './js/app.js?v=11', './js/audio.js?v=2', './js/config.js', './js/config.js?v=2', './js/cycles.js',
   './js/data.js', './js/equipment.js', './js/exports.js', './js/reports.js', './js/rotation.js',
-  './js/profiles.js', './js/screens.js?v=3', './js/storage.js?v=3', './js/timer.js', './js/utils.js', './js/workout.js',
+  './js/profiles.js', './js/screens.js?v=4', './js/storage.js?v=4', './js/timer.js', './js/utils.js', './js/workout.js',
   './js/vendor/chart.umd.min.js'];
 self.addEventListener('install', event => {
   self.skipWaiting();

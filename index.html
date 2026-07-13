@@ -19,7 +19,7 @@
   <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
   <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
 
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
 
   <!-- Apply saved theme before first paint to avoid a flash of the wrong theme.
        Mirrors settings.theme in localStorage['morningCircuit']. Night is default. -->
@@ -54,7 +54,32 @@
        offline-first and never phones out to a CDN. -->
   <script src="js/vendor/chart.umd.min.js"></script>
 
-  <script type="module" src="js/app.js?v=10"></script>
+  <script>
+    // ES modules and JSON fetches are blocked when index.html is opened as a
+    // local file. Give a useful launch path instead of leaving the loading
+    // screen spinning forever.
+    if (window.location.protocol === 'file:') {
+      document.getElementById('app').innerHTML = `
+        <main class="page page--no-nav" style="justify-content:center;min-height:100dvh;text-align:center;">
+          <div class="movement-brand" aria-label="Movement Practice" style="justify-content:center;">
+            <span class="movement-mark" aria-hidden="true"><span></span></span>
+            <span class="movement-brand__type"><strong>Movement</strong><small>Practice</small></span>
+          </div>
+          <h1 class="page-title" style="margin-top:24px;">Open the local preview</h1>
+          <p class="page-subtitle" style="margin:10px auto 24px;max-width:32rem;">
+            Movement needs its local preview server to load workout data securely.
+          </p>
+          <a class="btn btn--primary" href="http://127.0.0.1:4174/" style="text-decoration:none;max-width:320px;margin:0 auto;">
+            Open Movement
+          </a>
+        </main>`;
+    } else {
+      const appScript = document.createElement('script');
+      appScript.type = 'module';
+      appScript.src = 'js/app.js?v=11';
+      document.body.appendChild(appScript);
+    }
+  </script>
   <script>
     if ('serviceWorker' in navigator) window.addEventListener('load', function () {
       navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'none' });

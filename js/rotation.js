@@ -6,10 +6,10 @@ import { USERA_HEAVY_SEQUENCE, USERB_SEQUENCE } from './config.js';
 import { today, daysBetween, toLocalDateString } from './utils.js';
 import { describePainRule } from './adaptation.js';
 
-// ---- Eli ------------------------------------------------
+// ---- User A ------------------------------------------------
 
 /**
- * Has Eli had a break since his last heavy session?
+ * Has User A had a break since his last heavy session?
  * Break = any non-heavy session logged, any missed-day entry,
  * OR simply 1+ calendar day elapsed since last heavy.
  */
@@ -40,39 +40,39 @@ export function userAHasBreakDay(cycleState, sessions, missedDays) {
  */
 export function userAEligibleForFullBody(cycleState) {
   const c = cycleState.userAHeavyCounts;
-  return c.eli_upper_push > 0 && c.eli_lower_body > 0 && c.eli_upper_pull > 0;
+  return c.strength_upper_push > 0 && c.strength_lower_body > 0 && c.strength_upper_pull > 0;
 }
 
 const USERA_ALTERNATIVES = [
-  { id: 'eli_light_circuit',        label: 'Light Circuit',           type: 'circuit' },
-  { id: 'eli_cardio_circuit',       label: 'Cardio Circuit',          type: 'cardio_circuit' },
-  { id: 'eli_mobility_recovery',    label: 'Mobility / Recovery',     type: 'mobility_recovery' },
-  { id: 'eli_combo_weight_circuit', label: 'Combo: Weight + Circuit', type: 'combo_weight_circuit' },
+  { id: 'strength_light_circuit',        label: 'Light Circuit',           type: 'circuit' },
+  { id: 'strength_cardio_circuit',       label: 'Cardio Circuit',          type: 'cardio_circuit' },
+  { id: 'strength_mobility_recovery',    label: 'Mobility / Recovery',     type: 'mobility_recovery' },
+  { id: 'strength_combo_weight_circuit', label: 'Combo: Weight + Circuit', type: 'combo_weight_circuit' },
   { id: 'skip_rest',                label: 'Skip / Rest Today',       type: 'skip_rest' }
 ];
 
 const USERA_HEAVY_LABELS = {
-  eli_upper_push: 'Upper Push — Chest & Shoulders',
-  eli_lower_body: 'Lower Body — Legs & Glutes',
-  eli_upper_pull: 'Upper Pull — Back & Biceps',
-  eli_full_body:  'Full Body'
+  strength_upper_push: 'Upper Push — Chest & Shoulders',
+  strength_lower_body: 'Lower Body — Legs & Glutes',
+  strength_upper_pull: 'Upper Pull — Back & Biceps',
+  strength_full_body:  'Full Body'
 };
 
-export function getEliSuggestion(cycleState, sessions, missedDays) {
+export function getUserASuggestion(cycleState, sessions, missedDays) {
   const hasBreak  = userAHasBreakDay(cycleState, sessions, missedDays);
   const nextHeavy = USERA_HEAVY_SEQUENCE[cycleState.userASequencePointer];
 
   if (!hasBreak) {
     return {
       primary: {
-        id:     'eli_light_circuit',
+        id:     'strength_light_circuit',
         label:  'Light Circuit',
         type:   'circuit',
         reason: 'Break day needed after your last heavy session.'
       },
       alternatives: [
-        ...USERA_ALTERNATIVES.filter(a => a.id !== 'eli_light_circuit'),
-        { id: 'christina_light_movement', label: 'Gentle Movement', type: 'circuit' }
+        ...USERA_ALTERNATIVES.filter(a => a.id !== 'strength_light_circuit'),
+        { id: 'adaptive_light_movement', label: 'Gentle Movement', type: 'circuit' }
       ],
       heavyBlocked: true,
       heavyBlockedReason: 'Complete a break day before your next heavy session.'
@@ -92,33 +92,33 @@ export function getEliSuggestion(cycleState, sessions, missedDays) {
   };
 }
 
-// ---- Christina ------------------------------------------
+// ---- User B ------------------------------------------
 //
 // Pain level (low / med / high) is the only driver of intensity. The specific
 // symptom buttons are tracked for history only — they do not steer the routine.
-// Recovery / Light Movement / Rest are always offered as alternatives; Christina
+// Recovery / Light Movement / Rest are always offered as alternatives; User B
 // chooses them herself rather than the app forcing them.
 
 const USERB_LABELS = {
-  christina_gentle_upper:        'Gentle Upper Body',
-  christina_gentle_lower:        'Gentle Lower Body',
-  christina_gentle_pull_posture: 'Gentle Pull & Posture',
-  christina_gentle_full_body:    'Gentle Full Body',
-  christina_light_movement:      'Light Movement',
-  christina_recovery_minimum:    'Recovery / Minimum'
+  adaptive_gentle_upper:        'Gentle Upper Body',
+  adaptive_gentle_lower:        'Gentle Lower Body',
+  adaptive_gentle_pull_posture: 'Gentle Pull & Posture',
+  adaptive_gentle_full_body:    'Gentle Full Body',
+  adaptive_light_movement:      'Light Movement',
+  adaptive_recovery_minimum:    'Recovery / Minimum'
 };
 
 // A low-pain day borrows the corresponding five-slot strength template while
-// retaining Christina's own routine id, sequence pointer, profile weight, and
+// retaining User B's own routine id, sequence pointer, profile weight, and
 // reporting. Medium/high days continue to use the gentle templates above.
 const USERB_LOW_PAIN_TEMPLATES = {
-  christina_gentle_upper:        { id: 'eli_upper_push', label: 'Strength Upper Body' },
-  christina_gentle_lower:        { id: 'eli_lower_body', label: 'Strength Lower Body' },
-  christina_gentle_pull_posture: { id: 'eli_upper_pull', label: 'Strength Pull & Posture' },
-  christina_gentle_full_body:    { id: 'eli_full_body',  label: 'Strength Full Body' }
+  adaptive_gentle_upper:        { id: 'strength_upper_push', label: 'Strength Upper Body' },
+  adaptive_gentle_lower:        { id: 'strength_lower_body', label: 'Strength Lower Body' },
+  adaptive_gentle_pull_posture: { id: 'strength_upper_pull', label: 'Strength Pull & Posture' },
+  adaptive_gentle_full_body:    { id: 'strength_full_body',  label: 'Strength Full Body' }
 };
 
-export function getChristinaSuggestion(cycleState, symptomState) {
+export function getUserBSuggestion(cycleState, symptomState) {
   const painDay = symptomState?.painDay ?? 'low';
 
   const nextId = USERB_SEQUENCE[cycleState.userBSequencePointer % USERB_SEQUENCE.length];
@@ -136,8 +136,8 @@ export function getChristinaSuggestion(cycleState, symptomState) {
       reason:          describePainRule(painDay)
     },
     alternatives: [
-      { id: 'christina_light_movement',   label: 'Light Movement',     adaptationLevel },
-      { id: 'christina_recovery_minimum', label: 'Recovery / Minimum', adaptationLevel: 'recovery' },
+      { id: 'adaptive_light_movement',   label: 'Light Movement',     adaptationLevel },
+      { id: 'adaptive_recovery_minimum', label: 'Recovery / Minimum', adaptationLevel: 'recovery' },
       { id: 'skip_rest',                  label: 'Skip / Rest Today',  adaptationLevel: 'skip' }
     ].filter(a => a.id !== nextId)
   };

@@ -2,13 +2,13 @@
 // app.js — Movement Practice · Main orchestrator  v0.4.1
 // ============================================================
 
-import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js?v=3';
+import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js?v=4';
 import { loadAllData } from './data.js';
 import { unlockAudio, playSessionComplete, playMeditation, stopMeditation, playTimerComplete, playButtonClick } from './audio.js?v=2';
 import { initCycleFromLaunchDate, startNewCycle, isCycleExpired, updateCycleAfterSession, getCycleProgressionSuggestions } from './cycles.js';
-import { getEliReadiness } from './reports.js';
-import { getEliSuggestion, getChristinaSuggestion, getMissedDays } from './rotation.js';
-import { adaptChristinaExercises, adaptWorkoutToCapacity, composeCapacityPlan, annotateSymptomConflicts } from './adaptation.js';
+import { getUserAReadiness } from './reports.js';
+import { getUserASuggestion, getUserBSuggestion, getMissedDays } from './rotation.js';
+import { adaptUserBExercises, adaptWorkoutToCapacity, composeCapacityPlan, annotateSymptomConflicts } from './adaptation.js';
 import { analyzePairedConflicts, getConflictingItems } from './equipment.js';
 import { buildExercisePlan, createSession, logSet, skipExercise,
          completeSession, getTemplateAnchors,
@@ -24,7 +24,7 @@ import {
   renderRoutineSuggestion, renderWarmup, renderWorkoutRunner, renderRestOverlay, updateRestOverlayDOM,
   renderEndCheckin, renderMeditation, renderSessionSummary, renderReports,
   initReportCharts, renderSettings, renderCycleReview, initCycleReviewCards
-} from './screens.js?v=3';
+} from './screens.js?v=4';
 
 // ============================================================
 // Global App object
@@ -43,8 +43,8 @@ window.App = {
     capacityDimensionChoices: {},
     userASuggestion:          null,
     userBSuggestion:    null,
-    selectedEliRoutine:     null,
-    selectedChristinaRoutine: null,
+    selectedUserARoutine:     null,
+    selectedUserBRoutine: null,
     userAAnchors:             [],
     conflicts:              [],
     userACheckin:             null,
@@ -271,15 +271,15 @@ function navigate(screen) {
       const cycleNum = App.state.cycleState?.cycleNumber ?? 1;
 
       if (!App.ui.routineSuggestionBuilt) {
-        let userAPlan = [], cPlan = [];
+        let userAPlan = [], userBPlan = [];
 
         if (users.includes('userA')) {
           const style = 'progressive';
           if (style === 'progressive') {
-            App.ui.userASuggestion = getEliSuggestion(App.state.cycleState, App.state.sessions, App.state.missedDays);
+            App.ui.userASuggestion = getUserASuggestion(App.state.cycleState, App.state.sessions, App.state.missedDays);
           } else {
             const proxy = { ...App.state.cycleState, userBSequencePointer: App.state.cycleState.userASequencePointer };
-            const adaptive = getChristinaSuggestion(proxy, App.ui.symptomsByUser.userA);
+            const adaptive = getUserBSuggestion(proxy, App.ui.symptomsByUser.userA);
             const trackingId = USERA_HEAVY_SEQUENCE[App.state.cycleState.userASequencePointer % USERA_HEAVY_SEQUENCE.length];
             App.ui.userASuggestion = {
               primary: { ...adaptive.primary, id: trackingId,
@@ -290,14 +290,14 @@ function navigate(screen) {
               heavyBlockedReason: adaptive.heavyBlockedReason
             };
           }
-          App.ui.selectedEliRoutine = {
+          App.ui.selectedUserARoutine = {
             id:    App.ui.userASuggestion.primary.id,
             templateId: App.ui.userASuggestion.primary.templateId,
             type:  App.ui.userASuggestion.primary.type,
             label: App.ui.userASuggestion.primary.label
           };
-          if (App.ui.selectedEliRoutine.id !== 'skip_rest') {
-            const tmpl = App.data.routineTemplates.find(t => t.id === (App.ui.selectedEliRoutine.templateId ?? App.ui.selectedEliRoutine.id));
+          if (App.ui.selectedUserARoutine.id !== 'skip_rest') {
+            const tmpl = App.data.routineTemplates.find(t => t.id === (App.ui.selectedUserARoutine.templateId ?? App.ui.selectedUserARoutine.id));
             if (tmpl) {
               userAPlan = buildExercisePlan(tmpl, App.data.exercises,
                 App.state.sessions.filter(s => s.users.includes('userA')).length, cycleNum,
@@ -306,7 +306,7 @@ function navigate(screen) {
                 App.state.settings.profiles.userA,
                 App.state.settings.unavailableEquipmentIds);
               if (style === 'pain_adaptive') {
-                userAPlan = adaptChristinaExercises(userAPlan, App.ui.symptomsByUser.userA);
+                userAPlan = adaptUserBExercises(userAPlan, App.ui.symptomsByUser.userA);
                 userAPlan = annotateSymptomConflicts(userAPlan, App.ui.symptomsByUser.userA);
               }
               const adjustment = adaptWorkoutToCapacity(userAPlan, App.ui.symptomsByUser.userA, App.state.settings.profiles.userA);
@@ -327,14 +327,14 @@ function navigate(screen) {
         if (users.includes('userB')) {
           const style = 'progressive';
           if (style === 'pain_adaptive') {
-            App.ui.userBSuggestion = getChristinaSuggestion(App.state.cycleState, App.ui.symptomsByUser.userB);
+            App.ui.userBSuggestion = getUserBSuggestion(App.state.cycleState, App.ui.symptomsByUser.userB);
           } else {
             const proxy = { ...App.state.cycleState,
               userASequencePointer: App.state.cycleState.userBSequencePointer,
               userALastHeavyDate: App.state.cycleState.userBLastActivityDate };
             const mappedSessions = App.state.sessions.map(s => ({ ...s,
               users: s.users.includes('userB') ? [...new Set([...s.users, 'userA'])] : s.users }));
-            const strength = getEliSuggestion(proxy, mappedSessions, App.state.missedDays);
+            const strength = getUserASuggestion(proxy, mappedSessions, App.state.missedDays);
             const trackingId = USERB_SEQUENCE[App.state.cycleState.userBSequencePointer % USERB_SEQUENCE.length];
             App.ui.userBSuggestion = {
               primary: { ...strength.primary, id: trackingId, templateId: strength.primary.id,
@@ -344,21 +344,21 @@ function navigate(screen) {
               heavyBlockedReason: strength.heavyBlockedReason
             };
           }
-          App.ui.selectedChristinaRoutine = {
+          App.ui.selectedUserBRoutine = {
             id:    App.ui.userBSuggestion.primary.id,
             templateId: App.ui.userBSuggestion.primary.templateId,
             level: App.ui.userBSuggestion.primary.adaptationLevel,
             label: App.ui.userBSuggestion.primary.label
           };
-          if (App.ui.selectedChristinaRoutine.id !== 'skip_rest') {
-            const tmplId = App.ui.selectedChristinaRoutine.templateId ?? App.ui.selectedChristinaRoutine.id;
+          if (App.ui.selectedUserBRoutine.id !== 'skip_rest') {
+            const tmplId = App.ui.selectedUserBRoutine.templateId ?? App.ui.selectedUserBRoutine.id;
             const tmpl = App.data.routineTemplates.find(t => t.id === tmplId);
             if (tmpl) {
               let plan = buildExercisePlan(tmpl, App.data.exercises,
                 App.state.sessions.filter(s => s.users.includes('userB')).length, cycleNum,
                 {}, {}, App.state.settings.profiles.userB,
                 App.state.settings.unavailableEquipmentIds);
-              if (style === 'pain_adaptive') plan = adaptChristinaExercises(plan, App.ui.symptomsByUser.userB);
+              if (style === 'pain_adaptive') plan = adaptUserBExercises(plan, App.ui.symptomsByUser.userB);
               const adjustment = adaptWorkoutToCapacity(plan, App.ui.symptomsByUser.userB, App.state.settings.profiles.userB);
               App.ui.userBOriginalPlan = plan;
               App.ui.userBCapacityAdjustment = adjustment;
@@ -367,16 +367,16 @@ function navigate(screen) {
               plan = adjustment.plan;
               // Advisory: flag exercises that conflict with today's active symptoms (no removal).
               plan = annotateSymptomConflicts(plan, App.ui.symptomsByUser.userB);
-              cPlan = plan;
+              userBPlan = plan;
             }
           }
-          App.ui.userBExercisePlan = cPlan;
+          App.ui.userBExercisePlan = userBPlan;
         }
 
-        if (users.length === 2 && userAPlan.length && cPlan.length) {
-          cPlan = reorderToReduceConflicts(userAPlan, cPlan, App.data.exercises);
-          App.ui.userBExercisePlan = cPlan;
-          App.ui.conflicts = analyzePairedConflicts(userAPlan, cPlan, App.data.exercises);
+        if (users.length === 2 && userAPlan.length && userBPlan.length) {
+          userBPlan = reorderToReduceConflicts(userAPlan, userBPlan, App.data.exercises);
+          App.ui.userBExercisePlan = userBPlan;
+          App.ui.conflicts = analyzePairedConflicts(userAPlan, userBPlan, App.data.exercises);
         } else {
           App.ui.conflicts = [];
         }
@@ -431,7 +431,7 @@ function navigate(screen) {
       };
       const activeProfiles = getActiveProfileIds(App.state.settings);
       const heavyTemplates = App.data.routineTemplates.filter(t => USERA_HEAVY_SEQUENCE.includes(t.id));
-      const userAReadiness = getEliReadiness(App.state.sessions, App.state.cycleState);
+      const userAReadiness = getUserAReadiness(App.state.sessions, App.state.cycleState);
       App.ui.cycleProgressionSuggestions = activeProfiles.includes('userA')
         ? getCycleProgressionSuggestions(
           App.state.cycleState, App.data.exercises, heavyTemplates, userAReadiness.overall,
@@ -636,6 +636,7 @@ function setupListeners(screen) {
             b.style.background = 'var(--surface)';
             b.style.color = 'var(--text-2)';
             b.style.fontWeight = '400';
+            b.setAttribute('aria-pressed', 'false');
           });
           // Highlight the tapped button
           const t = e.currentTarget;
@@ -643,6 +644,7 @@ function setupListeners(screen) {
           t.style.background = 'color-mix(in srgb, var(--action-primary) 12%, var(--surface))';
           t.style.color = 'var(--action-primary)';
           t.style.fontWeight = '700';
+          t.setAttribute('aria-pressed', 'true');
           const who = t.dataset.logWho;
           logUsers = who === 'both' ? [...activeProfiles] : [who];
         });
@@ -686,8 +688,12 @@ function setupListeners(screen) {
           const { cat, date } = e.currentTarget.dataset;
           App.ui.missedDayChoices[date] = cat;
           const parent = e.currentTarget.closest('[data-date]');
-          parent?.querySelectorAll('.miss-cat-btn').forEach(b => b.classList.remove('selected'));
+          parent?.querySelectorAll('.miss-cat-btn').forEach(b => {
+            b.classList.remove('selected');
+            b.setAttribute('aria-pressed', 'false');
+          });
           e.currentTarget.classList.add('selected');
+          e.currentTarget.setAttribute('aria-pressed', 'true');
         });
       });
       on('btn-missed-done', 'click', saveMissedDaysAndContinue);
@@ -702,11 +708,15 @@ function setupListeners(screen) {
       let currentEnergy = 'medium';
       let currentSoreness = 'low';
       const activeSymptoms = new Set();
+      const selectPressed = (buttons, selectedButton) => buttons.forEach(button => {
+        const selected = button === selectedButton;
+        button.classList.toggle('selected', selected);
+        button.setAttribute('aria-pressed', String(selected));
+      });
 
       document.querySelectorAll('#pain-picker .pain-btn').forEach(btn => {
         btn.addEventListener('click', e => {
-          document.querySelectorAll('#pain-picker .pain-btn').forEach(b => b.classList.remove('selected'));
-          e.currentTarget.classList.add('selected');
+          selectPressed(document.querySelectorAll('#pain-picker .pain-btn'), e.currentTarget);
           currentPainDay = e.currentTarget.dataset.value;
         });
       });
@@ -717,21 +727,21 @@ function setupListeners(screen) {
           if (activeSymptoms.has(id)) {
             activeSymptoms.delete(id);
             e.currentTarget.classList.remove('active');
+            e.currentTarget.setAttribute('aria-pressed', 'false');
           } else {
             activeSymptoms.add(id);
             e.currentTarget.classList.add('active');
+            e.currentTarget.setAttribute('aria-pressed', 'true');
           }
         });
       });
 
       document.querySelectorAll('[data-energy]').forEach(btn => btn.addEventListener('click', e => {
-        document.querySelectorAll('[data-energy]').forEach(b => b.classList.remove('selected'));
-        e.currentTarget.classList.add('selected');
+        selectPressed(document.querySelectorAll('[data-energy]'), e.currentTarget);
         currentEnergy = e.currentTarget.dataset.energy;
       }));
       document.querySelectorAll('[data-soreness]').forEach(btn => btn.addEventListener('click', e => {
-        document.querySelectorAll('[data-soreness]').forEach(b => b.classList.remove('selected'));
-        e.currentTarget.classList.add('selected');
+        selectPressed(document.querySelectorAll('[data-soreness]'), e.currentTarget);
         currentSoreness = e.currentTarget.dataset.soreness;
       }));
 
@@ -813,10 +823,14 @@ function setupListeners(screen) {
       }));
 
       on('userA-alt-toggle', 'click', () => {
-        get('userA-alternatives')?.classList.toggle('hidden');
+        const panel = get('userA-alternatives');
+        panel?.classList.toggle('hidden');
+        get('userA-alt-toggle')?.setAttribute('aria-expanded', String(!panel?.classList.contains('hidden')));
       });
       on('userB-alt-toggle', 'click', () => {
-        get('userB-alternatives')?.classList.toggle('hidden');
+        const panel = get('userB-alternatives');
+        panel?.classList.toggle('hidden');
+        get('userB-alt-toggle')?.setAttribute('aria-expanded', String(!panel?.classList.contains('hidden')));
       });
 
       document.querySelectorAll('[data-swap-user]').forEach(row => {
@@ -825,11 +839,11 @@ function setupListeners(screen) {
           const idx  = parseInt(e.currentTarget.dataset.swapIndex, 10);
           const plan = user === 'userA' ? App.ui.userAExercisePlan : App.ui.userBExercisePlan;
           if (!plan) return;
-          // Eli's swaps carry forward any progressed weight for the new exercise.
+          // User A's swaps carry forward any progressed weight for the new exercise.
           const weightOverrides = user === 'userA' ? (App.state.cycleState?.userAExerciseWeights ?? {}) : {};
           swapExercise(plan, App.data.exercises, idx, weightOverrides, App.state.settings.profiles[user]);
           // A swap changes the exercise (and its attributes) — re-flag symptom
-          // conflicts on Christina's plan so the advisory badges stay correct.
+          // conflicts on User B's plan so the advisory badges stay correct.
           if (user === 'userB') {
             App.ui.userBExercisePlan = annotateSymptomConflicts(
               App.ui.userBExercisePlan, App.ui.userBSymptoms);
@@ -851,7 +865,7 @@ function setupListeners(screen) {
           const type = e.currentTarget.dataset.type;
           const templateId = e.currentTarget.dataset.templateId || id;
           const label = e.currentTarget.dataset.label || e.currentTarget.textContent.trim().replace('Current', '').replace('›','').trim();
-          App.ui.selectedEliRoutine = { id, templateId, type, label };
+          App.ui.selectedUserARoutine = { id, templateId, type, label };
           if (id !== 'skip_rest') {
             const tmpl = App.data.routineTemplates.find(t => t.id === templateId);
             if (tmpl) {
@@ -889,9 +903,9 @@ function setupListeners(screen) {
           const level = e.currentTarget.dataset.adaptation;
           const templateId = e.currentTarget.dataset.templateId || id;
           const label = e.currentTarget.dataset.label || e.currentTarget.textContent.trim().replace('Current', '').replace('›','').trim();
-          App.ui.selectedChristinaRoutine = { id, templateId, level, label };
+          App.ui.selectedUserBRoutine = { id, templateId, level, label };
 
-          // Rebuild Christina's plan for the chosen routine (mirrors Eli's handler).
+          // Rebuild User B's plan for the chosen routine (mirrors User A's handler).
           // Previously this was skipped, so the shown exercise list, swap rows, and
           // conflict banner kept operating on the prior routine's plan until the
           // workout actually started — audit B4.
@@ -915,7 +929,7 @@ function setupListeners(screen) {
             App.ui.userBExercisePlan = [];
           }
 
-          // A routine change can alter equipment overlap with Eli's plan.
+          // A routine change can alter equipment overlap with User A's plan.
           if (App.ui.selectedUsers?.length === 2 &&
               App.ui.userAExercisePlan?.length && App.ui.userBExercisePlan?.length) {
             App.ui.userBExercisePlan = reorderToReduceConflicts(
@@ -932,12 +946,12 @@ function setupListeners(screen) {
       });
 
       on('btn-start-workout', 'click', () => {
-        const userAR  = App.ui.selectedEliRoutine;
-        const cR    = App.ui.selectedChristinaRoutine;
+        const userAR  = App.ui.selectedUserARoutine;
+        const userBR    = App.ui.selectedUserBRoutine;
         const users = [...App.ui.selectedUsers];
 
         const missingPlan = users.find(userId => {
-          const routine = userId === 'userA' ? userAR : cR;
+          const routine = userId === 'userA' ? userAR : userBR;
           const plan = userId === 'userA' ? App.ui.userAExercisePlan : App.ui.userBExercisePlan;
           return routine?.id !== 'skip_rest' && !plan?.length;
         });
@@ -949,7 +963,7 @@ function setupListeners(screen) {
 
         const skipping = users.filter(u =>
           (u === 'userA'       && userAR?.id === 'skip_rest') ||
-          (u === 'userB' && cR?.id   === 'skip_rest')
+          (u === 'userB' && userBR?.id   === 'skip_rest')
         );
         if (skipping.length) {
           const t = today();
@@ -961,7 +975,7 @@ function setupListeners(screen) {
 
         const activeUsers = users.filter(u =>
           !(u === 'userA'       && userAR?.id === 'skip_rest') &&
-          !(u === 'userB' && cR?.id   === 'skip_rest')
+          !(u === 'userB' && userBR?.id   === 'skip_rest')
         );
 
         if (!activeUsers.length) {
@@ -1029,8 +1043,12 @@ function setupListeners(screen) {
       document.querySelectorAll('[data-effort-user]').forEach(btn => {
         btn.addEventListener('click', e => {
           const userId = e.currentTarget.dataset.effortUser;
-          document.querySelectorAll(`[data-effort-user="${userId}"]`).forEach(b => b.classList.remove('selected'));
+          document.querySelectorAll(`[data-effort-user="${userId}"]`).forEach(b => {
+            b.classList.remove('selected');
+            b.setAttribute('aria-pressed', 'false');
+          });
           e.currentTarget.classList.add('selected');
+          e.currentTarget.setAttribute('aria-pressed', 'true');
           checkins[userId].effort = parseInt(e.currentTarget.dataset.value);
           persistWorkoutDraft('end_checkin');
         });
@@ -1039,9 +1057,13 @@ function setupListeners(screen) {
       document.querySelectorAll('[data-joint-pain-user]').forEach(btn => {
         btn.addEventListener('click', e => {
           const userId = e.currentTarget.dataset.jointPainUser;
-          document.querySelectorAll(`[data-joint-pain-user="${userId}"]`).forEach(b => b.classList.remove('selected','selected--none'));
+          document.querySelectorAll(`[data-joint-pain-user="${userId}"]`).forEach(b => {
+            b.classList.remove('selected','selected--none');
+            b.setAttribute('aria-pressed', 'false');
+          });
           const pain = e.currentTarget.dataset.value;
           e.currentTarget.classList.add(pain === 'no' ? 'selected--none' : 'selected');
+          e.currentTarget.setAttribute('aria-pressed', 'true');
           checkins[userId].jointPain = pain;
           persistWorkoutDraft('end_checkin');
         });
@@ -1461,9 +1483,9 @@ function reorderToReduceConflicts(userAPlan, userBPlan, allExercises) {
   const result = [...userBPlan];
   for (let i = 0; i < Math.min(userAPlan.length, result.length); i++) {
     const eDef = allExercises.find(e => e.id === userAPlan[i].id);
-    const cDef = allExercises.find(e => e.id === result[i].id);
-    if (!eDef || !cDef) continue;
-    if (getConflictingItems(eDef, cDef).length > 0) {
+    const userBDef = allExercises.find(e => e.id === result[i].id);
+    if (!eDef || !userBDef) continue;
+    if (getConflictingItems(eDef, userBDef).length > 0) {
       for (let j = i + 1; j < result.length; j++) {
         const swapDef = allExercises.find(e => e.id === result[j].id);
         if (!swapDef) continue;
@@ -1542,12 +1564,12 @@ function afterMissedDays() {
 // ============================================================
 function buildWorkoutState() {
   const users    = App.ui.selectedUsers;
-  const userAR     = App.ui.selectedEliRoutine;
-  const christR  = App.ui.selectedChristinaRoutine;
+  const userAR     = App.ui.selectedUserARoutine;
+  const userBR  = App.ui.selectedUserBRoutine;
   const cycleNum = App.state.cycleState?.cycleNumber ?? 1;
 
   const userASessionCount = App.state.sessions.filter(s => s.users.includes('userA')).length;
-  const cSessionCount   = App.state.sessions.filter(s => s.users.includes('userB')).length;
+  const userBSessionCount   = App.state.sessions.filter(s => s.users.includes('userB')).length;
 
   let userAExercises = [], userBExercises = [];
 
@@ -1562,10 +1584,10 @@ function buildWorkoutState() {
     }
   }
 
-  if (users.includes('userB') && christR?.id && christR.id !== 'skip_rest') {
-    const tmpl = App.data.routineTemplates.find(t => t.id === (christR.templateId ?? christR.id));
+  if (users.includes('userB') && userBR?.id && userBR.id !== 'skip_rest') {
+    const tmpl = App.data.routineTemplates.find(t => t.id === (userBR.templateId ?? userBR.id));
     if (tmpl) {
-      let plan = buildExercisePlan(tmpl, App.data.exercises, cSessionCount, cycleNum, {}, {}, App.state.settings.profiles.userB, App.state.settings.unavailableEquipmentIds);
+      let plan = buildExercisePlan(tmpl, App.data.exercises, userBSessionCount, cycleNum, {}, {}, App.state.settings.profiles.userB, App.state.settings.unavailableEquipmentIds);
       const adjusted = adaptWorkoutToCapacity(plan, App.ui.symptomsByUser.userB, App.state.settings.profiles.userB);
       plan = composeCapacityPlan(plan, adjusted.plan, App.ui.capacityDimensionChoices.userB);
       userBExercises = annotateSymptomConflicts(plan, App.ui.symptomsByUser.userB);
@@ -1598,7 +1620,7 @@ function buildWorkoutState() {
     mode,
     activeUser: users[0],
     userA:      userState(userAExercises,      userAR?.templateId ?? userAR?.id),
-    userB:userState(userBExercises, christR?.templateId ?? christR?.id),
+    userB:userState(userBExercises, userBR?.templateId ?? userBR?.id),
     restActive:      false,
     restRemaining:   0,
     restTotalSeconds:0,
@@ -1609,8 +1631,8 @@ function buildWorkoutState() {
     users,
     userAR?.id   !== 'skip_rest' ? userAR?.id   : null,
     userAR?.id   !== 'skip_rest' ? userAR?.type  : null,
-    christR?.id !== 'skip_rest' ? christR?.id : null,
-    christR?.level ?? null,
+    userBR?.id !== 'skip_rest' ? userBR?.id : null,
+    userBR?.level ?? null,
     App.state.cycleState?.cycleId ?? null
   );
   App.currentSession.profileCheckins = Object.fromEntries(users.map(userId => [userId, {
@@ -1910,7 +1932,9 @@ function showRestTimer(restSecs, currentUserState, totalSecs = restSecs, paused 
   })();
 
   const appEl = document.getElementById('app');
+  [...appEl.children].forEach(child => { child.inert = true; });
   appEl.insertAdjacentHTML('beforeend', renderRestOverlay(restSecs, totalSecs, nextExName, null));
+  document.getElementById('rest-overlay')?.focus();
 
   App.workoutState.restActive       = true;
   App.workoutState.restRemaining    = restSecs;

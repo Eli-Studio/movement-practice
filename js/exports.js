@@ -5,6 +5,14 @@
 import { today, formatDate } from './utils.js';
 import { exportStateJSON } from './storage.js?v=2';
 
+// Quoting protects CSV structure; the leading apostrophe also prevents
+// spreadsheet apps from evaluating user-controlled cells as formulas.
+export function escapeCSVCell(value) {
+  let text = String(value ?? '');
+  if (/^\s*[=+\-@]/.test(text)) text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
 function downloadFile(filename, content, mime) {
   const blob = new Blob([content], { type: mime });
   const url  = URL.createObjectURL(blob);
@@ -38,7 +46,7 @@ export function exportMonthCSV(sessions, missedDays, year, month, profiles = {},
       && (m.users ?? []).some(id => activeProfileIds.includes(id));
   });
 
-  const q = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
+  const q = escapeCSVCell;
   const nameA = profiles.userA?.displayName ?? 'User A';
   const nameB = profiles.userB?.displayName ?? 'User B';
   const profileHeaders = activeProfileIds.flatMap(id => id === 'userA'
@@ -88,7 +96,7 @@ export function exportMonthMarkdown(sessions, missedDays, year, month, profiles 
   });
 
   const userACount = mSessions.filter(s => s.users.includes('userA')).length;
-  const cCount   = mSessions.filter(s => s.users.includes('userB')).length;
+  const userBCount   = mSessions.filter(s => s.users.includes('userB')).length;
   const nameA = profiles.userA?.displayName ?? 'User A';
   const nameB = profiles.userB?.displayName ?? 'User B';
 
@@ -97,7 +105,7 @@ export function exportMonthMarkdown(sessions, missedDays, year, month, profiles 
   md    += `## Summary\n\n`;
   md    += `- Total sessions: ${mSessions.length}\n`;
   if (activeProfileIds.includes('userA')) md += `- ${nameA} sessions: ${userACount}\n`;
-  if (activeProfileIds.includes('userB')) md += `- ${nameB} sessions: ${cCount}\n`;
+  if (activeProfileIds.includes('userB')) md += `- ${nameB} sessions: ${userBCount}\n`;
   md    += `- Missed / other days: ${mMissed.length}\n\n---\n\n`;
   md    += `## Session Log\n\n`;
 
@@ -157,10 +165,10 @@ export function exportCycleMarkdown(cycleState, sessions, profiles = {}, activeP
   if (activeProfileIds.includes('userA')) {
     md += `## ${nameA}\n\n`;
     md += `| Routine | Sessions |\n|---|---|\n`;
-    md += `| Upper Push | ${cycleState.userAHeavyCounts.eli_upper_push} |\n`;
-    md += `| Lower Body | ${cycleState.userAHeavyCounts.eli_lower_body} |\n`;
-    md += `| Upper Pull | ${cycleState.userAHeavyCounts.eli_upper_pull} |\n`;
-    md += `| Full Body  | ${cycleState.userAHeavyCounts.eli_full_body}  |\n`;
+    md += `| Upper Push | ${cycleState.userAHeavyCounts.strength_upper_push} |\n`;
+    md += `| Lower Body | ${cycleState.userAHeavyCounts.strength_lower_body} |\n`;
+    md += `| Upper Pull | ${cycleState.userAHeavyCounts.strength_upper_pull} |\n`;
+    md += `| Full Body  | ${cycleState.userAHeavyCounts.strength_full_body}  |\n`;
     md += `| Circuit    | ${cycleState.userACircuitCount}  |\n`;
     md += `| Cardio     | ${cycleState.userACardioCount}   |\n`;
     md += `| Mobility   | ${cycleState.userAMobilityCount} |\n\n`;
@@ -171,12 +179,12 @@ export function exportCycleMarkdown(cycleState, sessions, profiles = {}, activeP
     const cr = cycleState.userBRoutineCounts;
     md += `## ${nameB}\n\n`;
     md += `| Routine | Sessions |\n|---|---|\n`;
-    md += `| Gentle Upper | ${cr.christina_gentle_upper ?? 0} |\n`;
-    md += `| Gentle Lower | ${cr.christina_gentle_lower ?? 0} |\n`;
-    md += `| Gentle Pull/Posture | ${cr.christina_gentle_pull_posture ?? 0} |\n`;
-    md += `| Gentle Full Body | ${cr.christina_gentle_full_body ?? 0} |\n`;
-    md += `| Light Movement | ${cr.christina_light_movement ?? 0} |\n`;
-    md += `| Recovery | ${cr.christina_recovery_minimum ?? 0} |\n\n`;
+    md += `| Gentle Upper | ${cr.adaptive_gentle_upper ?? 0} |\n`;
+    md += `| Gentle Lower | ${cr.adaptive_gentle_lower ?? 0} |\n`;
+    md += `| Gentle Pull/Posture | ${cr.adaptive_gentle_pull_posture ?? 0} |\n`;
+    md += `| Gentle Full Body | ${cr.adaptive_gentle_full_body ?? 0} |\n`;
+    md += `| Light Movement | ${cr.adaptive_light_movement ?? 0} |\n`;
+    md += `| Recovery | ${cr.adaptive_recovery_minimum ?? 0} |\n\n`;
   }
 
   downloadFile(fname, md, 'text/markdown');
