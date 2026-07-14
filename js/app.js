@@ -2,9 +2,9 @@
 // app.js — Movement Practice · Main orchestrator  v0.4.1
 // ============================================================
 
-import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js?v=4';
+import { loadState, saveState, getDefaultState, clearState, importStateJSON } from './storage.js';
 import { loadAllData } from './data.js';
-import { unlockAudio, playSessionComplete, playMeditation, stopMeditation, playTimerComplete, playButtonClick } from './audio.js?v=2';
+import { unlockAudio, playSessionComplete, playMeditation, stopMeditation, playTimerComplete, playButtonClick } from './audio.js';
 import { initCycleFromLaunchDate, startNewCycle, isCycleExpired, updateCycleAfterSession, getCycleProgressionSuggestions } from './cycles.js';
 import { getUserAReadiness } from './reports.js';
 import { getUserASuggestion, getUserBSuggestion, getMissedDays } from './rotation.js';
@@ -24,7 +24,7 @@ import {
   renderRoutineSuggestion, renderWarmup, renderWorkoutRunner, renderRestOverlay, updateRestOverlayDOM,
   renderEndCheckin, renderMeditation, renderSessionSummary, renderReports,
   initReportCharts, renderSettings, renderCycleReview, initCycleReviewCards
-} from './screens.js?v=4';
+} from './screens.js';
 
 // ============================================================
 // Global App object
@@ -171,7 +171,7 @@ document.addEventListener('click', (e) => {
   playButtonClick(App.state?.settings?.audioEnabled ?? true);
 }, true);
 
-window.addEventListener('morning-circuit:save-error', () => {
+window.addEventListener('movement:save-error', () => {
   showToast('Changes could not be saved. Check browser storage permissions or available space.', 'error', 6000);
 });
 

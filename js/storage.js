@@ -2,7 +2,7 @@
 // storage.js — localStorage persistence
 // ============================================================
 
-import { AUDIO_AVAILABLE, STORAGE_KEY } from './config.js?v=2';
+import { AUDIO_AVAILABLE, STORAGE_KEY, LEGACY_STORAGE_KEYS } from './config.js';
 import { safeSpotifyUrl } from './utils.js';
 import { PROFILE_IDS, getActiveProfileIds } from './profiles.js';
 
@@ -34,7 +34,8 @@ function validateBackup(state) {
     && Array.isArray(state.missedDays) && state.missedDays.length <= 10000
     && Array.isArray(state.cycleReviews) && state.cycleReviews.length <= 10000
     && isValidWorkoutDraft(state.workoutDraft)
-    && state.sessions.every(x => isObject(x) && typeof x.date === 'string' && isDate(x.date))
+    && state.sessions.every(x => isObject(x) && typeof x.date === 'string' && isDate(x.date)
+      && Array.isArray(x.users))
     && state.missedDays.every(x => isObject(x) && typeof x.date === 'string' && isDate(x.date));
 }
 
@@ -286,7 +287,22 @@ function mergeAgainstDefaults(rawParsed) {
 
 export function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let raw = localStorage.getItem(STORAGE_KEY);
+    // One-time forward migration from an older codename key. Copy the legacy
+    // save under the current key and retire the old one so this only runs once.
+    if (!raw) {
+      for (const legacyKey of LEGACY_STORAGE_KEYS) {
+        const legacyRaw = localStorage.getItem(legacyKey);
+        if (legacyRaw) {
+          raw = legacyRaw;
+          try {
+            localStorage.setItem(STORAGE_KEY, legacyRaw);
+            localStorage.removeItem(legacyKey);
+          } catch (_) { /* out of quota / private mode — still load in-memory */ }
+          break;
+        }
+      }
+    }
     if (!raw) return null;
     return mergeAgainstDefaults(JSON.parse(raw));
   } catch {
@@ -301,7 +317,7 @@ export function saveState(state) {
     return true;
   } catch (err) {
     console.error('[storage] Failed to save state:', err);
-    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('morning-circuit:save-error'));
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('movement:save-error'));
     return false;
   }
 }

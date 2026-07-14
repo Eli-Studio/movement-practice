@@ -3,7 +3,7 @@
 // ============================================================
 
 import { today, formatDate } from './utils.js';
-import { exportStateJSON } from './storage.js?v=2';
+import { exportStateJSON } from './storage.js';
 
 // Quoting protects CSV structure; the leading apostrophe also prevents
 // spreadsheet apps from evaluating user-controlled cells as formulas.

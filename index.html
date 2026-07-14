@@ -19,14 +19,15 @@
   <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
   <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
 
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css">
 
   <!-- Apply saved theme before first paint to avoid a flash of the wrong theme.
-       Mirrors settings.theme in localStorage['morningCircuit']. Night is default. -->
+       Mirrors settings.theme in localStorage['movementPractice'] (older saves
+       under the 'morningCircuit' codename are read as a fallback). Night is default. -->
   <script>
     (function () {
       try {
-        var s = JSON.parse(localStorage.getItem('morningCircuit') || '{}');
+        var s = JSON.parse(localStorage.getItem('movementPractice') || localStorage.getItem('morningCircuit') || '{}');
         var t = (s.settings && s.settings.theme) === 'day' ? 'day' : 'night';
         document.documentElement.setAttribute('data-theme', t);
       } catch (e) {
@@ -76,7 +77,7 @@
     } else {
       const appScript = document.createElement('script');
       appScript.type = 'module';
-      appScript.src = 'js/app.js?v=11';
+      appScript.src = 'js/app.js';
       document.body.appendChild(appScript);
     }
   </script>

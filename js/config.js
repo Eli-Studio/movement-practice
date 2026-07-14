@@ -3,7 +3,11 @@
 // ============================================================
 
 export const APP_VERSION = '0.6.0';
-export const STORAGE_KEY = 'morningCircuit';
+// Current localStorage key. Older builds shipped under the 'morningCircuit'
+// project codename; loadState() migrates those saves forward (see
+// LEGACY_STORAGE_KEYS) so no history is stranded by the rename.
+export const STORAGE_KEY = 'movementPractice';
+export const LEGACY_STORAGE_KEYS = ['morningCircuit'];
 export const CYCLE_LENGTH_DAYS = 28;
 
 export const USERA_HEAVY_SEQUENCE = [

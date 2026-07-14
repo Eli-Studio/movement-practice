@@ -55,6 +55,9 @@
   --action-primary: #52624e;
   --action-primary-hover: #60715b;
   --action-primary-text: var(--movement-ivory-100);
+  /* Selected/active foreground on dark Night surfaces. --action-primary itself
+     (#52624e) is a fill/border color and fails AA as text on dark; this lighter
+     sage clears AA. Day overrides this with a dark olive for light surfaces. */
   --action-primary-strong: var(--movement-sage-300);
   --action-shared-start: var(--movement-sage-500);
   --action-shared-end: var(--movement-plum-500);
@@ -211,6 +214,10 @@ html[data-theme="day"] {
   --action-primary: #4b5c47;
   --action-primary-hover: #3f503c;
   --action-primary-text: #f6efe5;
+  /* Selected/active foreground on light Day surfaces: a dark olive reads at AA.
+     (Night uses the lighter sage from :root; the base --action-primary is too
+     dark to serve as text on dark Night surfaces.) */
+  --action-primary-strong: #3a4a37;
   --status-positive: #506d4b;
   --status-positive-strong: #3f5d3b;
   --status-positive-surface: #dce8d8;
@@ -521,7 +528,7 @@ body {
   transition: color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
-.bottom-nav__item.active { color: var(--action-primary); }
+.bottom-nav__item.active { color: var(--action-primary-strong); }
 .bottom-nav__item.active::before {
   content: ''; width: 18px; height: 1px; margin-bottom: -1px;
   background: var(--movement-brass-500);
@@ -547,7 +554,7 @@ body {
 .eyebrow {
   font-size: 0.72rem; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--action-primary);
+  color: var(--action-primary-strong);
 }
 .eyebrow--userB { color: var(--profile-b-accent); }
 
@@ -775,7 +782,7 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
 }
 .choice-btn.selected,
 .choice-btn[data-who="userA"].selected { border-color: var(--profile-a-accent); color: var(--profile-a-accent); background: var(--profile-a-glow); }
-.choice-btn[data-who="both"].selected { border-color: var(--action-primary); color: var(--action-primary); background: color-mix(in srgb, var(--action-primary) 12%, transparent); }
+.choice-btn[data-who="both"].selected { border-color: var(--action-primary); color: var(--action-primary-strong); background: color-mix(in srgb, var(--action-primary) 12%, transparent); }
 .choice-btn[data-who="userB"].selected { border-color: var(--profile-b-accent); color: var(--profile-b-accent); background: var(--profile-b-glow); }
 .choice-btn:active { opacity: 0.7; }
 
@@ -1073,7 +1080,7 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   line-height: 1; margin-bottom: 8px; color: var(--text);
   font-variant-numeric: tabular-nums; transition: color 0.3s;
 }
-.rest-overlay__time.urgent { color: var(--action-primary); }
+.rest-overlay__time.urgent { color: var(--action-primary-strong); }
 .rest-overlay__next {
   font-size: 0.875rem; color: var(--text-2);
   margin-bottom: 48px; text-align: center; max-width: 280px; line-height: 1.4;
@@ -1215,7 +1222,7 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   width: 22px; height: 22px;
   display: flex; align-items: center; justify-content: center; border-radius: 50%;
 }
-.calendar__cell--today .calendar__day-num { color: var(--action-primary); font-weight: 700; background: color-mix(in srgb, var(--action-primary) 12%, transparent); }
+.calendar__cell--today .calendar__day-num { color: var(--action-primary-strong); font-weight: 700; background: color-mix(in srgb, var(--action-primary) 12%, transparent); }
 .calendar__dots { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
 .calendar__dot  { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
@@ -1367,7 +1374,7 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
   font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
-.miss-cat-btn.selected { border-color: var(--action-primary); color: var(--action-primary); }
+.miss-cat-btn.selected { border-color: var(--action-primary); color: var(--action-primary-strong); }
 
 /* --- Exercise Countdown Timer ---------------------------- */
 .exercise-countdown {
@@ -1530,7 +1537,7 @@ textarea.input { height: auto; min-height: 80px; padding: 12px 16px; resize: ver
 .mode-btn.active {
   background: color-mix(in srgb, var(--action-primary) 12%, var(--surface));
   border-color: var(--action-primary);
-  color: var(--action-primary);
+  color: var(--action-primary-strong);
   font-weight: 600;
 }
 @media (hover: hover) and (pointer: fine) {

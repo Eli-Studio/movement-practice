@@ -295,8 +295,8 @@ export function renderHello(state, backupNudgeDismissed = false) {
   const userBNextId      = USERB_SEQUENCE[cycleState.userBSequencePointer % USERB_SEQUENCE.length];
   const userBNextLabel   = USERB_LABELS[userBNextId] ?? '—';
 
-  const userASessions   = sessions.filter(s => s.users.includes('userA')).length;
-  const userBSessions= sessions.filter(s => s.users.includes('userB')).length;
+  const userASessions   = sessions.filter(s => (s.users ?? []).includes('userA')).length;
+  const userBSessions= sessions.filter(s => (s.users ?? []).includes('userB')).length;
 
   return `
     <div class="page fade-in" style="display:flex;flex-direction:column;">
