@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - A short origin story explaining the two-person, capacity-adaptive product constraints.
 - Reproducible current-version README screenshots with deterministic fictional sample data.
-- A generated 1200×630 social preview plus Open Graph, Twitter card, canonical URL, and page-description metadata.
+- A generated 1280×640 social preview plus Open Graph, Twitter card, canonical URL, and page-description metadata.
 - A fixed GitHub author link in the in-app About card.
 
 ### Changed
 - Replaced the README's implementation badge with the Release Checks workflow status.
 - Updated architecture, testing, and roadmap documentation for the current public demo.
+- Restored the home dashboard's concentric day-progress rings while keeping the
+  workout-screen cycle icon divided into four week quadrants.
 
 ## [0.6.1] — 2026-07-13
 

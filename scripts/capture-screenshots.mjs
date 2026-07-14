@@ -163,28 +163,29 @@ try {
   await page.getByRole('heading', { name: 'Your routine' }).waitFor();
   await capture(page, 'adaptation');
 
-  await page.setViewportSize({ width: 1200, height: 630 });
+  await page.setViewportSize({ width: 1280, height: 640 });
   await page.setContent(`<!doctype html>
     <html><head><style>
       * { box-sizing: border-box; }
-      html, body { width: 1200px; height: 630px; margin: 0; overflow: hidden; }
+      html, body { width: 1280px; height: 640px; margin: 0; overflow: hidden; }
       body {
-        display: grid; grid-template-columns: 1.15fr .85fr; color: #eee9df;
+        display: grid; grid-template-columns: 680px 600px; color: #eee9df;
         background: radial-gradient(circle at 72% 28%, #283129 0, #151b17 43%, #0e1310 100%);
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
       .copy { padding: 76px 40px 70px 82px; position: relative; z-index: 2; }
       .brand { display: flex; align-items: center; gap: 17px; color: #d1aa64; }
-      .brand img { width: 70px; height: 70px; }
-      .brand span { color: #eee9df; font: 600 29px/1 Georgia, serif; }
-      .brand small { display: block; margin-top: 7px; color: #d1aa64; font: 700 12px/1 sans-serif; letter-spacing: .28em; text-transform: uppercase; }
-      .eyebrow { margin-top: 70px; color: #a8b79a; font-size: 14px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
-      h1 { max-width: 610px; margin: 17px 0 20px; font: 400 64px/1.02 Georgia, serif; letter-spacing: -.025em; }
-      p { max-width: 610px; margin: 0; color: #b9b5aa; font-size: 23px; line-height: 1.45; }
+      .brand img { width: 70px; height: 70px; border-radius: 17px; filter: brightness(1.18) saturate(1.08); box-shadow: 0 0 0 1px #8b7449, 0 10px 28px #0007; }
+      .brand span { color: #eee9df; font: 600 30px/1 Georgia, serif; }
+      .brand small { display: block; margin-top: 7px; color: #d1aa64; font: 700 13px/1 sans-serif; letter-spacing: .28em; text-transform: uppercase; }
+      .eyebrow { margin-top: 70px; color: #a8b79a; font-size: 16px; font-weight: 750; letter-spacing: .17em; text-transform: uppercase; }
+      h1 { max-width: 610px; margin: 17px 0 20px; font: 400 66px/1.02 Georgia, serif; letter-spacing: -.025em; }
+      p { max-width: 610px; margin: 0; color: #c3beb3; font-size: 24px; font-weight: 450; line-height: 1.42; }
       .tags { display: flex; gap: 10px; margin-top: 34px; }
-      .tags span { padding: 9px 13px; border: 1px solid #4b574d; color: #d7d2c7; font-size: 13px; letter-spacing: .04em; }
-      .phone { width: 368px; height: 690px; margin: 35px 0 0 34px; overflow: hidden; border: 1px solid #596259; border-radius: 26px; background: #111613; box-shadow: 0 28px 80px #0009; transform: rotate(2deg); }
+      .tags span { padding: 9px 13px; border: 1px solid #59665a; color: #e0dbd0; font-size: 14px; font-weight: 500; letter-spacing: .035em; }
+      .phone { position: relative; width: 402px; height: 706px; margin: 20px 0 0 66px; overflow: hidden; border-radius: 28px; background: #111613; box-shadow: 0 28px 80px #000a, 0 0 0 1px #657066; }
       .phone img { width: 100%; display: block; }
+      .phone::after { content: ""; position: absolute; inset: 0; border: 1px solid #657066; border-radius: inherit; pointer-events: none; }
       .rule { position: absolute; inset: auto 0 0; height: 4px; background: linear-gradient(90deg, #d1aa64, #7f9670, #705162); }
     </style></head><body>
       <main class="copy">
