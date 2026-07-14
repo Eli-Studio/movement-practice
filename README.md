@@ -9,7 +9,7 @@
   <img alt="Vanilla JS" src="https://img.shields.io/badge/vanilla-JS-informational">
 </p>
 
-### ▶︎ [Try the live demo](https://eli-studio.github.io/morning-circuit-public/)
+### ▶︎ [Try the live demo](https://eli-studio.github.io/movement-practice/)
 
 <p>
   <img src="docs/screenshots/dashboard.jpg" alt="Home dashboard showing cycle progress and today's routine" width="260">
@@ -79,6 +79,10 @@ npm run test:e2e   # Playwright behavioral smoke tests (onboarding, navigation, 
 Pushing to `main` deploys via GitHub Actions. In **Settings → Pages**, set **Source** to **GitHub Actions**. Chart.js is vendored locally, so the deployed app makes no third-party network requests and works fully offline after the first visit.
 
 Audio assets are intentionally excluded from this public build: the app never requests missing files, chime controls are hidden, and warm-up/meditation timers run silently. Public content identifiers use neutral `strength_*` / `adaptive_*` namespaces, and older backups are migrated by structure so their history stays usable.
+
+## Changelog
+
+Release history is in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
