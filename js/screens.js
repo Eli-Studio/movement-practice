@@ -545,9 +545,7 @@ export function renderSymptomCheck(App, userId = 'userB') {
       </div>
       <div class="symptom-clusters" role="group" aria-label="Active symptoms">
         ${SYMPTOM_CLUSTERS.map(s => `
-          <button class="symptom-cluster-btn" data-symptom="${s.id}" aria-pressed="false">
-            <span class="symptom-cluster-btn__icon">${uiGlyph(s.icon)}</span>${s.label}
-          </button>
+          <button class="symptom-cluster-btn" data-symptom="${s.id}" aria-pressed="false">${s.label}</button>
         `).join('')}
       </div>
 
