@@ -30,11 +30,18 @@ viewports.
    install, and offline reload.
 5. Tag the verified commit as `v0.6.0`.
 
+## Added since 0.6.0
+
+- MIT license ([LICENSE](LICENSE)).
+- Playwright behavioral smoke tests ([tests/e2e/](tests/e2e)) covering onboarding,
+  navigation, backup export, and a WCAG-AA contrast regression guard, wired into CI.
+- Zero-dependency local static server (`npm run serve`).
+- Architecture overview ([ARCHITECTURE.md](ARCHITECTURE.md)).
+
 ## Intentionally deferred beyond the demo
 
-- A broader automated browser suite for every complete workflow.
+- Extending the browser suite from smoke coverage to every complete workflow
+  (full paired workout, cycle rollover, resume/discard edge cases).
 - Styled in-app dialogs in place of native browser confirm/prompt dialogs.
 - Physical-device Safari and installed-PWA regression coverage.
 - Explicitly versioned migration functions for every future schema release.
-- An open-source license, if public code reuse is desired later. Until then, all
-  rights remain reserved.

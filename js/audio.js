@@ -12,7 +12,7 @@
 // programmatically for the rest of the session.
 // ============================================================
 
-import { AUDIO_AVAILABLE, AUDIO_FILES, MEDITATION_TRACKS } from './config.js?v=2';
+import { AUDIO_AVAILABLE, AUDIO_FILES, MEDITATION_TRACKS } from './config.js';
 
 // ---- Pre-create elements at module load --------------------
 // Do NOT create new Audio() objects later — reuse these.

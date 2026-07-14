@@ -2,7 +2,7 @@
 // timer.js — Rest timer with pause/resume/skip
 // ============================================================
 
-import { playTimerComplete } from './audio.js?v=2';
+import { playTimerComplete } from './audio.js';
 
 let _interval   = null;
 let _remaining  = 0;
