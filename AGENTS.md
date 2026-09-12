@@ -1,32 +1,64 @@
-# Agent instructions
+# Agent Instructions
 
-Read [`.agents/universal-contract.md`](.agents/universal-contract.md) first. It
-is the universal multi-agent engineering contract and governs lifecycle, role
-separation, verification evidence, review priorities, and escalation.
+## Scope
 
-- Source: https://github.com/Eli-Studio/eli-agent-workflow.git
-- Pinned commit: c224470c7f760eddb7287b257706279976ef2104
+The GitHub issue or explicitly approved task is the source of scope.
 
-The pinned copy is generated. Do not edit it here; change it upstream and
-re-run the installer.
+Implement the requested change as written. Do not expand scope, redesign mechanics, or introduce unrelated cleanup unless explicitly authorized.
 
-## Local rules
+If the task cannot safely be completed within the approved scope, stop and report what decision or information is needed.
 
-Local rules may specialize the universal contract. They must not weaken role
-separation, evidence requirements, review priorities, or escalation behavior.
+## Design authority
 
-### Stack and commands
+The owner retains authority over:
 
-<!-- Language, build, test, and lint commands agents should use. -->
+- gameplay rules and mechanics
+- puzzle behavior and difficulty
+- player-facing interaction design
+- narrative and character decisions
+- visual direction
+- consequential architecture or scope changes
 
-### Verification
+Implementation agents may identify concerns or alternatives but must not silently make these decisions.
 
-<!-- What "verified" means in this repo, per verification tier. -->
+## Implementation
 
-### Owned artifacts
+Prefer the smallest clear change that satisfies the acceptance criteria.
 
-<!-- Files or artifacts with a single active editor at a time. -->
+Follow existing architecture and repository conventions unless the task explicitly authorizes changing them.
 
-### Product and architecture decisions
+Do not modify unrelated systems merely because an alternative implementation appears cleaner.
 
-<!-- Where current decisions live, and what requires owner escalation. -->
+## Verification
+
+During implementation, run the smallest targeted deterministic checks relevant to the systems changed.
+
+Do not run the complete repository regression suite by default.
+
+Full repository verification should be performed by CI where available. Broader local verification is appropriate only when:
+
+- the issue explicitly requires it;
+- targeted checks cannot establish the requested behavior;
+- CI is unavailable; or
+- the change affects a foundational system where broader regression testing is necessary.
+
+Never claim a check passed unless it was actually run.
+
+Visual, interactive, or gameplay outcomes that cannot be established by automated tests require owner/playtest evaluation.
+
+## Handoff
+
+Before handoff:
+
+- commit and push the implementation;
+- identify the PR or branch;
+- summarize what changed;
+- report targeted checks run and their results;
+- identify anything not verified;
+- identify any remaining design, visual, or gameplay judgment required.
+
+Do not approve or merge your own implementation.
+
+Do not automatically launch another agent for review or adjudication.
+
+Once the implementation is handed off, stop unless explicitly asked to continue.
