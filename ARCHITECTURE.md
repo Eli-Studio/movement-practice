@@ -44,6 +44,18 @@ cross-cutting listeners (button-tap sound, save-error toast, draft persistence o
 render path inspectable in one file. The trade-off — full re-render per navigation
 — is a non-issue at this scale (one or two users, a handful of screens).
 
+## Design layers
+
+[`home-os-tokens.css`](home-os-tokens.css) contains the candidate, reusable Home
+OS foundation: semantic surfaces and text roles, orientation and focus, geometry,
+spacing, typography, motion, and Night/Day theme values. It loads before
+[`styles.css`](styles.css), which owns Movement identity and components.
+
+Existing `--movement-*` foundation variables are compatibility aliases to the
+shared roles. Profile colors, activity colors, the cycle instrument, and workout
+components remain app-specific. The shared contract is intentionally marked
+candidate until it has been tested in more than one Home OS application.
+
 ## How a day's plan is composed
 
 The interesting domain logic is the pipeline that turns "how do you feel today?"

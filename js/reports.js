@@ -13,8 +13,8 @@ function chartTheme() {
   const s = getComputedStyle(document.documentElement);
   const v = (name, fallback) => (s.getPropertyValue(name).trim() || fallback);
   return {
-    series: [v('--chart-series-1', '#9c7385'), v('--chart-series-2', '#b899a6'), v('--chart-series-3', '#cfbcc6')],
-    solid:  v('--chart-solid', '#7f9670'),
+    series: [v('--chart-series-1', '#7856d8'), v('--chart-series-2', '#a27cff'), v('--chart-series-3', '#d7caff')],
+    solid:  v('--chart-solid', '#61cbd0'),
     grid:   v('--chart-grid', 'rgb(255 255 255 / 6%)'),
     tick:   v('--chart-tick', '#aaa294')
   };

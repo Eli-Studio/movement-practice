@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- A candidate, reusable Home OS foundation token contract with intentional
+  Night and sunlit-relic Day modes, semantic surface/text roles, geometry,
+  spacing, typography, motion, and automated contrast validation.
 - A short origin story explaining the two-person, capacity-adaptive product constraints.
 - Reproducible current-version README screenshots with deterministic fictional sample data.
 - A generated 1280×640 social preview plus Open Graph, Twitter card, canonical URL, and page-description metadata.
@@ -16,8 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced the README's implementation badge with the Release Checks workflow status.
 - Updated architecture, testing, and roadmap documentation for the current public demo.
-- Restored the home dashboard's concentric day-progress rings while keeping the
-  workout-screen cycle icon divided into four week quadrants.
+- Unified the home dashboard and workout header around the same four concentric
+  week rings, replacing the obsolete workout-only quadrant treatment.
+- Carried the mineral-teal/amethyst identity into Day activity and chart colors,
+  and mounted workout actions in accessible dark ancient-tech hardware.
 
 ## [0.6.1] — 2026-07-13
 

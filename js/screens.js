@@ -91,16 +91,15 @@ function getProfileOverview(sessions, userId) {
 
 function bottomNav(active) {
   const items = [
-    { key:'hello', label:'Home', icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5v7.2H14v-5h-4v5H4z"/></svg>' },
-    { key:'reports', label:'Tracker', icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="5"/><path d="M12 4v8l5 3"/></svg>' },
-    { key:'settings', label:'Settings', icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1"/></svg>' }
+    { key:'hello', label:'Home' },
+    { key:'reports', label:'Tracker' },
+    { key:'settings', label:'Settings' }
   ];
   return `
-    <nav class="bottom-nav" aria-label="Primary navigation">
+    <nav class="bottom-nav" data-active="${active}" aria-label="Primary navigation">
       ${items.map(i => `
         <button class="bottom-nav__item ${active === i.key ? 'active' : ''}" data-nav="${i.key}"
                 ${active === i.key ? 'aria-current="page"' : ''}>
-          <span class="bottom-nav__icon">${i.icon}</span>
           <span>${i.label}</span>
         </button>
       `).join('')}
@@ -123,33 +122,35 @@ function cycleDayForDisplay(cycleState) {
   return cycleState?.startDate ? getCycleDayNumber(cycleState) : 1;
 }
 
-// The home dashboard shows day-level progress across four concentric week rings.
-// Compact workout and large tracker variants use the simpler week quadrants.
+// Four connected concentric channels fill from the outside inward, one ring per
+// week. Every size uses the same model so the cycle remains one recognizable
+// instrument on Home, Tracker, and in-workout views.
 function fourWeekCycle(dayNumber, cycleNumber, size = 'medium') {
   const safeDay = Math.min(Math.max(Number(dayNumber) || 1, 1), 28);
   const currentWeek = Math.min(Math.ceil(safeDay / 7), 4);
   const weekProgress = ((safeDay - 1) % 7 + 1) / 7;
   const weekNames = ['Foundation', 'Build', 'Intensify', 'Consolidate'];
-  const rings = size === 'medium'
-    ? [70, 56, 42, 28].map((radius, index) => {
-        const week = index + 1;
-        const state = week < currentWeek ? 'completed' : week === currentWeek ? 'current' : 'planned';
-        const progress = week < currentWeek ? 100 : week === currentWeek ? Math.round(weekProgress * 100) : 0;
-        return `<circle class="cycle-ring__track" cx="88" cy="88" r="${radius}" pathLength="100"></circle>
-          <circle class="cycle-ring__progress cycle-ring__progress--${state}" cx="88" cy="88" r="${radius}"
-            pathLength="100" stroke-dasharray="${progress} ${100 - progress}" data-week="${week}" data-state="${state}"></circle>`;
-      }).join('')
-    : Array.from({ length: 4 }, (_, index) => {
-        // pathLength=100 makes each quadrant 25 units; the gap separates them.
-        const week = index + 1;
-        const filled = week <= currentWeek;
-        const state = week < currentWeek ? 'completed' : week === currentWeek ? 'current' : 'planned';
-        const gap = 4;
-        const segment = 25 - gap;
-        return `<circle class="cycle-quadrant cycle-quadrant--${filled ? 'filled' : 'empty'}" cx="88" cy="88" r="70"
-          pathLength="100" stroke-dasharray="${segment} ${100 - segment}" stroke-dashoffset="${-index * 25}"
-          data-week="${week}" data-state="${state}"></circle>`;
-      }).join('');
+  const moltenDefs = `<defs>
+    <linearGradient id="molten-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#236d72"/>
+      <stop offset=".38" stop-color="#61cbd0"/>
+      <stop offset=".7" stop-color="#b7fbf5"/>
+      <stop offset="1" stop-color="#3a9da1"/>
+    </linearGradient>
+    <filter id="molten-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>`;
+  const channels = `<path class="cycle-ring__channel" d="M88 18V60 M88 116V158 M18 88H60 M116 88H158"/>`;
+  const rings = moltenDefs + channels + [70, 56, 42, 28].map((radius, index) => {
+    const week = index + 1;
+    const state = week < currentWeek ? 'completed' : week === currentWeek ? 'current' : 'planned';
+    const progress = week < currentWeek ? 100 : week === currentWeek ? Math.round(weekProgress * 100) : 0;
+    return `<circle class="cycle-ring__track" cx="88" cy="88" r="${radius}" pathLength="100"></circle>
+      <circle class="cycle-ring__progress cycle-ring__progress--${state}" cx="88" cy="88" r="${radius}"
+        pathLength="100" stroke-dasharray="${progress} ${100 - progress}" data-week="${week}" data-state="${state}"></circle>`;
+  }).join('');
   const description = `Cycle ${cycleNumber}, week ${currentWeek} of 4, ${weekNames[currentWeek - 1]}. Day ${safeDay} of 28.`;
   if (size === 'text') {
     return `<p class="four-week-cycle-text"><strong>Week ${currentWeek} of 4 · ${weekNames[currentWeek - 1]}</strong><span>Day ${safeDay} of 28 · Cycle ${cycleNumber}</span></p>`;
@@ -835,6 +836,18 @@ export function renderRoutineSuggestion(App) {
 
 // ---- 5b. Warm-Up ------------------------------------------
 
+function timerLabyrinth(timerId, value, timerClass, progress = 0, hidden = false, timerAttrs = '') {
+  return `<div class="timer-labyrinth" id="${timerId}-instrument"
+               style="--timer-progress:${progress};${hidden ? 'display:none;' : ''}">
+    <span class="timer-labyrinth__ring" style="--ring-index:0"></span>
+    <span class="timer-labyrinth__ring" style="--ring-index:1"></span>
+    <span class="timer-labyrinth__ring" style="--ring-index:2"></span>
+    <span class="timer-labyrinth__ring" style="--ring-index:3"></span>
+    <span class="timer-labyrinth__channels" aria-hidden="true"></span>
+    <div class="${timerClass}" id="${timerId}" ${timerAttrs}>${value}</div>
+  </div>`;
+}
+
 export function renderWarmup() {
   return `
     <div class="meditation-screen fade-in">
@@ -844,7 +857,7 @@ export function renderWarmup() {
         A few minutes together — sun salutations or gentle stretching,
         whatever feels right this morning.
       </p>
-      <div class="meditation-orb">${uiGlyph('breath')}</div>
+      <div class="meditation-orb" id="warmup-orb">${uiGlyph('breath')}</div>
       <div id="warmup-start-wrap" style="text-align:center;">
         <div class="warmup-length">
           <label for="warmup-minutes" class="input-label" style="display:block;margin-bottom:10px;">
@@ -859,7 +872,7 @@ export function renderWarmup() {
         </div>
       </div>
       <div id="warmup-timer-wrap" style="display:none;text-align:center;margin-top:24px;">
-        <div class="meditation-timer" id="warmup-timer">05:00</div>
+        ${timerLabyrinth('warmup-timer', '05:00', 'meditation-timer')}
         <button class="btn btn--ghost btn--sm" id="btn-warmup-end" style="margin-top:16px;">
           End &amp; Start Workout
         </button>
@@ -937,8 +950,9 @@ function renderSingleUserPanel(ws, user) {
       <div class="paired-panel paired-panel--${user} paired-panel--resting">
         <div class="paired-panel__user" style="font-size:1.25rem;font-weight:700;letter-spacing:0.02em;margin-bottom:6px;">${label}</div>
         <div class="rest-label-small">rest</div>
-        <div class="rest-countdown-big" id="${user}-rest-display"
-             style="font-variant-numeric:tabular-nums;">${mm}:${ss}</div>
+        ${timerLabyrinth(`${user}-rest-display`, `${mm}:${ss}`, 'rest-countdown-big',
+          us.restTotal ? 1 - (restRemaining / us.restTotal) : 0,
+          false, 'role="timer" aria-live="off"')}
         ${upNext}
         <button class="paired-complete-btn" id="${user}-complete-btn" disabled
                 data-user="${user}">
@@ -977,12 +991,9 @@ function renderSingleUserPanel(ws, user) {
     : `Complete Set ${setsDone + 1}`;
 
   const exCountdown = ex.durationSeconds
-    ? `<div id="${user}-ex-countdown"
-         style="display:none;font-size:clamp(3rem,11vw,5rem);font-weight:800;
-                text-align:center;font-variant-numeric:tabular-nums;
-                line-height:1;padding:12px 0;color:var(--${user});">
-         ${formatTime(ex.durationSeconds)}
-       </div>`
+    ? timerLabyrinth(`${user}-ex-countdown`, formatTime(ex.durationSeconds),
+        `exercise-countdown exercise-countdown--${user}`, 0, true,
+        'role="timer" aria-live="off"')
     : '';
 
   // Hidden rest display — populated by startUserRestTimer when rest starts
@@ -1002,13 +1013,10 @@ function renderSingleUserPanel(ws, user) {
       ${renderWeightStepper(ex, user)}
       ${renderRepsStepper(ex, user)}
       ${ex.formCues?.length
-        ? `<div style="margin-top:8px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.06);">
-             <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;
-                         color:var(--text-2);margin-bottom:4px;">Form</div>
+        ? `<div class="paired-form-cues">
+             <div class="paired-form-cues__title">Form</div>
              ${ex.formCues.slice(0,2).map(c =>
-               `<div style="font-size:0.72rem;color:var(--text-2);line-height:1.4;margin-bottom:2px;">
-                  · ${escapeHtml(c)}
-                </div>`
+               `<div class="paired-form-cues__item">· ${escapeHtml(c)}</div>`
              ).join('')}
            </div>`
         : ''}
@@ -1132,10 +1140,11 @@ export function renderWorkoutRunner(App) {
           <div class="set-tracker" style="margin-top:16px;">${setDots}</div>
           ${adaptNote}
           ${formCues}
-          <div id="${user}-ex-countdown"
-               style="display:none;font-size:clamp(3rem,12vw,5.5rem);font-weight:800;
-                      text-align:center;font-variant-numeric:tabular-nums;
-                      line-height:1;padding:16px 0;color:var(--${col});"></div>
+          ${ex.durationSeconds
+            ? timerLabyrinth(`${user}-ex-countdown`, formatTime(ex.durationSeconds),
+                `exercise-countdown-solo exercise-countdown--${user}`, 0, true,
+                'role="timer" aria-live="off"')
+            : ''}
         </div>
       </div>
       <div class="workout-footer">
@@ -1172,7 +1181,9 @@ export function renderRestOverlay(remaining, totalSeconds, nextExName) {
   return `
     <div class="rest-overlay" id="rest-overlay" role="dialog" aria-modal="true" aria-labelledby="rest-overlay-title" tabindex="-1">
       <div class="rest-overlay__label" id="rest-overlay-title">Rest between sets</div>
-      <div class="rest-overlay__time ${urgent?'urgent':''}" id="rest-time" role="timer" aria-live="off" aria-label="Rest time remaining">${mm}:${ss}</div>
+      ${timerLabyrinth('rest-time', `${mm}:${ss}`, `rest-overlay__time ${urgent?'urgent':''}`,
+        totalSeconds ? 1 - (remaining / totalSeconds) : 0,
+        false, 'role="timer" aria-live="off" aria-label="Rest time remaining"')}
       <div class="progress-bar" style="width:240px;margin-bottom:32px;">
         <div class="progress-bar__fill" id="rest-progress" style="width:${pct}%;"></div>
       </div>
@@ -1190,9 +1201,13 @@ export function renderRestOverlay(remaining, totalSeconds, nextExName) {
 export function updateRestOverlayDOM(remaining, totalSeconds) {
   const el = document.getElementById('rest-time');
   const pr = document.getElementById('rest-progress');
+  const instrument = document.getElementById('rest-time-instrument');
   if (!el) return;
   el.textContent = `${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`;
   el.className = `rest-overlay__time ${remaining<=10?'urgent':''}`;
+  if (instrument && totalSeconds) {
+    instrument.style.setProperty('--timer-progress', String(Math.max(0, Math.min(1, 1 - (remaining / totalSeconds)))));
+  }
   if (pr) pr.style.width = `${Math.max(0,(remaining/totalSeconds)*100)}%`;
 }
 
@@ -1288,7 +1303,7 @@ export function renderMeditation() {
         <p class="page-subtitle" style="max-width:300px;margin:8px auto 0;">
           Close out with a few quiet minutes, or skip and save.
         </p>
-        <div class="meditation-orb">${uiGlyph('breath')}</div>
+        <div class="meditation-orb" id="meditation-orb">${uiGlyph('breath')}</div>
         <div class="choice-grid choice-grid--3" style="width:100%;">
           <button class="choice-btn" data-med="5">
             <span class="choice-btn__icon">5</span>Minutes
@@ -1298,7 +1313,7 @@ export function renderMeditation() {
           <button class="choice-btn" data-med="skip"><span class="choice-btn__icon">${uiGlyph('skip')}</span>Skip and save</button>
         </div>
         <div id="med-timer-wrap" style="display:none;text-align:center;margin-top:32px;">
-          <div class="meditation-timer" id="med-timer">--:--</div>
+          ${timerLabyrinth('med-timer', '--:--', 'meditation-timer')}
           <button class="btn btn--ghost btn--sm" id="btn-end-meditation" style="margin-top:16px;">End Meditation</button>
         </div>
       </div>

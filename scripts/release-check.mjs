@@ -64,6 +64,91 @@ function checkDataGraph() {
   console.log(`✓ Data graph (${exercises.length} exercises, ${routines.length} routines, ${equipment.length} equipment records)`);
 }
 
+function checkDesignTokens() {
+  const tokenSource = readFileSync(join(root, 'home-os-tokens.css'), 'utf8');
+  const movementSource = readFileSync(join(root, 'styles.css'), 'utf8');
+  const indexSource = readFileSync(join(root, 'index.html'), 'utf8');
+  const workerSource = readFileSync(join(root, 'service-worker.js'), 'utf8');
+  const rootBlock = tokenSource.match(/:root\s*\{([\s\S]*?)\n\}/)?.[1];
+  const dayBlock = tokenSource.match(/html\[data-theme="day"\]\s*\{([\s\S]*?)\n\}/)?.[1];
+  assert(rootBlock && dayBlock, 'Home OS token file must define :root and Day theme blocks');
+
+  const readProperties = block => Object.fromEntries(
+    [...block.matchAll(/(--[a-z0-9-]+)\s*:\s*([^;]+);/g)]
+      .map(([, name, value]) => [name, value.trim()])
+  );
+  const rootTokens = readProperties(rootBlock);
+  const themes = {
+    night: rootTokens,
+    day: { ...rootTokens, ...readProperties(dayBlock) }
+  };
+  const required = [
+    '--home-os-surface-shell', '--home-os-surface-panel',
+    '--home-os-surface-control', '--home-os-surface-document',
+    '--home-os-text-on-shell-primary', '--home-os-text-on-shell-secondary',
+    '--home-os-text-on-shell-subtle', '--home-os-text-on-document',
+    '--home-os-text-on-document-muted', '--home-os-orientation',
+    '--home-os-focus', '--home-os-radius-sm', '--home-os-space-4',
+    '--home-os-touch-target-min', '--home-os-font-display',
+    '--home-os-motion-practical', '--home-os-motion-ritual'
+  ];
+  for (const name of required) assert(rootTokens[name], `Missing shared token ${name}`);
+
+  const resolve = (name, tokens, seen = new Set()) => {
+    assert(!seen.has(name), `Circular token reference at ${name}`);
+    seen.add(name);
+    const value = tokens[name];
+    assert(value, `Token ${name} has no value`);
+    const reference = value.match(/^var\((--[a-z0-9-]+)\)$/)?.[1];
+    return reference ? resolve(reference, tokens, seen) : value;
+  };
+  const rgb = value => {
+    const hex = value.match(/^#([0-9a-f]{6})$/i)?.[1];
+    assert(hex, `Contrast token must resolve to a six-digit hex color, got ${value}`);
+    return [0, 2, 4].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
+  };
+  const luminance = values => values
+    .map(value => {
+      const channel = value / 255;
+      return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+    })
+    .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+  const contrast = (foreground, background, tokens) => {
+    const a = luminance(rgb(resolve(foreground, tokens)));
+    const b = luminance(rgb(resolve(background, tokens)));
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  };
+  const pairs = [
+    ['--home-os-text-on-shell-primary', '--home-os-surface-shell'],
+    ['--home-os-text-on-shell-secondary', '--home-os-surface-panel'],
+    ['--home-os-text-on-shell-subtle', '--home-os-surface-panel'],
+    ['--home-os-text-on-document', '--home-os-surface-document'],
+    ['--home-os-text-on-document-muted', '--home-os-surface-document'],
+    ['--home-os-orientation', '--home-os-surface-shell'],
+    ['--home-os-orientation', '--home-os-surface-panel']
+  ];
+  for (const [theme, tokens] of Object.entries(themes)) {
+    for (const [foreground, background] of pairs) {
+      const ratio = contrast(foreground, background, tokens);
+      assert(ratio >= 4.5,
+        `${theme} ${foreground} on ${background} is ${ratio.toFixed(2)}:1; expected WCAG AA`);
+    }
+  }
+
+  const tokenLink = 'home-os-tokens.css?v=0.1.0-candidate.1';
+  assert(indexSource.indexOf(tokenLink) < indexSource.indexOf('styles.css?v='),
+    'Home OS tokens must load before Movement component styles');
+  assert(workerSource.includes(`'./${tokenLink}'`), 'Service worker must cache Home OS tokens');
+  for (const alias of [
+    '--movement-surface-app: var(--home-os-surface-shell)',
+    '--movement-text-primary: var(--home-os-text-on-shell-primary)',
+    '--movement-brass-500: var(--home-os-orientation)',
+    '--movement-focus: var(--home-os-focus)'
+  ]) assert(movementSource.includes(alias), `Missing Movement compatibility alias: ${alias}`);
+
+  console.log(`✓ Home OS token contract (${resolve('--home-os-token-version', rootTokens).replaceAll('"', '')}, Night + Day AA roles)`);
+}
+
 async function checkMigration() {
   const { getDefaultState, importStateJSON } = await import('../js/storage.js');
   const defaultState = getDefaultState();
@@ -101,6 +186,7 @@ async function checkCSV() {
 
 checkSyntax();
 checkDataGraph();
+checkDesignTokens();
 await checkMigration();
 await checkCSV();
 console.log('\nRelease checks passed.');

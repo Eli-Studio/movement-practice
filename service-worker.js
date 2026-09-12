@@ -1,8 +1,9 @@
 // Bump this version whenever any precached asset changes. This is the single
 // cache-busting mechanism — module URLs no longer carry per-file ?v= query
 // strings (which had drifted out of sync and spawned duplicate module fetches).
-const CACHE = 'movement-network-first-v17';
-const CORE = ['./', './index.html', './styles.css', './manifest.json', './icons/icon.svg',
+const CACHE = 'movement-network-first-v23';
+const CORE = ['./', './index.html', './home-os-tokens.css?v=0.1.0-candidate.1',
+  './styles.css?v=home-os-stone-6', './manifest.json', './icons/icon.svg',
   './icons/icon-120.png', './icons/icon-152.png', './icons/icon-167.png', './icons/icon-180.png',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png',
   './data/equipment.json', './data/exercises.json', './data/routineTemplates.json',
@@ -14,9 +15,15 @@ self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)));
 });
+// Only prune this app's own caches. Cache Storage is per-origin, so if Home OS
+// apps are ever served from one origin, an unfiltered sweep here would delete
+// sibling apps' caches (Council, Kitchen) on every version bump.
+const CACHE_PREFIX = 'movement-';
 self.addEventListener('activate', event => event.waitUntil(Promise.all([
   self.clients.claim(),
-  caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
+  caches.keys().then(keys => Promise.all(keys
+    .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE)
+    .map(key => caches.delete(key))))
 ])));
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
