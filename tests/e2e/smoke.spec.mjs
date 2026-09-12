@@ -17,6 +17,39 @@ async function onboard(page) {
   await expect(page.locator('[data-who="userA"]')).toBeVisible();
 }
 
+async function setThemeWithoutTransitions(page, theme) {
+  await page.evaluate((nextTheme) => {
+    if (!document.querySelector('#e2e-disable-transitions')) {
+      const style = document.createElement('style');
+      style.id = 'e2e-disable-transitions';
+      style.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+      document.head.append(style);
+    }
+    document.documentElement.setAttribute('data-theme', nextTheme);
+  }, theme);
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+
+async function contrastRatio(locator) {
+  return locator.evaluate((el) => {
+    const parseRGB = value => {
+      const channels = value.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+      if (!channels || channels.length !== 3) throw new Error(`Unable to parse computed color: ${value}`);
+      return channels;
+    };
+    const luminance = value => parseRGB(value)
+      .map(channel => {
+        const normalized = channel / 255;
+        return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+      })
+      .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+    const styles = getComputedStyle(el);
+    const foreground = luminance(styles.color);
+    const background = luminance(styles.backgroundColor);
+    return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+  });
+}
+
 test('onboarding lands on the dashboard', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#btn-launch')).toBeVisible();
@@ -44,7 +77,7 @@ test('reports and settings screens render from the nav', async ({ page }) => {
   await page.screenshot({ path: `${SHOTS}/settings.png`, fullPage: true });
 });
 
-test('home uses concentric day rings while workouts use week quadrants', async ({ page }) => {
+test('cycle progress uses four concentric week rings across the app', async ({ page }) => {
   await onboard(page);
 
   await expect(page.locator('.four-week-cycle--medium .cycle-ring__track')).toHaveCount(4);
@@ -57,8 +90,24 @@ test('home uses concentric day rings while workouts use week quadrants', async (
   await page.locator('#btn-start-workout').click();
   await page.locator('#btn-warmup-skip').click();
 
-  await expect(page.locator('.four-week-cycle--compact .cycle-quadrant')).toHaveCount(4);
-  await expect(page.locator('.four-week-cycle--compact .cycle-ring__track')).toHaveCount(0);
+  await expect(page.locator('.four-week-cycle--compact .cycle-ring__track')).toHaveCount(4);
+  await expect(page.locator('.four-week-cycle--compact .cycle-ring__progress')).toHaveCount(4);
+  await expect(page.locator('.four-week-cycle--compact .cycle-quadrant')).toHaveCount(0);
+});
+
+test('warm-up timer wakes the orb and molten ring instrument', async ({ page }) => {
+  await onboard(page);
+  await page.locator('[data-guide-skip]').click();
+  await page.locator('[data-who="userA"]').click();
+  await page.locator('#btn-symptoms-done').click();
+  await page.locator('#btn-start-workout').click();
+
+  await expect(page.getByRole('heading', { name: 'Warm-Up' })).toBeVisible();
+  await page.locator('#btn-warmup-begin').click();
+  await expect(page.locator('#warmup-orb')).toHaveClass(/is-running/);
+  await expect(page.locator('#warmup-timer-instrument')).toBeVisible();
+  await expect(page.locator('#warmup-timer-instrument .timer-labyrinth__ring')).toHaveCount(4);
+  await page.screenshot({ path: `${SHOTS}/warmup-running.png`, fullPage: true });
 });
 
 test('full JSON backup produces a download', async ({ page }) => {
@@ -83,24 +132,52 @@ test('selected control text meets WCAG AA contrast in both themes', async ({ pag
   await expect(page.locator('.mode-btn.active')).toBeVisible();
 
   for (const theme of ['night', 'day']) {
-    const ratio = await page.evaluate((t) => {
-      document.documentElement.setAttribute('data-theme', t);
-      // Force a style/layout flush so var()-derived colors re-resolve.
-      void document.body.offsetHeight;
-      const el = document.querySelector('.mode-btn.active');
-      const cs = getComputedStyle(el);
-
-      const ctx = document.createElement('canvas').getContext('2d');
-      const toRGB = (str) => { ctx.fillStyle = '#000'; ctx.fillStyle = str; ctx.fillRect(0, 0, 1, 1); const d = ctx.getImageData(0, 0, 1, 1).data; return [d[0], d[1], d[2]]; };
-      const lum = ([r, g, b]) => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
-
-      // The button background is a translucent tint over the surface; composite
-      // it by reading the actually-rendered backgroundColor.
-      const fg = lum(toRGB(cs.color));
-      const bg = lum(toRGB(cs.backgroundColor));
-      return (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05);
-    }, theme);
+    await setThemeWithoutTransitions(page, theme);
+    const ratio = await contrastRatio(page.locator('.mode-btn.active'));
 
     expect(ratio, `contrast in ${theme} theme`).toBeGreaterThanOrEqual(4.5);
+  }
+});
+
+test('paired workout hardware meets WCAG AA contrast in both themes', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-profile-count="two"]').click();
+  await page.locator('#btn-launch').click();
+
+  const guideSkip = page.locator('[data-guide-skip]');
+  if (await guideSkip.isVisible()) await guideSkip.click();
+  await page.locator('[data-who="both"]').click();
+  await page.locator('#btn-symptoms-done').click();
+  await page.locator('#btn-symptoms-done').click();
+  await page.locator('#btn-start-workout').click();
+  await page.locator('#btn-warmup-skip').click();
+
+  await expect(page.locator('.paired-panel')).toHaveCount(2);
+  for (const user of ['userA', 'userB']) {
+    await page.locator(`.paired-panel--${user} .paired-set-dot.current`).evaluate(el => {
+      el.classList.remove('current');
+      el.classList.add('done');
+    });
+  }
+
+  const controls = [
+    '#btn-end-workout-early',
+    '.paired-panel--userA .paired-complete-btn',
+    '.paired-panel--userB .paired-complete-btn',
+    '.paired-panel--userA .weight-btn',
+    '.paired-panel--userB .weight-btn',
+    '.paired-panel--userA .paired-set-dot.done',
+    '.paired-panel--userB .paired-set-dot.done'
+  ];
+
+  for (const theme of ['night', 'day']) {
+    await setThemeWithoutTransitions(page, theme);
+    await page.screenshot({ path: `${SHOTS}/paired-workout-${theme}.png`, fullPage: true });
+    for (const selector of controls) {
+      const target = page.locator(selector).first();
+      await expect(target).toBeVisible();
+      const ratio = await contrastRatio(target);
+      expect(ratio, `${selector} contrast in ${theme} theme`).toBeGreaterThanOrEqual(4.5);
+    }
   }
 });

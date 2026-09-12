@@ -67,6 +67,13 @@ const App = window.App;
 
 const cloneSerializable = value => JSON.parse(JSON.stringify(value));
 
+function updateTimerInstrument(timerId, remaining, total) {
+  const instrument = document.getElementById(`${timerId}-instrument`);
+  if (!instrument || !total) return;
+  const progress = Math.max(0, Math.min(1, 1 - (remaining / total)));
+  instrument.style.setProperty('--timer-progress', String(progress));
+}
+
 function persistWorkoutDraft(screen = App.ui.currentScreen) {
   if (!App.state || !App.currentSession || !App.workoutState) return;
   const workoutState = cloneSerializable(App.workoutState);
@@ -1024,10 +1031,16 @@ function setupListeners(screen) {
         get('warmup-start-wrap')?.style.setProperty('display','none');
         const wrap = get('warmup-timer-wrap');
         if (wrap) wrap.style.display = 'block';
+        get('warmup-orb')?.classList.add('is-running');
+        get('warmup-timer-instrument')?.classList.add('is-running');
 
-        let remaining = minutes * 60;
+        const total = minutes * 60;
+        let remaining = total;
         const el  = get('warmup-timer');
-        const tick = () => { if (el) el.textContent = formatTime(remaining); };
+        const tick = () => {
+          if (el) el.textContent = formatTime(remaining);
+          updateTimerInstrument('warmup-timer', remaining, total);
+        };
         tick();
 
         warmupInterval = setInterval(() => {
@@ -1134,10 +1147,16 @@ function setupListeners(screen) {
           });
           const timerWrap = get('med-timer-wrap');
           if (timerWrap) timerWrap.style.display = 'block';
+          get('meditation-orb')?.classList.add('is-running');
+          get('med-timer-instrument')?.classList.add('is-running');
 
-          let remaining = minutes * 60;
+          const total = minutes * 60;
+          let remaining = total;
           const timerEl = get('med-timer');
-          const update  = () => { if (timerEl) timerEl.textContent = formatTime(remaining); };
+          const update  = () => {
+            if (timerEl) timerEl.textContent = formatTime(remaining);
+            updateTimerInstrument('med-timer', remaining, total);
+          };
           update();
 
           medTimerInterval = setInterval(() => {
@@ -1852,6 +1871,7 @@ function startUserRestTimer(user, seconds) {
       const m = String(Math.floor(us.restRemaining / 60)).padStart(2,'0');
       const s = String(us.restRemaining % 60).padStart(2,'0');
       display.textContent = `${m}:${s}`;
+      updateTimerInstrument(`${user}-rest-display`, us.restRemaining, us.restTotal);
     }
 
     if (us.restRemaining <= 0) {
@@ -1885,16 +1905,22 @@ export function startExerciseTimer(user) {
   us.exerciseTimerRemaining = remaining;
 
   const el = document.getElementById(`${user}-ex-countdown`);
+  const instrument = document.getElementById(`${user}-ex-countdown-instrument`);
   if (!el) return;
 
-  el.style.display = 'block';
+  if (instrument) {
+    instrument.style.display = 'grid';
+    instrument.classList.add('is-running');
+  }
   el.textContent   = formatTime(remaining);
+  updateTimerInstrument(`${user}-ex-countdown`, remaining, ex.durationSeconds);
 
   us.exerciseTimerInterval = setInterval(() => {
     remaining--;
     us.exerciseTimerRemaining = remaining;
     persistWorkoutDraft('workout_runner');
     if (el) el.textContent = remaining > 0 ? formatTime(remaining) : '✓ Done';
+    updateTimerInstrument(`${user}-ex-countdown`, Math.max(0, remaining), ex.durationSeconds);
 
     if (remaining <= 0) {
       stopExerciseTimer(user);
@@ -1916,7 +1942,8 @@ function stopExerciseTimer(user) {
   // across navigates so the timer can resume from where it left off.
   // exerciseTimerRemaining is explicitly nulled in advanceSet and skip handlers.
   const el = document.getElementById(`${user}-ex-countdown`);
-  if (el) el.style.display = 'none';
+  const instrument = document.getElementById(`${user}-ex-countdown-instrument`);
+  if (instrument) instrument.style.display = 'none';
 }
 
 function clearRestTimer(user) {
