@@ -19,10 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced the README's implementation badge with the Release Checks workflow status.
 - Updated architecture, testing, and roadmap documentation for the current public demo.
+- Recast the interface as a rain-dark stone sanctuary in Night mode and the same
+  weathered artifact uncovered in sunlight in Day mode.
 - Unified the home dashboard and workout header around the same four concentric
   week rings, replacing the obsolete workout-only quadrant treatment.
+- Turned warm-up, rest, exercise, and meditation timers into animated labyrinth
+  instruments, with reduced-motion behavior preserved.
 - Carried the mineral-teal/amethyst identity into Day activity and chart colors,
   and mounted workout actions in accessible dark ancient-tech hardware.
+- Redesigned the app icon family and regenerated the README gallery and social
+  preview against deterministic fictional data.
 
 ## [0.6.1] — 2026-07-13
 

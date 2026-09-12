@@ -1,11 +1,11 @@
 # Movement Practice
 
-**A local-first, offline-capable movement tracker that adapts each day's workout to how your body actually feels.** No account, no server, no data ever leaves your device — built as a zero-runtime-dependency progressive web app in vanilla JavaScript.
+**A local-first, offline-capable movement tracker that adapts each day's workout to how your body actually feels.** No account, no server, and no transmission of workout data — built as a zero-runtime-dependency progressive web app in vanilla JavaScript.
 
 <p>
-  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-b89458">
-  <img alt="Zero runtime dependencies" src="https://img.shields.io/badge/runtime%20deps-0-2f6f4e">
-  <img alt="PWA" src="https://img.shields.io/badge/PWA-offline--first-4b5c47">
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-bd9652">
+  <img alt="Zero runtime dependencies" src="https://img.shields.io/badge/runtime%20deps-0-34777b">
+  <img alt="PWA" src="https://img.shields.io/badge/PWA-offline--first-6849b8">
   <a href="https://github.com/Eli-Studio/movement-practice/actions/workflows/release-checks.yml"><img alt="Release checks" src="https://github.com/Eli-Studio/movement-practice/actions/workflows/release-checks.yml/badge.svg"></a>
 </p>
 
@@ -34,17 +34,30 @@ Movement Practice began as a tool for my partner and me. We wanted to follow the
 
 That constraint shaped the two-profile model, local-first storage, shared-equipment handling, and the adaptation engine.
 
+## Design language
+
+Movement is the first working expression of a candidate Home OS design system:
+ancient technology made practical and humane. Night mode is the reference—a
+rain-dark stone sanctuary with structural brass and scarce teal/amethyst mineral
+light. Day mode is the same artifact uncovered in sunlight, using parchment,
+weathered stone, and dark technological inlays rather than a mechanical inversion.
+
+Shared foundations live in [`home-os-tokens.css`](home-os-tokens.css); profile
+identity, activity colors, the concentric cycle instrument, timer labyrinths, and
+workout hardware remain Movement-owned. The rationale and promotion criteria are
+recorded in the [token incubation decision](docs/decisions/2026-09-10-home-os-token-incubator.md).
+
 ## Notable engineering
 
 The parts worth a look if you're reviewing the code:
 
-- **Offline-first PWA, zero runtime dependencies.** The entire app is hand-written ES modules + one vendored chart library. A [service worker](service-worker.js) precaches the app shell and serves it offline; a single cache-version constant is the only cache-busting mechanism.
+- **Offline-first PWA, zero runtime dependencies.** The entire app is hand-written ES modules + one vendored chart library. A [service worker](service-worker.js) precaches the app shell, serves it offline, and prunes only Movement-owned caches. Its cache version controls shell upgrades; versioned stylesheet URLs identify design revisions.
 - **An adaptive training engine.** [`adaptation.js`](js/adaptation.js) + [`rotation.js`](js/rotation.js) + [`cycles.js`](js/cycles.js) compose the daily plan from a capacity check-in, a symptom→exercise conflict matrix, available equipment, and where you are in the 28-day cycle.
+- **A layered, accessible design system.** Candidate `--home-os-*` foundations define shared semantic roles while Movement owns its ritual instruments and profile identity. Dependency-free checks validate the token graph and shared contrast; Playwright checks rendered controls in both themes.
 - **Safe, structural data migration.** [`storage.js`](js/storage.js) forward-fills older saves against the current schema (nested count maps, per-profile fields), migrates a legacy storage key without stranding history, and validates imported backups field-by-field before trusting them.
 - **Security-minded exports and links.** CSV cells are [neutralized against spreadsheet formula injection](js/exports.js) (`=`, `+`, `-`, `@`), all user text is HTML-escaped at the render layer, user-configured links are restricted to an `https://open.spotify.com` allow-list, and the About card contains one fixed author link to GitHub.
 - **Accessibility as a first-class concern.** `aria-pressed` toggles, an `aria-live` announcement region, visible focus indicators, `prefers-reduced-motion` support, 44px touch targets, and WCAG AA color contrast in both themes — with an automated contrast regression test guarding it.
-- **iOS-safe audio unlocking.** [`audio.js`](js/audio.js) works around WebKit's gesture-gated `.play()` by pre-creating and unlocking every audio element on the first user tap.
-- **A dependency-free release checker.** [`scripts/release-check.mjs`](scripts/release-check.mjs) validates JS syntax, the exercise/routine/equipment reference graph, version alignment, backup migration round-trips, and CSV safety — with no test framework.
+- **A dependency-free release checker.** [`scripts/release-check.mjs`](scripts/release-check.mjs) validates JS syntax, the exercise/routine/equipment reference graph, the Home OS token contract, Night/Day shared-role contrast, version alignment, backup migration round-trips, and CSV safety — with no test framework.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for a tour of how a screen renders and how a day's plan is composed.
 
@@ -56,7 +69,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for a tour of how a screen renders and ho
 - Interrupted-workout **Resume** and **Discard** recovery.
 - Four-week cycle reports and readiness trends (charts via a locally vendored Chart.js).
 - Full JSON backup + restore, plus per-month CSV/Markdown exports.
-- Day and Night themes, applied before first paint to avoid a flash.
+- Day and Night ritual themes, applied before first paint to avoid a flash.
 
 ## Privacy and data
 
@@ -77,7 +90,7 @@ npm run serve      # zero-dependency static server → http://127.0.0.1:4174
 ## Testing
 
 ```bash
-npm test           # dependency-free release checks (syntax, data graph, migration, CSV safety)
+npm test           # release checks (syntax, data graph, tokens, contrast, migration, CSV safety)
 npm run test:e2e   # Playwright behavioral smoke tests (flows, export, a11y, cycle graphics)
 npm run screenshots # regenerate the curated README gallery and social preview
 ```
@@ -86,7 +99,7 @@ npm run screenshots # regenerate the curated README gallery and social preview
 
 ## Deployment
 
-Pushing to `main` deploys via GitHub Actions. In **Settings → Pages**, set **Source** to **GitHub Actions**. Chart.js is vendored locally, so the deployed app makes no third-party network requests and works fully offline after the first visit.
+Pushing to `main` deploys through [the GitHub Pages workflow](.github/workflows/pages.yml). Forks must set **Settings → Pages → Source** to **GitHub Actions**. Chart.js is vendored locally, so the deployed app makes no third-party network requests and works fully offline after the first visit.
 
 Audio assets are intentionally excluded from this public build: the app never requests missing files, chime controls are hidden, and warm-up/meditation timers run silently. Public content identifiers use neutral `strength_*` / `adaptive_*` namespaces, and older backups are migrated by structure so their history stays usable.
 

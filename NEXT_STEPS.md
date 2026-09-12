@@ -1,7 +1,9 @@
 # Roadmap and Release Checkpoint
 
-Version 0.6.1 is the current public demo. The main branch is functional,
-deployable, and verified across phone, tablet, and desktop viewports.
+Version 0.6.1 is the latest tagged release. The deployed `main` branch also
+contains the accepted candidate Home OS design foundation planned for the next
+minor release. It is functional, deployable, and covered by automated phone-first
+flows plus deterministic portfolio captures.
 
 ## Completed through 0.6.1
 
@@ -19,21 +21,34 @@ deployable, and verified across phone, tablet, and desktop viewports.
 - Spreadsheet-safe CSV cells for profile names and free-text notes.
 - Dependency-free automated release checks in pull requests and before Pages deploys.
 
+## Completed on main after 0.6.1
+
+- Candidate shared Home OS semantic tokens with Night and sunlit-relic Day modes.
+- Movement-owned stone-sanctuary presentation, teal/amethyst profile identity,
+  concentric cycle instrument, and animated timer labyrinths.
+- Accessible ancient-tech workout hardware with rendered contrast coverage for
+  both profiles in both themes.
+- A redesigned icon family plus regenerated README and social-preview imagery.
+- Scoped service-worker cleanup that preserves sibling Home OS caches sharing an origin.
+
 ## Release procedure
 
-1. Run `npm test` locally.
-2. Merge the release branch into `main`.
-3. Confirm the GitHub Pages workflow succeeds.
-4. On the deployed HTTPS URL, smoke-test fresh onboarding, one short workout,
+1. Run `npm test` and `npm run test:e2e` locally.
+2. Regenerate and inspect documentation imagery with `npm run screenshots`.
+3. Merge the release branch into `main`.
+4. Confirm the GitHub Pages workflow succeeds.
+5. On the deployed HTTPS URL, smoke-test fresh onboarding, one short workout,
    resume/discard, backup restore, second-profile controls, paired phone layout,
    install, and offline reload.
-5. Tag the verified commit with the next semantic version.
+6. Tag the verified commit with the next semantic version (`0.7.0` for the current
+   candidate design-system release).
 
 ## Portfolio and release tooling
 
 - MIT license ([LICENSE](LICENSE)).
 - Playwright behavioral smoke tests ([tests/e2e/](tests/e2e)) covering onboarding,
-  navigation, backup export, and a WCAG-AA contrast regression guard, wired into CI.
+  navigation, backup export, cycle and timer instruments, and rendered Night/Day
+  contrast for selected and paired workout controls, wired into CI.
 - Zero-dependency local static server (`npm run serve`).
 - Architecture overview ([ARCHITECTURE.md](ARCHITECTURE.md)).
 - Reproducible README screenshots and social preview (`npm run screenshots`).
