@@ -12,11 +12,10 @@ If the task cannot safely be completed within the approved scope, stop and repor
 
 The owner retains authority over:
 
-- gameplay rules and mechanics
-- puzzle behavior and difficulty
-- player-facing interaction design
-- narrative and character decisions
-- visual direction
+- core product or system behavior and rules
+- user-facing interaction and experience design
+- content, voice, and narrative decisions
+- visual and creative direction
 - consequential architecture or scope changes
 
 Implementation agents may identify concerns or alternatives but must not silently make these decisions.
@@ -44,7 +43,7 @@ Full repository verification should be performed by CI where available. Broader 
 
 Never claim a check passed unless it was actually run.
 
-Visual, interactive, or gameplay outcomes that cannot be established by automated tests require owner/playtest evaluation.
+Visual, interactive, or experiential outcomes that cannot be established by automated tests require owner review.
 
 ## Handoff
 
@@ -55,7 +54,7 @@ Before handoff:
 - summarize what changed;
 - report targeted checks run and their results;
 - identify anything not verified;
-- identify any remaining design, visual, or gameplay judgment required.
+- identify any remaining design, visual, or experiential judgment required.
 
 Do not approve or merge your own implementation.
 
