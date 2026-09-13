@@ -1,7 +1,7 @@
 # Incubate candidate Home OS tokens in Movement
 
 - **Date:** 2026-09-10
-- **Status:** Candidate; owner review required
+- **Status:** Accepted candidate
 - **Work item:** Public design-system backport
 - **Class:** Design
 
