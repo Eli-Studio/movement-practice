@@ -30,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Redesigned the app icon family and regenerated the README gallery and social
   preview against deterministic fictional data.
 
+### Fixed
+- Timer labyrinth rings now stay full and visible when a timed exercise
+  finishes, and paired rest rings keep their elapsed progress when the
+  partner's action re-renders the workout.
+
 ## [0.6.1] — 2026-07-13
 
 ### Fixed
