@@ -37,8 +37,9 @@ framework:
 
 All user-supplied text (profile names, notes, Spotify URL) is passed through
 `escapeHtml()` at interpolation time, so `innerHTML` rendering stays safe. A few
-cross-cutting listeners (button-tap sound, save-error toast, draft persistence on
-`visibilitychange`/`pagehide`) are registered once, outside the per-screen pass.
+cross-cutting listeners (a button-interaction audio hook that is dormant in the
+public build, save-error toast, draft persistence on `visibilitychange`/`pagehide`)
+are registered once, outside the per-screen pass.
 
 **Why strings, not a framework?** It keeps the app dependency-free and the whole
 render path inspectable in one file. The trade-off — full re-render per navigation
@@ -94,20 +95,24 @@ into a concrete workout:
 ## Offline & caching
 
 [`service-worker.js`](service-worker.js) precaches the app shell and data files on
-install and serves them offline. A single `CACHE` version constant is the only
-cache-busting mechanism — module URLs carry no per-file query strings. Bump that
-constant whenever a precached asset changes; the worker then wipes older caches on
-activate. Chart.js is vendored under `js/vendor/`, so the app makes zero
+install and serves them offline. The `CACHE` version controls offline-shell
+upgrades, while versioned stylesheet URLs identify the paired Home OS and Movement
+design revisions; JavaScript module URLs carry no per-file query strings. Bump the
+cache version whenever a precached asset changes. On activation, the worker prunes
+only older `movement-*` caches so sibling Home OS apps on the same origin retain
+their offline data. Chart.js is vendored under `js/vendor/`, so the app makes zero
 third-party network requests.
 
 ## Testing
 
 - [`scripts/release-check.mjs`](scripts/release-check.mjs) — **dependency-free**
-  gate: JS syntax, the exercise/routine/equipment reference graph, version
-  alignment, backup-migration round-trip, and CSV formula-injection safety.
+  gate: JS syntax, the exercise/routine/equipment reference graph, the shared
+  token graph and Night/Day contrast roles, version alignment,
+  backup-migration round-trip, and CSV formula-injection safety.
 - [`tests/e2e/`](tests/e2e) — **dev-only** Playwright behavioral tests (onboarding,
-  navigation, backup download, cycle-graphic variants, and a WCAG-AA contrast
-  regression guard), driven through the zero-dep static server in
+  navigation, backup download, cycle instruments, timer activation, selected
+  controls, and paired workout hardware contrast in both themes), driven through
+  the zero-dep static server in
   [`scripts/serve.mjs`](scripts/serve.mjs).
 - [`scripts/capture-screenshots.mjs`](scripts/capture-screenshots.mjs) — regenerates
   the curated README gallery and social preview from a clean, deterministic app session.
@@ -127,7 +132,7 @@ third-party network requests.
 | `equipment.js` | Shared-equipment conflict resolution for paired workouts |
 | `reports.js` | Readiness scoring and chart rendering |
 | `exports.js` | JSON / CSV / Markdown export (CSV injection-safe) |
-| `audio.js` | iOS-safe audio unlocking and playback |
+| `audio.js` | Dormant audio adapter; public configuration prevents element creation and media requests |
 | `timer.js` | Rest / exercise / meditation timers |
 | `profiles.js` | Profile ids and active-profile helpers |
 | `config.js` | Constants, sequences, and content vocabulary |
