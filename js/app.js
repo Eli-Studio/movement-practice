@@ -491,8 +491,9 @@ function navigate(screen) {
     if (ws.mode === 'both') {
       ['userA', 'userB'].forEach(u => {
         if (ws[u].restRemaining > 0) {
-          // User is mid-rest — restart interval with saved countdown
-          startUserRestTimer(u, ws[u].restRemaining);
+          // User is mid-rest — restart interval with saved countdown and the
+          // original total, so the ring keeps its elapsed fraction
+          startUserRestTimer(u, ws[u].restRemaining, ws[u].restTotal || ws[u].restRemaining);
         } else {
           // User is active — restart exercise timer only if not already tracked
           // (avoids resetting the other user's in-progress timed exercise)
@@ -1848,13 +1849,13 @@ function advanceSet(user) {
 
 // ---- Paired rest timer ------------------------------------
 
-function startUserRestTimer(user, seconds) {
+function startUserRestTimer(user, seconds, totalSeconds = seconds) {
   const ws = App.workoutState;
   const us = ws[user];
 
   clearRestTimer(user);
   us.restRemaining = seconds;
-  us.restTotal     = seconds;
+  us.restTotal     = totalSeconds;
   persistWorkoutDraft('workout_runner');
 
   // Initial button state
@@ -1908,10 +1909,16 @@ export function startExerciseTimer(user) {
   const instrument = document.getElementById(`${user}-ex-countdown-instrument`);
   if (!el) return;
 
-  if (instrument) {
-    instrument.style.display = 'grid';
-    instrument.classList.add('is-running');
+  if (instrument) instrument.style.display = 'grid';
+
+  // Already finished (e.g. re-render after completion): hold the full ring.
+  if (remaining <= 0) {
+    el.textContent = '✓ Done';
+    updateTimerInstrument(`${user}-ex-countdown`, 0, ex.durationSeconds);
+    return;
   }
+
+  instrument?.classList.add('is-running');
   el.textContent   = formatTime(remaining);
   updateTimerInstrument(`${user}-ex-countdown`, remaining, ex.durationSeconds);
 
@@ -1923,7 +1930,7 @@ export function startExerciseTimer(user) {
     updateTimerInstrument(`${user}-ex-countdown`, Math.max(0, remaining), ex.durationSeconds);
 
     if (remaining <= 0) {
-      stopExerciseTimer(user);
+      stopExerciseTimer(user, { keepVisible: true });
       if (App.state.settings.musicMode === 'chimes') {
         playTimerComplete(App.state.settings.audioEnabled);
       }
@@ -1931,7 +1938,7 @@ export function startExerciseTimer(user) {
   }, 1000);
 }
 
-function stopExerciseTimer(user) {
+function stopExerciseTimer(user, { keepVisible = false } = {}) {
   const us = App.workoutState?.[user];
   if (!us) return;
   if (us.exerciseTimerInterval) {
@@ -1943,7 +1950,8 @@ function stopExerciseTimer(user) {
   // exerciseTimerRemaining is explicitly nulled in advanceSet and skip handlers.
   const el = document.getElementById(`${user}-ex-countdown`);
   const instrument = document.getElementById(`${user}-ex-countdown-instrument`);
-  if (instrument) instrument.style.display = 'none';
+  instrument?.classList.remove('is-running');
+  if (instrument && !keepVisible) instrument.style.display = 'none';
 }
 
 function clearRestTimer(user) {

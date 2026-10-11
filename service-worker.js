@@ -1,7 +1,7 @@
 // Bump this version whenever any precached asset changes. This is the single
 // cache-busting mechanism — module URLs no longer carry per-file ?v= query
 // strings (which had drifted out of sync and spawned duplicate module fetches).
-const CACHE = 'movement-network-first-v23';
+const CACHE = 'movement-network-first-v24';
 const CORE = ['./', './index.html', './home-os-tokens.css?v=0.1.0-candidate.1',
   './styles.css?v=home-os-stone-6', './manifest.json', './icons/icon.svg',
   './icons/icon-120.png', './icons/icon-152.png', './icons/icon-167.png', './icons/icon-180.png',
